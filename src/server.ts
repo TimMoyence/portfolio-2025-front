@@ -1,5 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine, isMainModule } from '@angular/ssr/node';
+import compression from 'compression';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import fs from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -14,11 +15,11 @@ import { loadCsrShell } from './server/rendu/csr-shell';
 import { lecteurDeMetadonneesSeo } from './server/seo/metadonnees-seo';
 import { entetesDeLaRoute, isClientOnlyRoute } from './server/rendu/routes/routes-client';
 import { registerPermanentRedirects } from './server/rendu/redirects';
-import { lecteurDArticlesDuSitemap } from './server/seo/article-sitemap';
+import { lecteurDArticlesDuSitemap } from './server/seo/sitemap/article-sitemap';
 import { buildLlmsFullTxt, buildLlmsTxt, buildRobotsTxt } from './server/seo/seo-builders';
 import { buildSecurityHeaders } from './server/rendu/security-headers';
 import { injectSeoHead } from './server/seo/seo-injector';
-import { routeDuSitemap } from './server/seo/sitemap-route';
+import { routeDuSitemap } from './server/seo/sitemap/sitemap-route';
 import {
   ALLOWED_HOSTS,
   buildBaseUrlFromRequest,
@@ -27,8 +28,8 @@ import {
   urlRefusee,
 } from './server/rendu/url-utils';
 import { LOCALES_DU_SITE } from './app/core/config/locales';
-import { routeSansLocale } from './app/core/seo/chemins';
-import { localeParDefaut } from './app/core/seo/pages-seo';
+import { routeSansLocale } from './app/core/seo/pages/chemins';
+import { localeParDefaut } from './app/core/seo/pages/pages-seo';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 
@@ -50,6 +51,7 @@ const resolveIndexHtml = (locale: string | null): string => {
 
 const app = express();
 app.disable('x-powered-by');
+app.use(compression());
 
 const poserLesEntetes = (res: Response, entetes: Readonly<Record<string, string>>): void => {
   for (const [nom, valeur] of Object.entries(entetes)) {

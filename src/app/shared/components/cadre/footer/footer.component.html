@@ -9,8 +9,10 @@
           i18n-aria-label="footer.logo.alt|Footer logo alt@@footerLogoAlt"
         >
           <span class="asili-logo__dot" aria-hidden="true"></span>
-          <span class="asili-logo__name">Asili</span>
-          <small class="asili-logo__suffix" aria-hidden="true">design</small>
+          <span class="asili-logo__texte">
+            <span class="asili-logo__name">{{ nomDuSite }}</span>
+            <small class="asili-logo__metier" i18n="@@marqueMetier">Sites web & apps mobiles</small>
+          </span>
         </a>
         <p class="asili-footer__baseline">{{ brandBaseline }}</p>
 
@@ -69,31 +71,13 @@
       <app-newsletter-form />
     </div>
 
-    <address class="asili-footer__address" itemscope itemtype="https://schema.org/LocalBusiness">
-      <meta itemprop="name" [attr.content]="nomDuSite" />
-      <span
-        class="asili-footer__address-line"
-        itemprop="address"
-        itemscope
-        itemtype="https://schema.org/PostalAddress"
-      >
-        <span itemprop="streetAddress">Allée Serr</span>,
-        <span itemprop="postalCode">33100</span>&ngsp;
-        <span itemprop="addressLocality">Bordeaux</span>,
-        <span itemprop="addressCountry">France</span>
-      </span>
+    <address class="asili-footer__address">
+      <span class="asili-footer__address-line">{{ adresse }}</span>
       @for (method of contactMethods; track $index) {
         <span class="asili-footer__address-line" [attr.data-testid]="'contact-method-' + $index">
-          @if (method.href) {
-            <a
-              [href]="method.href"
-              [attr.aria-label]="method.label + ': ' + method.value"
-              [attr.itemprop]="method.schemaProp || null"
-              >{{ method.value }}</a
-            >
-          } @else {
-            <span [attr.itemprop]="method.schemaProp || null">{{ method.value }}</span>
-          }
+          <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value">{{
+            method.value
+          }}</a>
         </span>
       }
     </address>

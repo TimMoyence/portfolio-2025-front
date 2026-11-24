@@ -218,14 +218,14 @@ describe('ArticleDetailComponent — métadonnées SEO', () => {
     });
   });
 
-  it('signe du nom du site le titre de l article et son éditeur', () => {
+  it('signe du nom du site le titre de l article, et désigne son éditeur par l @id de l entreprise', () => {
     const config = seoDeLArticle();
 
     expect(config.title).toBe('Veille IA — Asili Design');
     expect(config.jsonLd).toContain(
       jasmine.objectContaining({
         '@type': 'Article',
-        publisher: { '@type': 'Organization', name: 'Asili Design' },
+        publisher: { '@id': 'https://asilidesign.fr/#organization' },
       }),
     );
   });

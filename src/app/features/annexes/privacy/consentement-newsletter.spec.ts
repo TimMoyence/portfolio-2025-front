@@ -1,12 +1,7 @@
-import { isolateAnimReady } from '../../../../testing/dom/anim-ready';
-import {
-  rendreLaPolitique,
-  texteNormalise,
-} from '../../../../testing/page/politique-de-confidentialite';
+import { rendreLaPolitique } from '../../../../testing/page/politique-de-confidentialite';
+import { texteDe as texteNormalise } from '../../../../testing/texte/textes-dom';
 
 describe('Consentement newsletter dans la politique de confidentialité', () => {
-  isolateAnimReady();
-
   it('NL-07 · fonde la newsletter sur le consentement', () => {
     const page = rendreLaPolitique();
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { estCheminInterne } from '../../../../../core/seo/chemins';
+import { estCheminInterne } from '../../../../../core/seo/pages/chemins';
 
 @Component({
   selector: 'app-slide-cta',

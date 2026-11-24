@@ -1,5 +1,6 @@
 @use '../../../slide-section' as slide;
 @use '../../../slide-toile' as toile;
+@use '../../../../../styles-shared/composants/survol';
 
 .slide-table {
   width: 100%;
@@ -70,7 +71,7 @@
     tr {
       transition: background 0.15s;
 
-      &:hover {
+      @include survol.survol {
         background: rgba(var(--teal-rgb), 0.08);
       }
     }

@@ -1,6 +1,7 @@
 import { of } from 'rxjs';
 import type { ContactResponseDto } from '../../../contrat/types.gen';
-import type { ContactPort } from '../../app/core/ports/contact.port';
+import type { Provider } from '@angular/core';
+import { CONTACT_PORT, type ContactPort } from '../../app/core/ports/contact.port';
 
 const accuse = (message = 'ok'): ContactResponseDto => ({ message, httpCode: 201 });
 
@@ -13,3 +14,8 @@ export function createContactPortStubWithDefault(): jasmine.SpyObj<ContactPort> 
   stub.contact.and.returnValue(of(accuse()));
   return stub;
 }
+
+export const CONTACT_PORT_PAR_DEFAUT: Provider = {
+  provide: CONTACT_PORT,
+  useFactory: createContactPortStubWithDefault,
+};

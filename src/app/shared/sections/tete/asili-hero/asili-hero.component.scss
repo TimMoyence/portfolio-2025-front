@@ -1,6 +1,6 @@
+@use '../../../../styles-shared/mise-en-page/heads' as heads;
 @use '../../../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../../../styles-shared/mise-en-page/hero-meta' as hero;
-@use '../../../../styles-shared/mise-en-page/mono';
 :host {
   display: block;
 }
@@ -33,21 +33,44 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--s-4);
+  align-items: center;
 }
 
-/* Titre serif geant ; l'accent (italique teal) est applique par .accent.
-   `::ng-deep` : indispensable car le titre peut arriver par projection
-   `[title]` (markup de l'hote, porteur du `_ngcontent` de la PAGE, pas du
-   hero) — un selecteur scope ne ciblerait jamais le `.accent` projete.
-   Couvre aussi le chemin par inputs (`.accent` rendu en interne). Meme
-   pattern que `asili-manifesto.component.scss` (`.mani-line ::ng-deep .t`). */
+.hero-grid:has(.hero-visuel > *) {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+}
+
+.hero-texte {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+}
+
 .hero-title {
-  max-width: 16ch;
+  max-width: heads.largeur-de-titre(16);
   margin-top: 8px;
 }
-.hero-title ::ng-deep .accent {
+.hero-title .accent {
   font-style: italic;
   color: var(--teal-deep);
+}
+
+.mot {
+  display: inline-block;
+  animation: mot-qui-monte 0.7s var(--ease) both;
+  animation-delay: calc(var(--rang) * 55ms);
+}
+
+@keyframes mot-qui-monte {
+  from {
+    transform: translateY(0.16em);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mot {
+    animation: none;
+  }
 }
 
 .hero-sub {
@@ -56,7 +79,6 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: var(--s-4);
-  margin-top: var(--s-4);
 }
 
 .hero-cta {
@@ -68,85 +90,20 @@
   display: none;
 }
 
-.hero-meta {
-  display: flex;
-  gap: var(--s-4);
-}
-.hero-meta:not(:has(*)) {
-  display: none;
-}
-/* `::ng-deep` : la meta arrive UNIQUEMENT par projection `[meta]` (markup de
-   l'hote). Les selecteurs descendants doivent percer l'encapsulation, sinon
-   les stats projetees restent NON stylees (pas de filet, pas de serif 30px).
-   Meme pattern que `asili-manifesto.component.scss` (`.mani-line ::ng-deep .t`). */
-.hero-meta ::ng-deep div {
-  border-left: 1px solid var(--line);
-  padding-left: 14px;
-}
-.hero-meta ::ng-deep .n {
-  font-family: var(--font-display);
-  font-size: 30px;
-  color: var(--ink);
-  line-height: 1;
-}
-.hero-meta ::ng-deep .l {
-  font-size: 12.5px;
-  color: var(--ink-mute);
-  margin-top: 4px;
-}
-.hero-meta .hero-meta-rows {
+.hero-meta-rows {
   @include hero.key-value-rows;
 }
 
-.scroll-hint {
-  position: absolute;
-  bottom: 26px;
-  left: 50%;
-  translate: -50% 0;
-  z-index: 2;
-  @include mono.police;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.scroll-hint .bar {
-  width: 1px;
-  height: 38px;
-  background: linear-gradient(var(--ink-faint), transparent);
-  animation: asili-hero-drop 2s var(--ease) infinite;
-}
-
-@keyframes asili-hero-drop {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-  40% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  60% {
-    transform: scaleY(1);
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .scroll-hint .bar {
-    animation: none;
-  }
+.hero-visuel:not(:has(*)) {
+  display: none;
 }
 
 @include bp.tablet {
-  .hero-meta {
+  .hero-grid:has(.hero-visuel > *) {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-meta-rows {
     display: none;
   }
 }

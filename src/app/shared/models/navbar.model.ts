@@ -1,20 +1,12 @@
+import type { EntreeDeFormation } from '../../core/config/familles-de-formation';
+
 export type NavLink = {
   label: string;
-  href: string;
-};
-
-type DropdownItem = {
-  title: string;
-  description: string;
-  icon: string;
-  iconAlt: string;
   href: string;
 };
 
 export type DropdownSection = {
   label: string;
   isOpen: boolean;
-  items: DropdownItem[];
-  href?: string;
-  subtitle?: string;
+  items: readonly EntreeDeFormation[];
 };

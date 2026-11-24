@@ -1,8 +1,8 @@
 import type { SeoMetadataFile } from '../../app/core/seo/seo-metadata.model';
 import { LOCALES_DU_SITE } from '../../app/core/config/locales';
-import { routeSansLocale } from '../../app/core/seo/chemins';
-import { NOM_DU_SITE } from '../../app/core/seo/nom-du-site';
-import { localeParDefaut } from '../../app/core/seo/pages-seo';
+import { routeSansLocale } from '../../app/core/seo/pages/chemins';
+import { NOM_DU_SITE } from '../../app/core/seo/pages/nom-du-site';
+import { localeParDefaut } from '../../app/core/seo/pages/pages-seo';
 
 const ARTICLE_FEED_PATH = '/api/v1/portfolio25/articles/feed.xml';
 const ARTICLE_FEED_TITLES: Record<string, string> = {

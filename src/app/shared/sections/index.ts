@@ -1,14 +1,13 @@
-export { AsiliHeroComponent, type AsiliHeroMetaRow } from './tete/asili-hero/asili-hero.component';
+export {
+  AsiliHeroComponent,
+  type AsiliHeroMetaRow,
+  type MorceauDeTitre,
+} from './tete/asili-hero/asili-hero.component';
 
 export {
   AsiliMethodComponent,
   type AsiliMethodStep,
 } from './methode/asili-method/asili-method.component';
-
-export {
-  AsiliPillarsComponent,
-  type AsiliPillar,
-} from './methode/asili-pillars/asili-pillars.component';
 
 export {
   AsiliCtaBandComponent,
@@ -21,15 +20,15 @@ export {
   type AsiliClosing,
 } from './fin/asili-closing/asili-closing.component';
 
-export {
-  AsiliProjectsGridComponent,
-  type AsiliProject,
-} from './fin/asili-projects-grid/asili-projects-grid.component';
+export { AsiliFaqComponent } from './fin/asili-faq/asili-faq.component';
 
 export {
-  AsiliManifestoComponent,
-  type AsiliManifestoLine,
-} from './tete/asili-manifesto/asili-manifesto.component';
+  AsiliProjectsGridComponent,
+  LARGEUR_DU_CONTENEUR,
+  PLEINE_LARGEUR_SUR_TABLETTE,
+  type AsiliProject,
+  type AsiliProjectSize,
+} from './fin/asili-projects-grid/asili-projects-grid.component';
 
 export { AsiliSectionTeteComponent } from './tete/asili-section-tete/asili-section-tete.component';
 

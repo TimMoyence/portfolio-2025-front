@@ -1,7 +1,12 @@
 import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { type Observable, firstValueFrom } from 'rxjs';
+import seoMetadata from '../../../assets/seo/seo-metadata.json';
+import { type FicheServie, jsonLdDUneFiche } from './json-ld';
 import { SeoRegistryService } from './seo-registry.service';
+import { METADONNEES_DU_SITE } from './site-servi';
+
+const accueil = seoMetadata.pages.find(({ id }) => id === 'home')!.locales;
 
 describe('SeoRegistryService', () => {
   function createService(locale: string): SeoRegistryService {
@@ -67,17 +72,16 @@ describe('SeoRegistryService', () => {
     it("devrait retourner la config SEO pour la cle 'home'", async () => {
       const seo = await seoParCle('fr', 'home');
 
-      expect(seo.title).toBe('Accueil — Tim Moyence Portfolio');
-      expect(seo.description).toBe(
-        'Découvrez mes services professionnels, réalisations et solutions digitales sur mesure. Tim Moyence, développeur web freelance à Bordeaux.',
-      );
+      expect(seo.title).toBe(accueil.fr.title);
+      expect(seo.description).toBe(accueil.fr.description);
       expect(seo.index).toBeTrue();
     });
 
     it("devrait retourner la config SEO en anglais pour la cle 'home'", async () => {
       const seo = await seoParCle('en', 'home');
 
-      expect(seo.title).toBe('Home — Tim Moyence, freelance web developer Bordeaux');
+      expect(seo.title).toBe(accueil.en.title);
+      expect(seo.title).not.toBe(accueil.fr.title);
     });
 
     it('refuse une clé que seo-metadata.json ne connaît pas, au lieu d’inventer un SEO', () => {
@@ -108,20 +112,18 @@ describe('SeoRegistryService', () => {
     it('devrait retourner les ogTitle et ogDescription depuis la page', async () => {
       const seo = await seoParCle('fr', 'home');
 
-      expect(seo.ogTitle).toBe('Accueil de Tim Moyence');
-      expect(seo.ogDescription).toBe(
-        'Découvrez mes services professionnels et mes réalisations en développement web.',
-      );
+      expect(seo.ogTitle).toBe(accueil.fr.ogTitle);
+      expect(seo.ogDescription).toBe(accueil.fr.ogDescription);
     });
   });
 
   describe('resolution de locale avec fallback', () => {
     it("devrait fallback sur la locale par defaut si la locale demandee n'existe pas dans la page", async () => {
-      expect((await seoParCle('ja', 'home')).title).toBe('Accueil — Tim Moyence Portfolio');
+      expect((await seoParCle('ja', 'home')).title).toBe(accueil.fr.title);
     });
 
     it('devrait fallback depuis une locale composee vers la langue de base', async () => {
-      expect((await seoParCle('fr-CA', 'home')).title).toBe('Accueil — Tim Moyence Portfolio');
+      expect((await seoParCle('fr-CA', 'home')).title).toBe(accueil.fr.title);
     });
   });
 
@@ -140,5 +142,53 @@ describe('SeoRegistryService', () => {
         ]);
       });
     }
+  });
+
+  describe('jsonLdDUneFiche · le fil d une fiche suit la langue servie et refuse un parent sans page', () => {
+    const ficheSous = (parent: string, url: string): FicheServie => ({
+      parent,
+      nom: 'Morning brief',
+      url,
+      bloc: { '@context': 'https://schema.org', '@type': 'Article' },
+    });
+
+    const filDeLaFiche = (locale: string, fiche: FicheServie): unknown =>
+      jsonLdDUneFiche(METADONNEES_DU_SITE, locale, fiche).find(
+        (bloc) => bloc['@type'] === 'BreadcrumbList',
+      )?.['itemListElement'];
+
+    const etapes = (noms: readonly (readonly [string, string])[]): unknown =>
+      noms.map(([name, item], rang) => ({ '@type': 'ListItem', position: rang + 1, name, item }));
+
+    it('en anglais, chaque étape porte son nom court anglais et son URL en /en', () => {
+      const url = 'https://asilidesign.fr/en/articles/morning-brief';
+
+      expect(filDeLaFiche('en', ficheSous('/articles', url))).toEqual(
+        etapes([
+          ['Home', 'https://asilidesign.fr/en/'],
+          ['Articles', 'https://asilidesign.fr/en/articles'],
+          ['Morning brief', url],
+        ]),
+      );
+    });
+
+    it('sous l accueil, le fil compte l accueil puis la fiche', () => {
+      const url = 'https://asilidesign.fr/fr/morning-brief';
+
+      expect(filDeLaFiche('fr', ficheSous('/', url))).toEqual(
+        etapes([
+          ['Accueil', 'https://asilidesign.fr/fr/'],
+          ['Morning brief', url],
+        ]),
+      );
+    });
+
+    it('un parent sans page indexable est refusé', () => {
+      const fiche = ficheSous('/inconnu', 'https://asilidesign.fr/fr/inconnu/fiche');
+
+      expect(() => jsonLdDUneFiche(METADONNEES_DU_SITE, 'fr', fiche)).toThrowError(
+        'préfixe sans page indexable : /inconnu (de /inconnu)',
+      );
+    });
   });
 });

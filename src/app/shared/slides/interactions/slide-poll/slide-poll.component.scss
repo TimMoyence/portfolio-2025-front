@@ -1,4 +1,5 @@
 @use '../../slide-section' as slide;
+@use '../../../../styles-shared/composants/survol';
 
 .slide-poll {
   @include slide.interaction;
@@ -30,8 +31,10 @@
   overflow: hidden;
   min-height: 3.25rem;
 
-  &:hover:not(:disabled) {
-    border-color: var(--accent, #4fb3a2);
+  &:not(:disabled) {
+    @include survol.survol {
+      border-color: var(--accent, #4fb3a2);
+    }
   }
 
   &:focus-visible {

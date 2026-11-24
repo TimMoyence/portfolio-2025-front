@@ -24,11 +24,6 @@ import { bornerEntre } from '../../../../cours/runtime/core/texte/valeurs';
         <div class="nf-code" role="img" aria-label="404">
           4<span #zero class="o" aria-hidden="true">0</span>4
         </div>
-        <!--
-          La GIF est conservée (demande utilisateur) en visuel décoratif sous le
-          code « 4 0 4 ». Asset existant /assets/images/404.gif, SSR-safe (image
-          statique, aucun JS requis pour l'afficher), alt descriptif.
-        -->
         <img
           class="nf-gif"
           src="/assets/images/404.gif"
@@ -49,7 +44,7 @@ import { bornerEntre } from '../../../../cours/runtime/core/texte/valeurs';
             Retour à l'accueil <span class="arrow">→</span>
           </a>
           <a class="btn btn-ghost" routerLink="/projets" i18n="@@notFoundCtaProjects">
-            Voir les projets
+            Voir mes réalisations
           </a>
         </div>
         <div class="nf-hint" i18n="@@notFoundHint">
@@ -60,7 +55,6 @@ import { bornerEntre } from '../../../../cours/runtime/core/texte/valeurs';
   `,
   styles: [
     `
-      /* Portés verbatim de AsiliNewDesign/asili-legal.css (.nf-*). */
       :host {
         display: block;
       }
@@ -101,8 +95,6 @@ import { bornerEntre } from '../../../../cours/runtime/core/texte/valeurs';
       .nf-code .o:active {
         cursor: grabbing;
       }
-      /* GIF décorative (conservée à la demande de l'utilisateur). Intégrée au
-         style Asili : largeur contenue, coins arrondis, ombre douce. */
       .nf-gif {
         display: block;
         width: clamp(180px, 40vw, 280px);
@@ -136,7 +128,7 @@ import { bornerEntre } from '../../../../cours/runtime/core/texte/valeurs';
         font-family: var(--font-mono);
         font-variant-ligatures: none;
         font-size: 12px;
-        color: var(--ink-faint);
+        color: var(--ink-mute);
         margin-top: 30px;
       }
       @media (prefers-reduced-motion: reduce) {

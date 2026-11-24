@@ -1,6 +1,6 @@
 <section class="projects-section section-pad">
   <div class="wrap">
-    <div class="projects-head" appReveal>
+    <div class="projects-head">
       <div>
         <ng-content select="[kicker]"><app-asili-kicker [texte]="kicker()" /></ng-content>
         <ng-content select="[heading]">
@@ -13,97 +13,39 @@
     </div>
 
     <div class="proj-grid">
-      @for (project of projects(); track project.title; let i = $index) {
+      @for (project of projects(); track project.href) {
         <article
           class="proj"
           [class.big]="project.size === 'big'"
           [class.small]="project.size === 'small'"
-          appReveal
-          [appRevealDelay]="i % 2 === 1 ? 1 : null"
         >
-          @if (project.href; as href) {
-            @if (estCheminInterne(href)) {
-              <a class="proj-link" [routerLink]="href">
-                <ng-container
-                  [ngTemplateOutlet]="shot"
-                  [ngTemplateOutletContext]="{ $implicit: project, index: i }"
-                />
-              </a>
-            } @else {
-              <a class="proj-link" [href]="href">
-                <ng-container
-                  [ngTemplateOutlet]="shot"
-                  [ngTemplateOutletContext]="{ $implicit: project, index: i }"
-                />
-              </a>
-            }
-          } @else {
-            <ng-container
-              [ngTemplateOutlet]="shot"
-              [ngTemplateOutletContext]="{ $implicit: project, index: i }"
-            />
-          }
+          <a class="proj-link" [routerLink]="project.href" [state]="{ vignette: true }">
+            <div class="proj-shot">
+              <img
+                [src]="project.image"
+                [attr.srcset]="project.srcset"
+                [attr.sizes]="cadres[project.size].sizes"
+                [alt]="project.imageAlt"
+                [style.view-transition-name]="project.vignette"
+                [attr.width]="cadres[project.size].width"
+                [attr.height]="cadres[project.size].height"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </a>
 
           <div class="proj-body">
-            @if (project.tags.length) {
-              <div class="proj-meta">
-                @for (tag of project.tags; track tag.label) {
-                  <span class="tag" [class.tag-prod]="tag.prod">{{ tag.label }}</span>
-                }
-              </div>
-            }
+            <div class="proj-meta">
+              @for (tag of project.tags; track tag.label) {
+                <span class="tag" [class.tag-prod]="tag.prod">{{ tag.label }}</span>
+              }
+            </div>
             <h3>{{ project.title }}</h3>
             <p>{{ project.desc }}</p>
-            @if (project.caseStudy; as study) {
-              <details class="proj-case-study">
-                <summary i18n="@@projectsGridCaseStudyToggle">Voir le cas d’usage</summary>
-                <dl>
-                  <div>
-                    <dt i18n="@@projectsGridCaseContext">Contexte</dt>
-                    <dd>{{ study.context }}</dd>
-                  </div>
-                  <div>
-                    <dt i18n="@@projectsGridCaseProblem">Problème</dt>
-                    <dd>{{ study.problem }}</dd>
-                  </div>
-                  <div>
-                    <dt i18n="@@projectsGridCaseSolution">Solution</dt>
-                    <dd>{{ study.solution }}</dd>
-                  </div>
-                  <div>
-                    <dt i18n="@@projectsGridCaseRole">Rôle</dt>
-                    <dd>{{ study.role }}</dd>
-                  </div>
-                  <div>
-                    <dt i18n="@@projectsGridCaseResult">Résultat</dt>
-                    <dd>{{ study.result }}</dd>
-                  </div>
-                </dl>
-              </details>
-            }
           </div>
         </article>
       }
     </div>
   </div>
 </section>
-
-<ng-template #shot let-project let-index="index">
-  <div class="proj-shot">
-    @if (project.image) {
-      <img
-        [src]="project.image"
-        [alt]="project.imageAlt ?? project.title"
-        [attr.width]="imageWidth(project.size)"
-        [attr.height]="imageHeight(project.size)"
-        [attr.loading]="imageLoading(index)"
-        [attr.fetchpriority]="imageFetchPriority(index)"
-        decoding="async"
-      />
-    } @else {
-      <div class="placeholder" aria-hidden="true">
-        <span>{{ project.imageAlt ?? project.title }}</span>
-      </div>
-    }
-  </div>
-</ng-template>

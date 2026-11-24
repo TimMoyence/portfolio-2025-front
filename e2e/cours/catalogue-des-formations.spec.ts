@@ -6,7 +6,9 @@ const CARTES = COURS_EN_SEANCE.length + 4;
 
 const ouvrirHydrate = async (page: Page, adresse: string): Promise<void> => {
   await page.goto(adresse, { waitUntil: 'networkidle' });
-  await expect(page.locator('html.anim-ready')).toHaveCount(1);
+  await expect(page.locator('app-formations-list:not([ngh]):not([ngskiphydration])')).toHaveCount(
+    1,
+  );
 };
 
 test.describe('CAT-06 · catalogue des formations servi', () => {

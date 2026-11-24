@@ -1,3 +1,4 @@
+@use '../../../../styles-shared/mise-en-page/heads' as heads;
 :host {
   display: block;
 }
@@ -30,13 +31,13 @@
 }
 
 .cta-kicker {
-  color: var(--teal);
+  color: var(--accent-text);
 }
 
 .cta-title {
   color: #fff;
   font-size: clamp(38px, 5.5vw, 78px);
-  max-width: 16ch;
+  max-width: heads.largeur-de-titre(16);
 }
 
 .cta-lead {

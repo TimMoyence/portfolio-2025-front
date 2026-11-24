@@ -1,6 +1,6 @@
 @use '../../../../styles-shared/mise-en-page/breakpoints' as bp;
+@use '../../../../styles-shared/composants/survol';
 @use '../../../../styles-shared/composants/cartes';
-@use '../../../../styles-shared/mise-en-page/mono';
 :host {
   display: block;
 }
@@ -31,14 +31,7 @@
   border: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  transition:
-    transform 0.5s var(--ease),
-    box-shadow 0.5s var(--ease);
-}
-
-.proj:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-card);
+  @include cartes.carte-soulevee(-6px);
 }
 
 .proj.big {
@@ -69,10 +62,20 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 50% 0%;
+  @include survol.en-mouvement {
+    transition: object-position 2.4s var(--ease);
+  }
 }
 
-.placeholder {
-  @include cartes.placeholder-raye(14px, 5px 11px, 0.06em);
+.proj {
+  @include survol.en-mouvement {
+    @include survol.survol {
+      .proj-shot img {
+        object-position: 50% 100%;
+      }
+    }
+  }
 }
 
 .proj-body {
@@ -98,45 +101,6 @@
 
 .proj p {
   font-size: 14.5px;
-  color: var(--ink-mute);
-}
-
-.proj-case-study {
-  border-top: 1px solid var(--line);
-  padding-top: 10px;
-  font-size: 13px;
-}
-
-.proj-case-study summary {
-  cursor: pointer;
-  color: var(--teal);
-  @include mono.police;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.proj-case-study dl {
-  display: grid;
-  gap: 8px;
-  margin: 12px 0 0;
-}
-
-.proj-case-study dl > div {
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: 8px;
-}
-
-.proj-case-study dt {
-  color: var(--ink);
-  @include mono.police;
-  font-size: 10px;
-  text-transform: uppercase;
-}
-
-.proj-case-study dd {
-  margin: 0;
   color: var(--ink-mute);
 }
 

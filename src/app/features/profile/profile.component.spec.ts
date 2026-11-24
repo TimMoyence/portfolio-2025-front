@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
+import type { NgForm } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
@@ -341,6 +342,51 @@ describe('ProfileComponent', () => {
 
   describe('refus et succès des mots de passe', () => {
     const texte = () => (fixture.nativeElement as HTMLElement).textContent ?? '';
+
+    for (const hasPassword of [false, true]) {
+      it(`annonce chaque succès par un statut et chaque refus par une alerte (mot de passe défini : ${hasPassword})`, async () => {
+        TestBed.resetTestingModule();
+        await monter({ hasPassword });
+        component.editProfileSuccess = 'profil ok';
+        component.editProfileError = 'profil refusé';
+        component.setPasswordSuccess = 'définition ok';
+        component.setPasswordError = 'définition refusée';
+        component.changePasswordSuccess = 'changement ok';
+        component.changePasswordError = 'changement refusé';
+        fixture.detectChanges();
+
+        const roles = [...(fixture.nativeElement as HTMLElement).querySelectorAll('.pf-msg')].map(
+          (message) => [
+            message.classList.contains('ok') ? 'ok' : 'err',
+            message.getAttribute('role'),
+          ],
+        );
+        expect(roles.length).toBeGreaterThan(0);
+        expect(roles).toEqual(roles.map(([genre]) => [genre, genre === 'ok' ? 'status' : 'alert']));
+      });
+    }
+
+    it('après un changement réussi, un second clic sur le formulaire vidé garde la confirmation', async () => {
+      TestBed.resetTestingModule();
+      await monter({ hasPassword: true });
+      authService.changePassword.and.returnValue(of(buildAuthUser({ hasPassword: true })));
+      component.currentPassword = 'actuel';
+      component.changeNewPassword = NEW_PASSWORD;
+      component.changePassword(formulaireSoumis());
+
+      component.changePassword(
+        jasmine.createSpyObj<NgForm>('NgForm', ['resetForm'], {
+          invalid: true,
+          valid: false,
+          pristine: true,
+        }),
+      );
+      fixture.detectChanges();
+
+      expect(component.changePasswordSuccess).toBe('Mot de passe modifié avec succès.');
+      expect(component.changePasswordSubmitted).toBeFalse();
+      expect(authService.changePassword).toHaveBeenCalledTimes(1);
+    });
 
     it('garde lisible le succès de la définition du mot de passe après le rechargement de la session', () => {
       authService.setPassword.and.returnValue(of(buildAuthUser({ hasPassword: true })));

@@ -16,13 +16,21 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LOCALES_DU_SITE, langueDuSite } from '../../../../core/config/locales';
-import { cheminEnLocale } from '../../../../core/seo/chemins';
+import { cheminEnLocale } from '../../../../core/seo/pages/chemins';
 import { BreakpointService } from '../../../../core/services/breakpoint.service';
 import { AuthStateService } from '../../../../core/services/auth-state.service';
 import type { DropdownSection, NavLink } from '../../../models/navbar.model';
 import { A11yDialogService } from '../../../services/a11y-dialog.service';
 import { initialeDe } from '../../../utils/initiale.utils';
 import { SvgIconComponent } from '../../svg-icon.component';
+import { ENTREES_DE_FORMATION } from '../../../../core/config/familles-de-formation';
+import { CHEMINS_DE_LA_NAVIGATION, nomCourtServi } from '../../../../core/seo/site-servi';
+
+const HORS_FORMATIONS = CHEMINS_DE_LA_NAVIGATION.filter(
+  (chemin) => !ENTREES_DE_FORMATION.some(({ lien }) => lien === chemin),
+);
+
+const lienDuMenu = (href: string): NavLink => ({ label: nomCourtServi(href), href });
 
 @Component({
   selector: 'app-navbar',
@@ -33,59 +41,20 @@ import { SvgIconComponent } from '../../svg-icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
-  readonly navLinks: NavLink[] = [
-    {
-      label: $localize`:navbar.link.presentation|Navbar primary link@@navLinkPresentation:Présentation`,
-      href: '/presentation',
-    },
-    {
-      label: $localize`:navbar.link.projects|Navbar primary link@@navLinkProjects:Projets`,
-      href: '/projets',
-    },
-    {
-      label: $localize`:navbar.link.articles|Navbar primary link@@navLinkArticles:Articles`,
-      href: '/articles',
-    },
-    {
-      label: $localize`:navbar.link.offer|Navbar primary link@@navLinkOfferSpan:Services`,
-      href: '/offer',
-    },
-  ];
+  readonly navLinks: NavLink[] = HORS_FORMATIONS.slice(0, -2).map(lienDuMenu);
+
+  readonly aPropos: NavLink = lienDuMenu(HORS_FORMATIONS.at(-2) ?? '');
+
+  readonly cheminDuContact = HORS_FORMATIONS.at(-1) ?? '';
 
   readonly formationsDropdown: DropdownSection = {
-    label: $localize`:navbar.formations.label|Formations dropdown label@@navFormationsLabel:Formations`,
+    label: $localize`:navbar.formations.label|Formations dropdown label@@navFormationsLabel:Formation`,
     isOpen: false,
-    items: [
-      {
-        title: $localize`:navbar.formations.ia.title|@@navFormationsIaTitle:IA pour Solopreneurs`,
-        description: $localize`:navbar.formations.ia.desc|@@navFormationsIaDesc:Panorama des outils IA pour entrepreneurs`,
-        icon: 'sparkles',
-        iconAlt: 'IA',
-        href: '/formations/ia-solopreneurs',
-      },
-      {
-        title: $localize`:navbar.formations.auto.title|@@navFormationsAutoTitle:Automatiser avec l'IA`,
-        description: $localize`:navbar.formations.auto.desc|@@navFormationsAutoDesc:5 workflows non-tech pour gagner 2h/semaine`,
-        icon: 'sparkles',
-        iconAlt: 'Automation',
-        href: '/formations/automatiser-avec-ia',
-      },
-      {
-        title: $localize`:navbar.formations.seo.title|@@navFormationsSeoTitle:Audit SEO DIY`,
-        description: $localize`:navbar.formations.seo.desc|@@navFormationsSeoDesc:7 checks en 20 min avec 5 outils gratuits`,
-        icon: 'sparkles',
-        iconAlt: 'SEO',
-        href: '/formations/audit-seo-diy',
-      },
-      {
-        title: $localize`:navbar.formations.all.title|@@navFormationsAllTitle:Toutes les formations`,
-        description: $localize`:navbar.formations.all.desc|@@navFormationsAllDesc:Voir le catalogue complet`,
-        icon: 'sparkles',
-        iconAlt: 'Liste',
-        href: '/formations',
-      },
-    ],
+    items: ENTREES_DE_FORMATION,
   };
+
+  @ViewChild('formationTrigger', { static: false })
+  formationTrigger?: ElementRef<HTMLButtonElement>;
 
   readonly openMenuLabel = $localize`:navbar.menu.open|Burger button label@@navMenuOpen:Ouvrir le menu principal`;
   readonly closeMenuLabel = $localize`:navbar.menu.close|Burger button label@@navMenuClose:Fermer le menu principal`;
@@ -143,10 +112,6 @@ export class NavbarComponent {
       }
     });
 
-    // Force le re-render quand l'etat auth change.
-    // Necessaire car ngSkipHydration (ajoute par Angular SSR) empeche
-    // les signal reads dans les ngTemplateOutlet embedded views de
-    // declencher correctement markForCheck sur le composant hote.
     effect(() => {
       this.authState.isLoggedIn();
       this.authState.user();
@@ -206,8 +171,36 @@ export class NavbarComponent {
     this.cdr.markForCheck();
   }
 
+  cliquerFormation(dropdown: DropdownSection, clic: MouseEvent): void {
+    if (clic.detail > 0 && this.surEcranASurvol()) {
+      this.setDropdownOpen(dropdown, true);
+      return;
+    }
+    this.toggleDropdown(dropdown);
+  }
+
   openDropdown(dropdown: DropdownSection): void {
-    this.setDropdownOpen(dropdown, true);
+    if (this.surEcranASurvol()) {
+      this.setDropdownOpen(dropdown, true);
+    }
+  }
+
+  private surEcranASurvol(): boolean {
+    return window.matchMedia('(hover: hover)').matches;
+  }
+
+  closeDropdownWhenFocusLeaves(dropdown: DropdownSection, event: FocusEvent): void {
+    const menu = event.currentTarget as HTMLElement;
+    if (!menu.contains(event.relatedTarget as Node | null)) {
+      this.closeDropdown(dropdown);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeDropdownOnOutsideClick(event: MouseEvent): void {
+    if (!(event.target as Element | null)?.closest('.asili-nav__item--formation')) {
+      this.closeDropdown(this.formationsDropdown);
+    }
   }
 
   closeDropdown(dropdown: DropdownSection): void {
@@ -255,6 +248,9 @@ export class NavbarComponent {
     if (openDropdown) {
       event.preventDefault();
       this.closeDropdown(openDropdown);
+      if (!this.mobileMenuOpen) {
+        this.formationTrigger?.nativeElement.focus();
+      }
       return true;
     }
     if (this.mobileMenuOpen) {

@@ -96,7 +96,9 @@ function prochainIdDuTitre(): string {
             >
           </label>
           @if (etat() === 'erreur') {
-            <p role="alert" data-newsletter-erreur class="text-sm text-red-600">{{ erreur() }}</p>
+            <p role="alert" data-newsletter-erreur class="text-sm text-scheme-danger">
+              {{ erreur() }}
+            </p>
           }
           <button
             type="submit"

@@ -7,7 +7,7 @@ const CLOTURE: AsiliClosing = {
   faq: {
     kicker: 'Questions fréquentes',
     title: 'Avant de se lancer.',
-    items: [{ q: 'Pourquoi pas de grille de prix ?', a: 'Chaque besoin est cadré.' }],
+    items: [{ question: 'Pourquoi pas de grille de prix ?', reponse: 'Chaque besoin est cadré.' }],
   },
   cta: {
     kicker: 'Prêt à clarifier ?',

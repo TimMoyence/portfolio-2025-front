@@ -8,13 +8,11 @@
   --ink: #0c0902;
   --ink-rgb: 12, 9, 2;
   --ink-soft: #3c3529;
-  --ink-mute: #756c5d;
-  --ink-faint: #9c9384;
+  --ink-mute: #615848;
 
   --teal: #4fb3a2;
-  --teal-rgb: 79, 179, 162;
+  --teal-rgb: 39, 116, 101;
   --teal-deep: #277465;
-  --teal-clair: #6cc3b4;
   --teal-dark: #2f7f74;
   --teal-ink: #1c5a50;
 
@@ -35,12 +33,16 @@
   --glass-dark: rgba(255, 255, 255, 0.05);
   --glass-dark-line: rgba(255, 255, 255, 0.1);
 
-  --success: #6cae3e;
+  --success: #3f6e22;
   --warning: #e6884f;
-  --danger: #c0563c;
+  --danger: #a4402b;
 
-  --font-display: 'Instrument Serif', 'Indices Serif', Georgia, 'Times New Roman', serif;
-  --font-sans: 'Hanken Grotesk', system-ui, -apple-system, 'Indices Serif', sans-serif;
+  --font-display:
+    'Instrument Serif', 'Instrument Serif Secours', 'Indices Serif', Georgia, 'Times New Roman',
+    serif;
+  --font-sans:
+    'Hanken Grotesk', 'Hanken Grotesk Secours', system-ui, -apple-system, 'Indices Serif',
+    sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Indices Serif', monospace;
 
   --s-2: 12px;
@@ -68,9 +70,9 @@
   --text: var(--ink-soft);
   --text-strong: var(--ink);
   --text-mute: var(--ink-mute);
-  --accent: var(--teal);
+  --accent: var(--teal-deep);
   --accent-text: var(--teal-deep);
-  --on-accent: #06231f;
+  --on-accent: var(--cream);
   --border: var(--line);
 }
 
@@ -80,8 +82,8 @@
   --text: rgba(255, 255, 255, 0.86);
   --text-strong: #ffffff;
   --text-mute: rgba(255, 255, 255, 0.6);
-  --accent: var(--teal);
-  --accent-text: var(--teal);
-  --on-accent: #06231f;
+  --accent: var(--teal-deep);
+  --accent-text: var(--cream);
+  --on-accent: var(--cream);
   --border: var(--glass-line);
 }

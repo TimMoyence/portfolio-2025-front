@@ -2,7 +2,6 @@ import type { Type } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { isolateAnimReady } from '../dom/anim-ready';
 import { monterSurPlateforme } from '../environnement/plateforme';
 import { setupTestBed, type SetupTestBedOptions } from '../setup-test-bed';
 
@@ -22,8 +21,6 @@ export function montagePage<T>(
 ): () => ComponentFixture<T> {
   const { avantRendu, ...banc } = options;
   let fixture: ComponentFixture<T>;
-
-  isolateAnimReady();
 
   beforeEach(async () => {
     await setupTestBed({ router: true, ...banc, imports: [composant] }).compileComponents();

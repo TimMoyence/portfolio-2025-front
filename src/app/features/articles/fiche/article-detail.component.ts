@@ -24,8 +24,8 @@ import {
 import { APP_CONFIG } from '../../../core/config/app-config.token';
 import type { PublishedArticle } from '../../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
-import { urlAbsolue, urlLocalisee } from '../../../core/seo/chemins';
-import { NOM_DU_SITE } from '../../../core/seo/nom-du-site';
+import { urlAbsolue, urlLocalisee } from '../../../core/seo/pages/chemins';
+import { NOM_DU_SITE } from '../../../core/seo/pages/nom-du-site';
 import { SeoRegistryService } from '../../../core/seo/seo-registry.service';
 import { SeoService } from '../../../core/seo/seo.service';
 import { HTTP_RESPONSE_STATUS } from '../../../core/ssr/http-response-status';
@@ -203,9 +203,11 @@ export class ArticleDetailComponent {
       twitterCard: 'summary_large_image',
       index: true,
       hreflangs: { [this.locale]: canonicalUrl },
-      jsonLd: [
-        ...this.seoRegistry.getJsonLdDuSite(),
-        {
+      jsonLd: this.seoRegistry.getJsonLdDeLaFiche({
+        parent: '/articles',
+        nom: article.title,
+        url: canonicalUrl,
+        bloc: {
           '@context': 'https://schema.org',
           '@type': 'Article',
           headline: article.title,
@@ -213,10 +215,8 @@ export class ArticleDetailComponent {
           datePublished: article.published_at,
           dateModified: article.updated_at,
           mainEntityOfPage: canonicalUrl,
-          author: { '@type': 'Person', name: 'Tim Moyence' },
-          publisher: { '@type': 'Organization', name: NOM_DU_SITE },
         },
-      ],
+      }),
     });
   }
 

@@ -1,3 +1,4 @@
+import { texteDe } from '../../../../testing/texte/textes-dom';
 import { Component, input } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import type { EcranContent, PieceJointe } from '../../../../cours/content/types';
@@ -1967,10 +1968,6 @@ async function verifierQueToutTient(monte: EcranCadre, temoin: string): Promise<
   expect(monte.hote.querySelector(temoin)).not.toBeNull();
   expect(elementsPerdus(monte)).withContext('éléments coupés').toEqual([]);
   monte.detruire();
-}
-
-function texteDe(element: Element | null): string | undefined {
-  return element?.textContent?.replace(/\s+/g, ' ').trim();
 }
 
 describe('CoursPresentationComponent : pièce jointe d un écran', () => {

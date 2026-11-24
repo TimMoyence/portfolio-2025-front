@@ -1,10 +1,7 @@
 <section class="catalogue-tete">
   <div class="wrap">
-    <h1 i18n="@@formations.titre">Formations</h1>
-    <p class="lead" i18n="@@formations.phrase">
-      Les cours interactifs du BTS CG et du Bachelor, à suivre en séance, et des formations IA et
-      web gratuites.
-    </p>
+    <h1>{{ tete().titre }}</h1>
+    <p class="lead">{{ tete().phrase }}</p>
     <label
       class="catalogue-tete__libelle"
       for="recherche-de-formation"
@@ -20,34 +17,36 @@
       [value]="recherche()"
       (input)="chercher($event)"
     />
-    <div
-      class="catalogue-tete__puces"
-      role="group"
-      aria-label="Parcours"
-      i18n-aria-label="@@formations.parcours"
-    >
-      <button
-        type="button"
-        class="puce"
-        [attr.aria-pressed]="choisi() === null"
-        [disabled]="total() === 0"
-        (click)="choisir(null)"
+    @if (avecPuces()) {
+      <div
+        class="catalogue-tete__puces"
+        role="group"
+        aria-label="Parcours"
+        i18n-aria-label="@@formations.parcours"
       >
-        <ng-container i18n="@@formations.toutes">Toutes</ng-container>
-        <span class="nombre">{{ total() }}</span>
-      </button>
-      @for (puce of parcours(); track puce.id) {
         <button
           type="button"
           class="puce"
-          [attr.aria-pressed]="choisi() === puce.id"
-          [disabled]="puce.cartes.length === 0"
-          (click)="choisir(puce.id)"
+          [attr.aria-pressed]="choisi() === null"
+          [disabled]="total() === 0"
+          (click)="choisir(null)"
         >
-          {{ puce.titre }} <span class="nombre">{{ puce.cartes.length }}</span>
+          <ng-container i18n="@@formations.toutes">Toutes</ng-container>
+          <span class="nombre">{{ total() }}</span>
         </button>
-      }
-    </div>
+        @for (puce of parcours(); track puce.id) {
+          <button
+            type="button"
+            class="puce"
+            [attr.aria-pressed]="choisi() === puce.id"
+            [disabled]="puce.cartes.length === 0"
+            (click)="choisir(puce.id)"
+          >
+            {{ puce.titre }} <span class="nombre">{{ puce.cartes.length }}</span>
+          </button>
+        }
+      </div>
+    }
     <p class="catalogue-tete__statut" role="status" i18n="@@formations.nombre">
       {affichees(), plural,
         =0 {Aucune formation}
@@ -70,7 +69,6 @@
             class="formation"
             [class.formation--bonus]="formation.variant === 'bonus'"
             [class.formation--live]="formation.variant === 'live'"
-            appReveal
           >
             <span class="badge">{{ formation.badge }}</span>
             <h3>{{ formation.title }}</h3>

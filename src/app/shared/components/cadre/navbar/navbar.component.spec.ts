@@ -87,29 +87,6 @@ describe('NavbarComponent', () => {
       expect(style(formations as Element).lineHeight).toBe(style(lien as Element).lineHeight);
     });
 
-    it('devrait afficher le logo Asili (image + nom « Asili design »)', () => {
-      fixture.detectChanges();
-      const nav = fixture.nativeElement as HTMLElement;
-      const logo = nav.querySelector('.asili-logo');
-      expect(logo).toBeTruthy();
-      const img = logo?.querySelector('img');
-      expect(img).toBeTruthy();
-      expect(img?.getAttribute('alt')).toContain('Asili');
-      expect(logo?.querySelector('.asili-logo__name')?.textContent).toContain('Asili design');
-    });
-
-    it('devrait exposer le lien primaire « Services » vers /offer', () => {
-      fixture.detectChanges();
-      const offerLink = component.navLinks.find((link) => link.href === '/offer');
-      expect(offerLink?.label).toBe('Services');
-    });
-
-    it('devrait exposer le lien primaire « Projets » vers /projets', () => {
-      fixture.detectChanges();
-      const projetsLink = component.navLinks.find((link) => link.label === 'Projets');
-      expect(projetsLink?.href).toBe('/projets');
-    });
-
     it("ne devrait plus exposer l'ancien Atelier", () => {
       fixture.detectChanges();
       const nav = fixture.nativeElement as HTMLElement;
@@ -125,10 +102,10 @@ describe('NavbarComponent', () => {
       expect(lang?.querySelector('.asili-lang__switch')?.textContent).toContain('EN');
     });
 
-    it('devrait afficher le bouton login quand non connecte', () => {
+    it('devrait afficher le lien de connexion quand non connecte', () => {
       fixture.detectChanges();
       const nav = fixture.nativeElement as HTMLElement;
-      const loginBtn = nav.querySelector('button[aria-label="Espace utilisateur"]');
+      const loginBtn = nav.querySelector('a[aria-label="Espace utilisateur"]');
       expect(loginBtn).toBeTruthy();
     });
 
@@ -143,7 +120,7 @@ describe('NavbarComponent', () => {
       fixture.detectChanges();
 
       const nav = fixture.nativeElement as HTMLElement;
-      const loginBtn = nav.querySelector('button[aria-label="Espace utilisateur"]');
+      const loginBtn = nav.querySelector('a[aria-label="Espace utilisateur"]');
       expect(loginBtn).toBeNull();
 
       const userMenuBtn = nav.querySelector('button[aria-label="Menu utilisateur"]');

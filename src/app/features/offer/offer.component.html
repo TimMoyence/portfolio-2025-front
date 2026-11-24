@@ -1,61 +1,55 @@
-<app-asili-hero [kicker]="heroKicker" [lead]="heroLead" [metaRows]="heroMeta">
-  <ng-container title>
-    <span data-testid="hero-title">
-      {{ heroTitlePre }}
-      <span class="accent">{{ heroTitleAccent }}</span>
-      {{ heroTitlePost }}
-    </span>
-  </ng-container>
-</app-asili-hero>
+<app-asili-hero [titre]="titre" [kicker]="heroKicker" [lead]="heroLead" />
 
-<section class="section-pad" data-testid="modes-section">
+<section class="section-pad" aria-labelledby="formules-titre">
   <div class="wrap">
-    <div class="modes">
-      @for (mode of modes; track mode.num) {
-        <a class="mode" [routerLink]="mode.link" appReveal [appRevealDelay]="mode.revealDelay">
-          <span class="mode-n">{{ mode.num }}</span>
-          <h3>{{ mode.title }}</h3>
-          <p>{{ mode.desc }}</p>
-          <span class="mode-go" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M5 12h14M13 6l6 6-6 6"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-        </a>
+    <h2 id="formules-titre" class="sr-only" i18n="@@offreFormulesTitre">Les formules</h2>
+    <div class="formules">
+      @for (formule of formules; track formule.titre) {
+        <article class="formule">
+          <h3>{{ formule.titre }}</h3>
+          <p class="formule-promesse">{{ formule.promesse }}</p>
+          <p class="formule-prix">
+            @for (morceau of formule.prix; track morceau; let premier = $first) {
+              @if (!premier) {
+                <span aria-hidden="true"> · </span>
+              }
+              <span>{{ morceau }}</span>
+            }
+          </p>
+          <a class="btn btn-ghost" routerLink="/contact" [queryParams]="{ besoin: formule.besoin }">
+            <span i18n="@@offreFormuleLien">Parler de ce projet</span>
+            <span class="arrow" aria-hidden="true"> →</span>
+          </a>
+        </article>
       }
     </div>
   </div>
 </section>
 
-<app-asili-method [steps]="methodSteps" [kicker]="methodKicker" [intro]="methodIntro">
-  <h2 heading class="h-lg">
-    <ng-container i18n="@@offerMethodHeading">Comment on avance,<br />concrètement.</ng-container>
-  </h2>
-</app-asili-method>
+<section class="inclus section-pad" aria-labelledby="inclus-titre">
+  <div class="wrap inclus-grille">
+    <h2 id="inclus-titre" class="h-lg" i18n="@@offreInclusTitre">Inclus</h2>
+    <ul>
+      <li i18n="@@offreInclusRedaction">Rédaction avec vous</li>
+      <li i18n="@@offreInclusReferencement">Référencement Google &amp; IA</li>
+      <li i18n="@@offreInclusMiseEnLigne">Mise en ligne</li>
+      <li i18n="@@offreInclusPriseEnMain">Prise en main</li>
+    </ul>
+  </div>
+</section>
 
-<section class="section-pad" data-testid="diff-section">
+<section class="section-pad" aria-labelledby="diagnostic-titre">
   <div class="wrap">
-    <div class="sec-head" appReveal>
-      <div>
-        <span class="kicker">{{ diffKicker }}</span>
-        <h2 class="h-lg" i18n="@@offerDiffHeading">Trois engagements<br />qui changent tout.</h2>
-      </div>
-    </div>
-    <div class="diff-grid">
-      @for (diff of diffs; track diff.num) {
-        <article class="diff" appReveal [appRevealDelay]="diff.revealDelay">
-          <span class="diff-n">{{ diff.num }}</span>
-          <h3>{{ diff.title }}</h3>
-          <p>{{ diff.desc }}</p>
-        </article>
-      }
-    </div>
+    <a class="diagnostic" routerLink="/growth-audit">
+      <span id="diagnostic-titre" class="diagnostic-titre" i18n="@@offreDiagnosticTitre"
+        >Diagnostic gratuit de votre site actuel</span
+      >
+      <span class="diagnostic-texte" i18n="@@offreDiagnosticTexte"
+        >Vous avez déjà un site ? Je regarde ce qui freine vos visites et vos appels, et je vous dis
+        quoi corriger d’abord.</span
+      >
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
   </div>
 </section>
 

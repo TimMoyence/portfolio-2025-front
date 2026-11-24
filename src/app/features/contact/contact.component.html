@@ -1,13 +1,6 @@
 <app-hero-section [contenu]="hero" />
 
 <section class="px-[5%] py-6 md:py-8 lg:py-12">
-  <div class="container mb-6 md:mb-8">
-    <p class="mb-3 font-semibold md:mb-4">{{ contactInfo.label }}</p>
-    <h2 class="mb-5 heading-h2 text-h2 md:mb-6" i18n="@@contactFormHeading">
-      Formulaire de contact
-    </h2>
-    <p class="md:text-md">{{ contactInfo.description }}</p>
-  </div>
   <div
     class="container grid grid-cols-1 items-start gap-y-12 md:grid-flow-row md:grid-cols-3 md:gap-x-12 lg:grid-flow-col lg:gap-x-20 lg:gap-y-16"
   >
@@ -17,6 +10,83 @@
       (ngSubmit)="handleContactSubmit(contactFormRef)"
     >
       <input appHoneypot name="website" [(ngModel)]="contactForm.website" />
+
+      <div class="grid w-full gap-2 md:col-span-2">
+        <label for="besoin" class="font-medium text-scheme-text" i18n="@@contactFormBesoin">
+          Votre besoin
+        </label>
+
+        <div
+          class="rounded-form border border-scheme-border w-full font-medium flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
+          [class.border-scheme-danger]="enErreur(besoinCtrl)"
+        >
+          <select
+            id="besoin"
+            name="besoin"
+            required
+            [(ngModel)]="contactForm.besoin"
+            #besoinCtrl="ngModel"
+            [attr.aria-invalid]="enErreur(besoinCtrl) || null"
+            [attr.aria-describedby]="enErreur(besoinCtrl) ? 'besoin-erreur' : null"
+            class="relative z-10 w-full appearance-none bg-transparent px-3 py-2 pr-12 font-medium focus:outline-none"
+            [ngClass]="contactForm.besoin ? 'text-scheme-text' : 'text-scheme-text-muted'"
+          >
+            <option value="" disabled i18n="@@contactFormBesoinPlaceholder">
+              Choisissez votre besoin
+            </option>
+
+            @for (besoin of besoins; track besoin.id) {
+              <option [value]="besoin.id">{{ besoin.libelle }}</option>
+            }
+          </select>
+        </div>
+
+        @if (enErreur(besoinCtrl)) {
+          <p
+            appFieldErrors
+            role="alert"
+            id="besoin-erreur"
+            class="mt-1 text-sm md:text-base text-scheme-danger"
+            [errors]="besoinCtrl.errors"
+          ></p>
+        }
+      </div>
+
+      <fieldset class="grid w-full grid-cols-2 gap-x-3 gap-y-5 py-3 md:col-span-2 md:py-4">
+        <legend class="mb-3 md:mb-4 font-medium text-scheme-text" i18n="@@contactFormActivite">
+          Votre activité
+        </legend>
+        @let activite = contactFormRef.controls['role'];
+        @for (role of activites; track role) {
+          <label
+            for="{{ role }}"
+            class="flex items-center justify-between space-x-2 gap-2 rounded border border-scheme-border p-3 text-sm font-medium shadow-sm transition-colors hover:bg-scheme-surface-hover has-checked:border-scheme-accent has-checked:ring-1 has-checked:ring-scheme-accent"
+          >
+            <p class="text-scheme-text">{{ role }}</p>
+            <input
+              [(ngModel)]="contactForm.role"
+              type="radio"
+              name="role"
+              required
+              [value]="role"
+              id="{{ role }}"
+              [attr.aria-invalid]="enErreur(activite) || null"
+              [attr.aria-describedby]="enErreur(activite) ? 'role-erreur' : null"
+              class="size-5 border-scheme-border"
+            />
+          </label>
+        }
+        @if (enErreur(activite)) {
+          <p
+            appFieldErrors
+            role="alert"
+            id="role-erreur"
+            class="col-span-2 mt-1 text-sm md:text-base text-scheme-danger"
+            [errors]="activite.errors"
+          ></p>
+        }
+      </fieldset>
+
       <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
         @for (field of contactFields; track field.key) {
           <div class="relative">
@@ -24,6 +94,7 @@
               [type]="field.type"
               [id]="field.key"
               [name]="field.key"
+              [attr.autocomplete]="field.autocomplete"
               [(ngModel)]="contactForm[field.key]"
               [required]="field.required"
               [appBornesDeSaisie]="field.bornes ?? null"
@@ -31,12 +102,11 @@
               placeholder=" "
               class="peer block w-full rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
               #control="ngModel"
-              [class.border-red-500]="control.invalid && (control.touched || isContactSubmitted)"
+              [attr.aria-invalid]="enErreur(control) || null"
+              [attr.aria-describedby]="enErreur(control) ? field.key + '-erreur' : null"
+              [class.border-scheme-danger]="enErreur(control)"
             />
 
-            <!-- La couleur est portee par le seul [ngClass] : `text-red-500` en
-                 [class.] serait inerte, les utilitaires `text-scheme-*` etant
-                 emis apres lui dans la feuille et de meme specificite (0,1,0). -->
             <label
               [for]="field.key"
               class="absolute left-3 px-1 text-sm font-medium pointer-events-none transition-all duration-200 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-focus:-top-3 peer-focus:text-sm peer-focus:text-scheme-accent peer-focus:bg-scheme-background"
@@ -44,8 +114,8 @@
                 (contactForm[field.key]
                   ? '-top-3 text-sm md:text-base bg-scheme-background '
                   : 'top-2 text-sm bg-transparent ') +
-                (control.invalid && (control.touched || isContactSubmitted)
-                  ? 'text-red-500'
+                (enErreur(control)
+                  ? 'text-scheme-danger'
                   : contactForm[field.key]
                     ? 'text-scheme-accent'
                     : 'text-scheme-text')
@@ -57,90 +127,17 @@
               }
             </label>
 
-            @if (control.invalid && (control.touched || isContactSubmitted)) {
+            @if (enErreur(control)) {
               <p
                 appFieldErrors
-                class="mt-1 text-sm md:text-base text-red-500"
+                role="alert"
+                [id]="field.key + '-erreur'"
+                class="mt-1 text-sm md:text-base text-scheme-danger"
                 [errors]="control.errors"
                 [phone]="field.format === 'telephone'"
               ></p>
             }
           </div>
-        }
-      </div>
-
-      <div class="grid w-full gap-2">
-        <label for="subject" class="font-medium text-scheme-text" i18n="@@contactFormSubject">
-          Sujet de votre demande
-        </label>
-
-        <div
-          class="rounded-form border border-scheme-border w-full font-medium flex items-center focus:border-scheme-accent focus:outline-none transition-colors appearance-none bg-[url('/assets/icons/chevron-down.svg')] bg-no-repeat bg-[right_1rem_center] bg-[length:1rem_1rem]"
-          [class.border-red-500]="
-            subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)
-          "
-        >
-          <select
-            id="subject"
-            name="subject"
-            required
-            [(ngModel)]="contactForm.subject"
-            #subjectCtrl="ngModel"
-            class="relative z-10 w-full appearance-none bg-transparent px-3 py-2 pr-12 font-medium focus:outline-none"
-            [ngClass]="contactForm.subject ? 'text-scheme-text' : 'text-scheme-text-muted'"
-          >
-            <option value="" disabled i18n="@@contactFormSubjectPlaceholder">
-              Sélectionnez un sujet
-            </option>
-
-            @for (subject of contactInfo.subjects; track $index) {
-              <option [value]="subject">{{ subject }}</option>
-            }
-          </select>
-        </div>
-
-        @if (subjectCtrl.invalid && (subjectCtrl.touched || isContactSubmitted)) {
-          <p class="text-sm md:text-base text-red-500">
-            <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
-          </p>
-        }
-      </div>
-
-      <div class="grid w-full items-center py-3 md:py-4">
-        <span class="mb-3 md:mb-4 font-medium text-scheme-text" i18n="@@contactFormRole"
-          >Qui êtes-vous ?</span
-        >
-        <fieldset class="space-y-3 grid grid-cols-2 gap-x-3 gap-y-5">
-          <legend class="sr-only" i18n="@@contactFormRoleLegend">Sélectionnez votre rôle</legend>
-          @for (role of contactInfo.roles; track $index) {
-            <div>
-              <label
-                for="{{ role }}"
-                class="flex items-center justify-between space-x-2 gap-2 rounded border border-scheme-border p-3 text-sm font-medium shadow-sm transition-colors hover:bg-scheme-surface-hover has-checked:border-scheme-accent has-checked:ring-1 has-checked:ring-scheme-accent"
-              >
-                <div>
-                  <p class="text-scheme-text">{{ role }}</p>
-                </div>
-                <input
-                  [(ngModel)]="contactForm.role"
-                  type="radio"
-                  name="role"
-                  required
-                  [value]="role"
-                  id="{{ role }}"
-                  class="size-5 border-scheme-border"
-                />
-              </label>
-            </div>
-          }
-        </fieldset>
-
-        @if (
-          contactFormRef.controls['role'] &&
-          contactFormRef.controls['role'].invalid &&
-          (contactFormRef.controls['role'].touched || isContactSubmitted)
-        ) {
-          <ng-container *ngTemplateOutlet="champObligatoire" />
         }
       </div>
 
@@ -154,9 +151,9 @@
           placeholder=" "
           class="peer block w-full min-h-[11.25rem] md:min-h-[17rem] rounded-form border border-scheme-border px-3 py-2 focus:border-scheme-accent focus:outline-none"
           #messageCtrl="ngModel"
-          [class.border-red-500]="
-            messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)
-          "
+          [attr.aria-invalid]="enErreur(messageCtrl) || null"
+          [attr.aria-describedby]="enErreur(messageCtrl) ? 'message-erreur' : null"
+          [class.border-scheme-danger]="enErreur(messageCtrl)"
         ></textarea>
 
         <label
@@ -166,47 +163,57 @@
             (contactForm.message
               ? '-top-3 text-sm md:text-base bg-scheme-background '
               : 'top-2 text-sm bg-transparent ') +
-            (messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)
-              ? 'text-red-500'
+            (enErreur(messageCtrl)
+              ? 'text-scheme-danger'
               : contactForm.message
                 ? 'text-scheme-accent'
                 : 'text-scheme-text')
           "
           i18n="@@contactFormMessageLabel"
         >
-          Votre message
+          Votre projet
         </label>
 
-        @if (messageCtrl.invalid && (messageCtrl.touched || isContactSubmitted)) {
+        @if (enErreur(messageCtrl)) {
           <p
             appFieldErrors
-            class="mt-1 text-sm md:text-base text-red-500"
+            role="alert"
+            id="message-erreur"
+            class="mt-1 text-sm md:text-base text-scheme-danger"
             [errors]="messageCtrl.errors"
           ></p>
         }
       </div>
 
-      <label class="flex col-span-1 md:col-span-2 items-center space-x-2 text-sm md:text-base">
-        <input
-          type="checkbox"
-          name="terms"
-          required
-          [(ngModel)]="contactForm.terms"
-          #termsCtrl="ngModel"
-        />
-        <span class="text-scheme-text" i18n="@@contactFormTerms">J'accepte les conditions</span>
-      </label>
-      @if (termsCtrl.invalid && (termsCtrl.touched || isContactSubmitted)) {
-        <ng-container *ngTemplateOutlet="champObligatoire" />
-      }
+      <div class="grid col-span-1 md:col-span-2 gap-1">
+        <label class="flex items-center space-x-2 text-sm md:text-base">
+          <input
+            type="checkbox"
+            name="terms"
+            required
+            [(ngModel)]="contactForm.terms"
+            #termsCtrl="ngModel"
+            [attr.aria-invalid]="enErreur(termsCtrl) || null"
+            [attr.aria-describedby]="enErreur(termsCtrl) ? 'terms-erreur' : null"
+          />
+          <span class="text-scheme-text" i18n="@@contactFormTerms">J'accepte les conditions</span>
+        </label>
+        @if (enErreur(termsCtrl)) {
+          <p
+            appFieldErrors
+            role="alert"
+            id="terms-erreur"
+            class="mt-1 text-sm md:text-base text-scheme-danger"
+            [errors]="termsCtrl.errors"
+          ></p>
+        }
+      </div>
 
       <div class="grid col-span-1 md:col-span-2 gap-4">
         <button
           type="submit"
           class="inline-flex items-center justify-center gap-3 rounded-button border border-scheme-border bg-scheme-accent px-6 py-3 text-scheme-on-accent transition-all duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-60 hover:bg-scheme-accent-hover"
-          i18n-title
-          title="Envoyer"
-          [disabled]="isContactLoading || !contactFormRef.form.valid"
+          [disabled]="isContactLoading"
           [attr.aria-busy]="isContactLoading"
         >
           @if (!isContactLoading) {
@@ -217,18 +224,18 @@
         </button>
 
         @if (contactErrorMessage) {
-          <p class="text-sm text-red-500">
+          <p class="text-sm text-scheme-danger" role="alert">
             {{ contactErrorMessage }}
           </p>
         }
         @if (contactSuccessMessage) {
-          <p class="text-sm text-green-600">
+          <p class="text-sm text-scheme-success" role="status">
             {{ contactSuccessMessage }}
           </p>
         }
 
         <p class="text-sm md:text-base text-scheme-text-muted" i18n="@@contactFormResponseTime">
-          Réponse sous 48h ouvrées.
+          Réponse sous 48 h ouvrées.
         </p>
       </div>
     </form>
@@ -256,9 +263,9 @@
           class="text-sm md:text-base text-scheme-text-muted leading-relaxed"
           i18n="@@contactFaq1A"
         >
-          Je réponds sous 48h ouvrées, du lundi au vendredi. Les demandes reçues le week-end sont
-          traitées le lundi matin. Pour les audits Growth, la synthèse IA arrive sous 5 minutes et
-          l'analyse humaine sous 24h.
+          Je réponds sous 48 h ouvrées, du lundi au vendredi. Les demandes reçues le week-end sont
+          traitées le lundi matin. Pour le diagnostic gratuit, la première analyse arrive en
+          quelques minutes et ma relecture sous 24 h.
         </p>
       </div>
       <div>
@@ -269,9 +276,9 @@
           class="text-sm md:text-base text-scheme-text-muted leading-relaxed"
           i18n="@@contactFaq2A"
         >
-          Applications web sur mesure (Angular, NestJS, TypeScript), audits SEO/IA, intégrations
-          OpenAI / Langchain / agents IA, accompagnement d'équipes sur l'outillage IA. TPE, PME,
-          solopreneurs et équipes de moins de 20 personnes en priorité.
+          Des sites web qui font appeler, des apps mobiles, des outils sur mesure quand un site ne
+          suffit plus, et des formations pour rendre votre équipe autonome. Artisans, commerces,
+          indépendants et PME en priorité.
         </p>
       </div>
       <div>
@@ -295,9 +302,9 @@
           class="text-sm md:text-base text-scheme-text-muted leading-relaxed"
           i18n="@@contactFaq4A"
         >
-          Vous remplissez ce formulaire avec le sujet de votre demande. Je vous réponds sous 48h
-          avec soit un devis direct (petit projet), soit une proposition d'appel découverte de 30
-          minutes gratuit pour cadrer le besoin et vous envoyer une estimation précise.
+          Vous remplissez ce formulaire avec votre besoin. Je vous réponds sous 48 h ouvrées avec
+          soit un devis direct (petit projet), soit une proposition d'appel découverte de 30 minutes
+          gratuit pour cadrer le besoin et vous envoyer une estimation précise.
         </p>
       </div>
     </div>
@@ -305,9 +312,3 @@
 </section>
 
 <app-cta-contact [leadParagraphs]="contactSection.leadParagraphs"></app-cta-contact>
-
-<ng-template #champObligatoire>
-  <p class="mt-1 text-sm md:text-base text-red-500">
-    <span i18n="auth.error.required@@authErrorRequired">Ce champ est obligatoire.</span>
-  </p>
-</ng-template>

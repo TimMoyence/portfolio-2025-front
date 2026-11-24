@@ -77,19 +77,23 @@ function siteDe(url: string): string {
     </a>
   `,
   styles: `
+    @use '../../../styles-shared/composants/survol';
     .provenance {
       display: inline-flex;
       flex-wrap: wrap;
       align-items: baseline;
       gap: 0 0.4rem;
-      color: var(--teal-ink);
+      color: var(--teal-deep);
       font-size: 0.8125rem;
       text-decoration: none;
     }
-    .provenance:hover .provenance__publication,
-    .provenance:focus-visible .provenance__publication {
-      text-decoration: underline;
-      text-underline-offset: 3px;
+    .provenance {
+      @include survol.survol-ou-focus {
+        .provenance__publication {
+          text-decoration: underline;
+          text-underline-offset: 3px;
+        }
+      }
     }
     .provenance__publication {
       font-weight: 600;

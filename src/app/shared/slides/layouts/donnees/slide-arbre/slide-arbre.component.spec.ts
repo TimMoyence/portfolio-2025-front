@@ -1,3 +1,4 @@
+import { texteDe as texteDuNoeud } from '../../../../../../testing/texte/textes-dom';
 import { INSTANTANE_B2_09 } from '../../../../../../testing/fixtures/instantanes/b2/instantane-b2-09';
 import {
   monterUnRendu,
@@ -19,7 +20,7 @@ const monterALaLargeur = (
 ): Promise<HTMLElement> => monterUnRendu(SlideArbreComponent, props, largeur);
 
 const texteDe = (element: Element | null, selecteur: string): string =>
-  element?.querySelector(selecteur)?.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+  texteDuNoeud(element?.querySelector(selecteur));
 
 const lignes = (racine: HTMLElement, selecteur: string): string[] =>
   [...racine.querySelectorAll(selecteur)].map((element) =>

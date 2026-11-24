@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { annonces } from '../../../../../testing/dom/annonces';
 import { aLaPage } from '../../../../../testing/page/chemin-de-la-page';
 import { LEAD_MAGNET_PORT } from '../../../../core/ports/lead-magnet.port';
 import {
@@ -98,6 +99,18 @@ describe('ToolkitFormComponent', () => {
 
     expect(enEchec.componentInstance.state()).toBe('error');
     expect(enEchec.nativeElement.querySelector('[data-toolkit-error]')).not.toBeNull();
+  });
+
+  it('annonce l échec par une alerte et le succès par un statut', async () => {
+    await soumettre(fixture);
+    expect(annonces(fixture.nativeElement, 'status').join(' ')).toContain('marie@example.com');
+
+    TestBed.resetTestingModule();
+    const enEchec = await monter(createLeadMagnetPortStubWithError());
+    await soumettre(enEchec);
+    expect(annonces(enEchec.nativeElement, 'alert')).toEqual([
+      enEchec.nativeElement.querySelector('[data-toolkit-error]')?.textContent?.trim(),
+    ]);
   });
 
   for (const { localeId, chemin } of [

@@ -1024,7 +1024,7 @@ test('ci-portes : eslint ignore chaque chemin que git ignore et aucun voisin, po
   );
 });
 
-test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9 d accessibilite et garde ses rapports sur le runner', () => {
+test('ci-portes : Lighthouse mobile est joue apres le build du job e2e, bloque sur l acquis et garde ses rapports sur le runner', () => {
   const { scripts } = lireContexte();
   const etapes = etapesDuJob(readFileSync(CHEMIN_WORKFLOW, 'utf8'), JOB_E2E);
   const indexBuild = etapes.findIndex((etape) => /\bnpm run build\b/.test(etape.commande));
@@ -1040,23 +1040,25 @@ test('ci-portes : Lighthouse est joue apres le build du job e2e, bloque sous 0,9
     indexBuild !== -1 && indexLighthouse !== -1 && indexBuild < indexLighthouse,
     `ci-portes : le job « ${JOB_E2E} » doit jouer « npm run lighthouse » apres le build (le serveur SSR lit dist/).`,
   );
-  assert.deepEqual(
-    configuration.assert.assertions['categories:accessibility'],
-    ['error', { minScore: 0.9 }],
-    'ci-portes : une accessibilite sous 0,9 doit faire echouer Lighthouse, donc le deploiement.',
+  assert.equal(
+    configuration.collect.settings.preset,
+    undefined,
+    'ci-portes : Lighthouse mesure l accueil en mobile, son reglage par defaut, sans preset ordinateur.',
   );
   assert.deepEqual(
+    configuration.assert.assertions,
     {
-      performance: configuration.assert.assertions['categories:performance'],
-      bonnesPratiques: configuration.assert.assertions['categories:best-practices'],
-      seo: configuration.assert.assertions['categories:seo'],
+      'categories:accessibility': ['error', { minScore: 0.9 }],
+      'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+      'uses-responsive-images': ['error', { maxLength: 0 }],
+      'color-contrast': ['error', { minScore: 1 }],
+      'uses-text-compression': ['error', { maxLength: 0 }],
+      'categories:performance': ['warn', { minScore: 0.8 }],
+      'largest-contentful-paint': ['warn', { maxNumericValue: 4000 }],
+      'categories:best-practices': ['warn', { minScore: 0.8 }],
+      'categories:seo': ['warn', { minScore: 0.9 }],
     },
-    {
-      performance: ['warn', { minScore: 0.8 }],
-      bonnesPratiques: ['warn', { minScore: 0.8 }],
-      seo: ['warn', { minScore: 0.9 }],
-    },
-    'ci-portes : performance, bonnes pratiques et SEO avertissent sous leur seuil, sans bloquer.',
+    'ci-portes : CLS, images, contraste, compression et accessibilite bloquent le deploiement ; performance, LCP, bonnes pratiques et SEO avertissent.',
   );
   assert.deepEqual(
     configuration.upload,

@@ -1,5 +1,4 @@
-@mixin deck-tokens($accent, $accent-dark) {
-  --accent: #{$accent};
+@mixin deck-tokens($accent-dark) {
   --accent-dark: #{$accent-dark};
   --slide-deck-bg: var(--bg, var(--cream, #fffaf2));
   --card-bg: var(--surface, var(--ivory, #fbf3e6));

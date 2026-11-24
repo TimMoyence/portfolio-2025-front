@@ -4,8 +4,14 @@ import {
   provideClientHydration,
   withEventReplay,
   withHttpTransferCacheOptions,
+  withI18nSupport,
 } from '@angular/platform-browser';
-import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withInMemoryScrolling,
+  withViewTransitions,
+} from '@angular/router';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { AuthHttpAdapter } from './core/adapters/auth/auth-http.adapter';
@@ -25,6 +31,7 @@ import { FORMATIONS_PORT } from './core/ports/formations.port';
 import { LEAD_MAGNET_PORT } from './core/ports/lead-magnet.port';
 import { NEWSLETTER_PORT } from './core/ports/newsletter.port';
 import { PRESENTATION_PORT } from './core/ports/presentation.port';
+import { transitionDeVignette } from './features/projets/fiche/transition-de-vignette';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,9 +42,14 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'enabled',
         anchorScrolling: 'enabled',
       }),
+      withViewTransitions({
+        skipInitialTransition: true,
+        onViewTransitionCreated: transitionDeVignette,
+      }),
     ),
     provideClientHydration(
       withEventReplay(),
+      withI18nSupport(),
       withHttpTransferCacheOptions({
         includePostRequests: false,
         filter: (req) => !req.url.includes('/auth/'),

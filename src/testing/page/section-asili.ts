@@ -1,7 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import type { Provider, Type } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
-import { isolateAnimReady } from '../dom/anim-ready';
 import { monterSurPlateforme, type PlateformeDeRendu } from '../environnement/plateforme';
 
 export type EntreesDeSection = Readonly<Record<string, unknown>>;
@@ -24,8 +23,6 @@ export function decrireSectionAsili<T>(
     return fixture;
   };
 
-  isolateAnimReady();
-
   it('se cree', () => {
     const fixture = monter();
     fixture.detectChanges();
@@ -40,11 +37,12 @@ export function decrireRenduServeur<T>(
   verifier: (hote: HTMLElement) => void,
   entrees: EntreesDeSection = {},
 ): void {
-  it("reste rendu cote serveur (SSR fail-open : pas d'anim-ready)", () => {
+  it('reste rendu cote serveur', () => {
     const fixture = monter('server', entrees);
     fixture.detectChanges();
-    verifier(fixture.nativeElement as HTMLElement);
-    expect(document.documentElement.classList).not.toContain('anim-ready');
+    const hote = fixture.nativeElement as HTMLElement;
+    expect(hote.children.length).withContext('le rendu serveur est vide').toBeGreaterThan(0);
+    verifier(hote);
   });
 }
 

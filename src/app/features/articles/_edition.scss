@@ -1,3 +1,5 @@
+@use '../../styles-shared/mise-en-page/heads';
+
 @mixin point-dore {
   content: '';
   width: 6px;
@@ -14,7 +16,7 @@
 }
 
 @mixin focus-encre {
-  outline: 2px solid var(--teal-ink);
+  outline: 2px solid var(--teal-deep);
   outline-offset: 2px;
 }
 
@@ -40,4 +42,9 @@
   &:first-child {
     border-top: 0;
   }
+}
+
+@mixin titre-d-edition($signes) {
+  max-width: heads.largeur-de-titre($signes);
+  text-wrap: balance;
 }

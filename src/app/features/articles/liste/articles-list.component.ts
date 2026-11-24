@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import type { ArticleListResponse, PublishedArticle } from '../../../core/models/article.model';
 import { ArticleHttpAdapter } from '../../../core/adapters/article-http.adapter';
 import { DateDuSitePipe, JourDuSitePipe } from '../../../shared/pipes/date-du-site.pipe';
-import { AsiliHeroComponent } from '../../../shared/sections';
+import { AsiliHeroComponent, type MorceauDeTitre } from '../../../shared/sections';
 import { ArticlesCtaComponent } from '../articles-cta.component';
 import { NewsletterFormComponent } from '../../../shared/components/sections/newsletter-form/newsletter-form.component';
 import { injecterLocaleDeLaPage } from '../../../core/config/locale-de-la-page';
@@ -37,6 +37,18 @@ function editionDuJournal(article: PublishedArticle): EditionDuJournal {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticlesListComponent {
+  protected readonly titre: readonly MorceauDeTitre[] = [
+    {
+      texte: $localize`:Titre des articles, première ligne@@articlesListHeroTitreDebut:Des idées qui servent`,
+    },
+    {
+      texte: $localize`:Titre des articles, en accent@@articlesListHeroTitreAccent:le terrain`,
+      accent: true,
+      aLaLigne: true,
+    },
+    { texte: '.' },
+  ];
+
   protected readonly heroKicker = $localize`:@@articlesListHeroKicker:Articles · Morning-Brief`;
   protected readonly heroLead = $localize`:@@articlesListHeroLead:Une veille sourcée, transformée en décisions et en pistes concrètes pour les équipes qui veulent utiliser l’IA sans perdre le fil.`;
   protected readonly ctaKicker = $localize`:@@articlesListCtaKicker:Une question concrète ?`;

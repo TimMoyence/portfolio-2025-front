@@ -1,31 +1,26 @@
-<app-asili-hero [kicker]="heroKicker" [lead]="heroLead" [metaRows]="heroMeta">
-  <ng-container title>
-    {{ heroTitlePre }}<br />
-    {{ heroTitleAccent }} <span class="accent">{{ heroTitlePost }}</span>
-  </ng-container>
-</app-asili-hero>
+<app-asili-hero [titre]="titre" [kicker]="heroKicker" [lead]="heroLead" [metaRows]="heroMeta" />
 
 <section class="section-pad">
   <div class="wrap intro-split">
-    <div class="portrait" appReveal>
+    <div class="portrait">
       @if (portraitImage) {
-        <img [src]="portraitImage" [alt]="portraitAlt" loading="lazy" decoding="async" />
+        <img [ngSrc]="portraitImage" [alt]="portraitAlt" fill priority />
       } @else {
         <div class="placeholder">
           <span>{{ portraitPlaceholder }}</span>
         </div>
       }
     </div>
-    <div class="intro-body" appReveal [appRevealDelay]="1">
+    <div class="intro-body">
       <p i18n="@@presentationIntroP1">
         J'ai d'abord managé des équipes pendant six ans chez Decathlon. Le terrain, les gens, les
         priorités. Puis je me suis reconverti au code — en gardant cette obsession :
         <strong>comprendre le besoin réel avant de produire quoi que ce soit.</strong>
       </p>
       <p i18n="@@presentationIntroP2">
-        Aujourd'hui je conçois des applications en production, avec de vrais utilisateurs, sous une
-        exigence d'ingénierie forte : DDD, Clean Architecture, TDD obligatoire, CI/CD complet. L'IA
-        est mon copilote au quotidien — Claude Code, LangChain, agents autonomes — jamais un gadget.
+        Aujourd'hui je crée des sites et des applications utilisés chaque jour par de vrais clients,
+        avec la même exigence : un test avant chaque changement, rien en ligne sans relecture. L'IA
+        m'aide à aller plus vite, au quotidien — jamais à la place du jugement.
       </p>
       <p i18n="@@presentationIntroP3">
         Je crois aux outils qui <strong>durent</strong>, aux interfaces qu'on comprend sans manuel,
@@ -43,7 +38,7 @@
   </h2>
   <div class="skills-grid">
     @for (skill of skills; track skill.title) {
-      <article class="skill" appReveal [appRevealDelay]="skill.revealDelay">
+      <article class="skill">
         <div class="s-ic" aria-hidden="true">
           @let icone = icones[skill.icon];
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -80,7 +75,7 @@
   [rule]="aiMethodRule"
   [ruleWho]="aiMethodRuleWho"
 >
-  <h2 heading class="h-xl ai-method-title" style="max-width: 18ch">
+  <h2 heading class="h-xl ai-method-title">
     <ng-container i18n="@@presentationAiMethodHeading"
       >L'IA amplifie une expertise. Elle ne la <em>remplace pas</em>.</ng-container
     >
@@ -96,7 +91,7 @@
   </a>
   <ol class="timeline">
     @for (item of milestones; track item.title) {
-      <li class="tl-item" appReveal>
+      <li class="tl-item">
         <div class="tl-year">{{ item.year }}</div>
         <div>
           <h3>{{ item.title }}</h3>

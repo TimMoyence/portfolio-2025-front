@@ -1,5 +1,6 @@
 @use '../../../slide-section' as slide;
 @use '../../../slide-toile' as toile;
+@use '../../../../../styles-shared/composants/survol';
 
 .slide-image {
   display: grid;
@@ -107,7 +108,7 @@
     box-shadow 0.2s ease,
     transform 0.2s ease;
 
-  &:hover {
+  @include survol.survol {
     border-color: var(--accent, #4fb3a2);
     box-shadow: 0 8px 24px rgba(var(--ink-rgb), 0.06);
     transform: translateY(-1px);

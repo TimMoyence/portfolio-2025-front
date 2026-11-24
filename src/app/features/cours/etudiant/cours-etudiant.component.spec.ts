@@ -1,3 +1,4 @@
+import { texteDe } from '../../../../testing/texte/textes-dom';
 import type { DebugElement } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
@@ -441,8 +442,8 @@ describe('CoursEtudiantComponent', () => {
     expect(lire(fixture, 'etudiant-hors-ligne')).toBeNull();
   }
 
-  function texteDeLaFile(fixture: Fixture): string | undefined {
-    return lire(fixture, 'etudiant-hors-ligne')?.textContent?.replace(/\s+/g, ' ').trim();
+  function texteDeLaFile(fixture: Fixture): string {
+    return texteDe(lire(fixture, 'etudiant-hors-ligne'));
   }
 
   async function laisserPasserLeReseau(fixture: Fixture): Promise<void> {
@@ -822,7 +823,7 @@ describe('CoursEtudiantComponent', () => {
     const refus = lire(fixture, 'etudiant-flux-refuse');
 
     expect(refus?.getAttribute('data-motif')).toBe('saturation');
-    expect(refus?.textContent?.replace(/\s+/g, ' ').trim()).toBe(
+    expect(texteDe(refus)).toBe(
       'Le suivi en direct est momentanément saturé (statut 429) : il reprendra de lui-même, sans rien à faire de votre côté.',
     );
   });
@@ -2947,7 +2948,7 @@ describe('CoursEtudiantComponent', () => {
 
         const paragraphe = lire(fixture, 'etudiant-reflexion-en-attente');
         expect(paragraphe?.getAttribute('data-etat')).toBe(etat);
-        expect(paragraphe?.textContent?.replace(/\s+/g, ' ').trim()).toBe(message);
+        expect(texteDe(paragraphe)).toBe(message);
       });
     }
   });

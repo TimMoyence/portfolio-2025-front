@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import { texteDe } from '../../../../../testing/texte/textes-dom';
+import { Component, PLATFORM_ID } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { PLATFORM_ID } from '@angular/core';
 import { rendreLHoteNavigateur } from '../../../../../testing/page/montage-page';
 import {
   decrireRenduServeur,
   decrireSectionAsili,
 } from '../../../../../testing/page/section-asili';
-import { AsiliHeroComponent } from './asili-hero.component';
+import { AsiliHeroComponent, type MorceauDeTitre } from './asili-hero.component';
 
-const KICKER = 'Studio digital & IA · Bordeaux';
-const LEAD = 'Developpeur & consultant Angular, NestJS et IA.';
+const KICKER = 'Création de sites web · Bordeaux';
+const LEAD = 'Je crée le site des artisans, commerces et indépendants.';
 
 function attachSoGetComputedStyleAppliesTheCascade(fixture: ComponentFixture<unknown>): void {
   document.body.appendChild(fixture.nativeElement);
@@ -34,50 +34,22 @@ describe('AsiliHeroComponent', () => {
     expect(root.querySelector('.hero-veil')).not.toBeNull();
   });
 
-  it("rend le titre via inputs avec l'accent italique teal", () => {
-    setup();
-    fixture.componentRef.setInput('titlePre', 'Clarifier ');
-    fixture.componentRef.setInput('accent', 'avant');
-    fixture.componentRef.setInput('titlePost', ' de construire.');
-    fixture.detectChanges();
-    const h1 = fixture.nativeElement.querySelector('h1.hero-title');
-    expect(h1).not.toBeNull();
-    expect((h1 as HTMLElement).textContent?.replace(/\s+/g, ' ').trim()).toBe(
-      'Clarifier avant de construire.',
-    );
-    const accent = (h1 as HTMLElement).querySelector('.accent');
-    expect(accent?.textContent).toBe('avant');
-  });
-
-  it('affiche la puce live quand `liveChip` est fourni', () => {
-    setup();
-    fixture.componentRef.setInput('liveChip', KICKER);
-    fixture.detectChanges();
-    const chip = fixture.nativeElement.querySelector('.live-chip');
-    expect(chip?.textContent).toContain(KICKER);
-    expect(chip?.querySelector('.live-dot')).not.toBeNull();
-  });
-
-  it('affiche le kicker mono quand `liveChip` est absent', () => {
+  it('affiche le kicker fourni, sans point ni barre animés', () => {
     setup();
     fixture.componentRef.setInput('kicker', KICKER);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.live-chip')).toBeNull();
     expect(fixture.nativeElement.querySelector('.kicker')?.textContent).toBe(KICKER);
+    expect(fixture.nativeElement.querySelector('.live-dot, .scroll-hint')).toBeNull();
   });
 
-  it("affiche l'accroche et l'indicateur de scroll quand fournis", () => {
+  it("affiche l'accroche fournie", () => {
     setup();
     fixture.componentRef.setInput('lead', LEAD);
-    fixture.componentRef.setInput('scrollHint', 'Defiler');
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.lead')?.textContent).toBe(LEAD);
-    const scrollHint = fixture.nativeElement.querySelector('.scroll-hint');
-    expect(scrollHint).toBeTruthy();
-    expect(scrollHint?.querySelector('.bar')).toBeTruthy();
   });
 
-  it('rend les lignes cle/valeur fournies en panneau, sans le filet des statistiques', () => {
+  it('rend les lignes cle/valeur fournies en panneau, sans filet', () => {
     setup();
     fixture.componentRef.setInput('metaRows', [
       { key: 'Format', value: 'Sur-mesure' },
@@ -87,7 +59,7 @@ describe('AsiliHeroComponent', () => {
     fixture.detectChanges();
 
     const panneau = (fixture.nativeElement as HTMLElement).querySelector(
-      '.hero-meta .hero-meta-rows',
+      '.hero-sub .hero-meta-rows',
     ) as HTMLElement;
     expect(panneau).not.toBeNull();
     const lignes = Array.from(panneau.querySelectorAll('.row')).map((row) => [
@@ -99,22 +71,69 @@ describe('AsiliHeroComponent', () => {
       ['Engagement', 'Du ponctuel au continu'],
     ]);
     expect(getComputedStyle(panneau).borderLeftWidth).toBe('0px');
-    expect(getComputedStyle(panneau.querySelector('.row') as HTMLElement).borderLeftWidth).toBe(
-      '0px',
-    );
     (fixture.nativeElement as HTMLElement).remove();
   });
 
-  it("n'affiche aucun panneau cle/valeur sans lignes", () => {
+  it("n'affiche aucun panneau cle/valeur sans lignes, ni zone de visuel vide", () => {
     setup();
+    attachSoGetComputedStyleAppliesTheCascade(fixture);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.hero-meta-rows')).toBeNull();
+    const racine = fixture.nativeElement as HTMLElement;
+
+    expect(racine.querySelector('.hero-meta-rows')).toBeNull();
+    expect(getComputedStyle(racine.querySelector('.hero-visuel') as HTMLElement).display).toBe(
+      'none',
+    );
+    racine.remove();
   });
 
-  it("n'affiche pas l'indication de scroll quand non fournie", () => {
+  function motsEtLignes(titre: readonly MorceauDeTitre[]): {
+    mots: (string | null)[];
+    lignes: string[];
+    accents: (string | null)[];
+  } {
     setup();
+    fixture.componentRef.setInput('titre', titre);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.scroll-hint')).toBeNull();
+    const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1') as HTMLElement;
+    const copie = h1.cloneNode(true) as HTMLElement;
+    copie.querySelectorAll('br').forEach((saut) => saut.replaceWith('\n'));
+    return {
+      mots: [...h1.querySelectorAll('.mot')].map((mot) => mot.textContent),
+      lignes: (copie.textContent ?? '')
+        .split('\n')
+        .map((ligne) => ligne.replace(/\s+/g, ' ').trim()),
+      accents: [...h1.querySelectorAll('.accent')].map((accent) => accent.textContent),
+    };
+  }
+
+  it('passe à la ligne avant un morceau aLaLigne et colle la ponctuation à l accent', () => {
+    expect(
+      motsEtLignes([
+        { texte: 'Des preuves,' },
+        { texte: 'pas des ', aLaLigne: true },
+        { texte: 'promesses', accent: true },
+        { texte: '.' },
+      ]),
+    ).toEqual({
+      mots: ['Des', 'preuves,', 'pas', 'des', 'promesses.'],
+      lignes: ['Des preuves,', 'pas des promesses.'],
+      accents: ['promesses'],
+    });
+  });
+
+  it('un morceau fait d une espace sépare deux mots sans créer de mot vide', () => {
+    expect(
+      motsEtLignes([{ texte: 'Manager' }, { texte: ' ' }, { texte: 'avant tout.', accent: true }]),
+    ).toEqual({
+      mots: ['Manager', 'avant', 'tout.'],
+      lignes: ['Manager avant tout.'],
+      accents: ['avant', 'tout.'],
+    });
+  });
+
+  it('un premier morceau aLaLigne n ouvre pas le titre sur une ligne vide', () => {
+    expect(motsEtLignes([{ texte: 'Des idées', aLaLigne: true }]).lignes).toEqual(['Des idées']);
   });
 
   decrireRenduServeur(
@@ -122,7 +141,7 @@ describe('AsiliHeroComponent', () => {
     (hote) => {
       expect(hote.querySelector('h1.hero-title')).not.toBeNull();
     },
-    { titlePre: 'Clarifier.' },
+    { kicker: KICKER },
   );
 
   describe('avec projection (page hote)', () => {
@@ -130,57 +149,57 @@ describe('AsiliHeroComponent', () => {
       standalone: true,
       imports: [AsiliHeroComponent],
       template: `
-        <app-asili-hero>
-          <span chip class="live-chip"><span class="live-dot"></span>Projection chip</span>
-          <ng-container title
-            >Clarifier <span class="accent">avant</span> de construire.
-          </ng-container>
-          <a cta class="btn btn-teal" href="/services">Voir</a>
-          <a cta class="btn btn-ghost" href="/projets">Essayer</a>
-          <div meta>
-            <div class="n">2</div>
-            <div class="l">piliers</div>
-          </div>
+        <app-asili-hero [titre]="titre">
+          <a cta class="btn btn-teal" href="/contact">Parler</a>
+          <a cta class="btn btn-ghost" href="/projets">Voir</a>
+          <figure visuel class="capture">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="Capture" />
+          </figure>
         </app-asili-hero>
       `,
     })
-    class HostComponent {}
+    class HostComponent {
+      protected readonly titre: readonly MorceauDeTitre[] = [
+        { texte: 'Votre métier mérite ' },
+        { texte: 'mieux', accent: true },
+        { texte: '.' },
+      ];
+    }
 
-    it('projette la puce, le titre, les CTA et la meta fournis par la page', () => {
+    it('rend le titre mot par mot, projette les CTA et le visuel fournis par la page', () => {
       const host = rendreLHoteNavigateur(HostComponent);
-      expect(host.querySelector('[chip].live-chip')?.textContent).toContain('Projection chip');
 
-      const h1 = host.querySelector('h1.hero-title');
-      expect(h1?.querySelector('.accent')?.textContent).toBe('avant');
-
-      const ctas = host.querySelectorAll('.hero-cta a[cta]');
-      expect(ctas.length).toBe(2);
-      expect((ctas[0] as HTMLAnchorElement).getAttribute('href')).toBe('/services');
-
-      expect(host.querySelector('.hero-meta [meta] .n')?.textContent).toBe('2');
+      expect(host.querySelector('h1.hero-title .accent')?.textContent).toBe('mieux');
+      expect([...host.querySelectorAll('h1 .mot')].map((mot) => mot.textContent)).toEqual([
+        'Votre',
+        'métier',
+        'mérite',
+        'mieux.',
+      ]);
+      expect(texteDe(host.querySelector('h1'))).toBe('Votre métier mérite mieux.');
+      expect(
+        [...host.querySelectorAll('.hero-cta a[cta]')].map((lien) => lien.getAttribute('href')),
+      ).toEqual(['/contact', '/projets']);
+      expect(host.querySelector('.hero-visuel figure.capture img')?.getAttribute('alt')).toBe(
+        'Capture',
+      );
     });
 
-    it('applique le style scope au contenu projete (accent italique teal, meta serif via ::ng-deep)', () => {
+    it('applique le style scope au titre projete et place le visuel en seconde colonne', () => {
       const hostFixture = TestBed.configureTestingModule({
         imports: [HostComponent],
         providers: [{ provide: PLATFORM_ID, useValue: 'browser' }],
       }).createComponent(HostComponent);
       attachSoGetComputedStyleAppliesTheCascade(hostFixture);
       hostFixture.detectChanges();
-
       const host = hostFixture.nativeElement as HTMLElement;
 
-      const accent = host.querySelector('.hero-title .accent') as HTMLElement;
-      expect(accent).not.toBeNull();
-      expect(getComputedStyle(accent).fontStyle).toBe('italic');
-
-      const value = host.querySelector('.hero-meta .n') as HTMLElement;
-      expect(value).not.toBeNull();
-      expect(getComputedStyle(value).fontSize).toBe('30px');
-
-      const divider = host.querySelector('.hero-meta div') as HTMLElement;
-      expect(divider).not.toBeNull();
-      expect(getComputedStyle(divider).borderLeftWidth).toBe('1px');
+      expect(
+        getComputedStyle(host.querySelector('.hero-title .accent') as HTMLElement).fontStyle,
+      ).toBe('italic');
+      expect(getComputedStyle(host.querySelector('.hero-visuel') as HTMLElement).display).not.toBe(
+        'none',
+      );
 
       hostFixture.destroy();
       host.remove();

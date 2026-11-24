@@ -1,5 +1,7 @@
 @use '../../styles-shared/composants/forms' as forms;
 @use '../../styles-shared/mise-en-page/mono';
+@use '../../styles-shared/composants/survol';
+@use '../../styles-shared/composants/badges';
 
 :host {
   display: block;
@@ -21,7 +23,7 @@
   width: 84px;
   height: 84px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--teal), var(--teal-ink));
+  background: linear-gradient(135deg, var(--teal-deep), var(--teal-deep));
   color: var(--cream);
   display: grid;
   place-items: center;
@@ -52,11 +54,8 @@
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: rgba(var(--teal-rgb), 0.12);
-  color: var(--teal-deep);
+  @include badges.pastille-opaque(var(--teal-deep));
   padding: 6px 12px;
-  border-radius: var(--r-pill);
-  border: 1px solid rgba(var(--teal-rgb), 0.22);
 }
 
 .pf-grid {
@@ -115,7 +114,7 @@
 }
 
 .muted {
-  color: var(--ink-faint);
+  color: var(--ink-mute);
   font-weight: 400;
 }
 
@@ -123,8 +122,10 @@
   @include forms.text-button(13px);
 }
 
-.edit:hover {
-  text-decoration: underline;
+.edit {
+  @include survol.survol {
+    text-decoration: underline;
+  }
 }
 
 .edit.danger {

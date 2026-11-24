@@ -1,7 +1,7 @@
 <section class="pf-hero">
   <div class="wrap">
     @if (authState.user(); as user) {
-      <div class="pf-top" appReveal>
+      <div class="pf-top">
         <span class="pf-avatar" aria-hidden="true">{{
           initial(user.firstName, user.lastName, user.email)
         }}</span>
@@ -13,7 +13,7 @@
       </div>
 
       <div class="pf-grid">
-        <article class="pf-card" appReveal>
+        <article class="pf-card">
           <h2 class="pf-card-title" i18n="@@profileIdentityTitle">Informations personnelles</h2>
           <p class="ch-sub" i18n="@@profileIdentitySub">Vos coordonnées de compte.</p>
 
@@ -153,15 +153,15 @@
           }
 
           @if (editProfileSuccess) {
-            <p class="pf-msg ok">{{ editProfileSuccess }}</p>
+            <p class="pf-msg ok" role="status">{{ editProfileSuccess }}</p>
           }
           @if (editProfileError) {
-            <p class="pf-msg err">{{ editProfileError }}</p>
+            <p class="pf-msg err" role="alert">{{ editProfileError }}</p>
           }
         </article>
 
         @if (user.hasPassword !== true) {
-          <article class="pf-card" appReveal>
+          <article class="pf-card">
             <h2 class="pf-card-title" i18n="@@profileSetPasswordTitle">Définir un mot de passe</h2>
             <p class="ch-sub" i18n="@@profileSetPasswordSub">
               Sécurisez votre compte avec un mot de passe.
@@ -214,17 +214,17 @@
               </button>
 
               @if (setPasswordSuccess) {
-                <p class="pf-msg ok">{{ setPasswordSuccess }}</p>
+                <p class="pf-msg ok" role="status">{{ setPasswordSuccess }}</p>
               }
               @if (setPasswordError) {
-                <p class="pf-msg err">{{ setPasswordError }}</p>
+                <p class="pf-msg err" role="alert">{{ setPasswordError }}</p>
               }
             </form>
           </article>
         }
 
         @if (user.hasPassword === true) {
-          <article class="pf-card" appReveal>
+          <article class="pf-card">
             <h2 class="pf-card-title" i18n="@@profileChangePasswordTitle">
               Changer le mot de passe
             </h2>
@@ -232,7 +232,7 @@
               Mettez à jour votre mot de passe régulièrement.
             </p>
             @if (setPasswordSuccess) {
-              <p class="pf-msg ok">{{ setPasswordSuccess }}</p>
+              <p class="pf-msg ok" role="status">{{ setPasswordSuccess }}</p>
             }
 
             <form
@@ -307,16 +307,16 @@
               </button>
 
               @if (changePasswordSuccess) {
-                <p class="pf-msg ok">{{ changePasswordSuccess }}</p>
+                <p class="pf-msg ok" role="status">{{ changePasswordSuccess }}</p>
               }
               @if (changePasswordError) {
-                <p class="pf-msg err">{{ changePasswordError }}</p>
+                <p class="pf-msg err" role="alert">{{ changePasswordError }}</p>
               }
             </form>
           </article>
         }
 
-        <article class="pf-card full" appReveal [appRevealDelay]="1">
+        <article class="pf-card full">
           <h2 class="pf-card-title" i18n="@@profileSessionTitle">Préférences &amp; session</h2>
           <p class="ch-sub" i18n="@@profileSessionSub">Gérez votre accès à l'écosystème Asili.</p>
           <div class="pf-line">

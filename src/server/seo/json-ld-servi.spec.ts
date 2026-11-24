@@ -1,11 +1,9 @@
+import { METADONNEES_DU_SITE } from '../../app/core/seo/site-servi';
 import { type BlocJsonLd, jsonLdDeLaPage, serialiserJsonLd } from '../../app/core/seo/json-ld';
-import type { SeoMetadataFile } from '../../app/core/seo/seo-metadata.model';
 import { SeoRegistryService } from '../../app/core/seo/seo-registry.service';
-import seoMetadata from '../../assets/seo/seo-metadata.json';
 import { buildPageSeoFr, buildSeoMetadata } from '../../testing/factories/seo-metadata.factory';
 import { injectSeoHead } from './seo-injector';
 
-const METADONNEES = seoMetadata as unknown as SeoMetadataFile;
 const EMPTY_HTML = '<html><head><title>x</title></head><body></body></html>';
 
 const blocsDeLaPage = (locale: string, id: string): BlocJsonLd[] | undefined => {
@@ -24,20 +22,46 @@ describe('JSON-LD servi', () => {
     const duSite = ['LocalBusiness', 'SiteNavigationElement'];
 
     expect(typesDe(blocsDeLaPage('fr', 'home'))).toEqual([...duSite, 'Person', 'WebSite']);
-    expect(typesDe(blocsDeLaPage('fr', 'contact'))).toEqual([...duSite, 'Person', 'ContactPage']);
+    expect(typesDe(blocsDeLaPage('fr', 'contact'))).toEqual([
+      ...duSite,
+      'Person',
+      'ContactPage',
+      'BreadcrumbList',
+    ]);
     expect(typesDe(blocsDeLaPage('fr', 'presentation'))).toEqual([
       ...duSite,
+      'Person',
       'ProfilePage',
-      'ProfessionalService',
+      'BreadcrumbList',
     ]);
     expect(blocsDeLaPage('fr', 'login')).toBeUndefined();
 
-    const servi = injectSeoHead(EMPTY_HTML, METADONNEES, '/fr/contact', 'https://asilidesign.fr');
+    const servi = injectSeoHead(
+      EMPTY_HTML,
+      METADONNEES_DU_SITE,
+      '/fr/contact',
+      'https://asilidesign.fr',
+    );
     expect(servi).toContain('application/rss+xml');
     expect(servi).not.toContain('application/ld+json');
   });
 
   for (const locale of ['fr', 'en']) {
+    it(`REC-09 · sur /presentation, la personne servie est global.person composée dans la langue de la page, que tout autre bloc désigne par son seul @id (${locale})`, () => {
+      const personne = `${METADONNEES_DU_SITE.site.baseUrl}/#person`;
+      const decrites = (valeur: unknown): Record<string, unknown>[] => {
+        if (Array.isArray(valeur)) return valeur.flatMap(decrites);
+        if (valeur === null || typeof valeur !== 'object') return [];
+        const bloc = valeur as Record<string, unknown>;
+        const decrite = bloc['@id'] === personne && Object.keys(bloc).some((cle) => cle !== '@id');
+        return [...(decrite ? [bloc] : []), ...Object.values(bloc).flatMap(decrites)];
+      };
+
+      expect(decrites(blocsDeLaPage(locale, 'presentation'))).toEqual(
+        jsonLdDeLaPage(METADONNEES_DU_SITE, locale).filter((bloc) => bloc['@type'] === 'Person'),
+      );
+    });
+
     it(`ART-IDX-2 · l'accueil ne déclare aucune recherche interne (${locale})`, () => {
       const siteWeb = blocsDeLaPage(locale, 'home')?.find((bloc) => bloc['@type'] === 'WebSite');
 
@@ -73,7 +97,7 @@ describe('serialiserJsonLd', () => {
 
 describe('jsonLdDeLaPage — fraicheur du JSON-LD de la page', () => {
   const blocsDatés = (jsonLd: BlocJsonLd): BlocJsonLd[] => {
-    const page = buildPageSeoFr('article', '/article', { jsonLd }, { lastmod: '2026-10-01' });
+    const page = buildPageSeoFr('article', '/', { jsonLd }, { lastmod: '2026-10-01' });
     return jsonLdDeLaPage(buildSeoMetadata([page]), 'fr', page);
   };
 
@@ -87,43 +111,5 @@ describe('jsonLdDeLaPage — fraicheur du JSON-LD de la page', () => {
     const bloc = { '@type': ['Article'], headline: 'A' };
 
     expect(blocsDatés(bloc)).toEqual([bloc]);
-  });
-});
-
-describe('jsonLdDeLaPage — fil d Ariane et locale', () => {
-  const contact = buildPageSeoFr(
-    'contact',
-    '/contact',
-    {},
-    {
-      breadcrumb: [
-        { name: 'Accueil', path: '/' },
-        { name: 'Contact', path: '/contact' },
-      ],
-    },
-  );
-  const metadata = buildSeoMetadata([buildPageSeoFr('home', '/'), contact]);
-
-  const itemsDuFil = (locale: string): unknown[] => {
-    const fil = jsonLdDeLaPage(metadata, locale, contact).find(
-      (bloc) => bloc['@type'] === 'BreadcrumbList',
-    );
-    return ((fil?.['itemListElement'] as { item: string }[] | undefined) ?? []).map(
-      (element) => element.item,
-    );
-  };
-
-  it('pointe l accueil du fil d Ariane sur la racine canonique /fr/', () => {
-    expect(itemsDuFil('fr')).toEqual([
-      'https://asilidesign.fr/fr/',
-      'https://asilidesign.fr/fr/contact',
-    ]);
-  });
-
-  it('suit la locale de la page dans le fil d Ariane', () => {
-    expect(itemsDuFil('en')).toEqual([
-      'https://asilidesign.fr/en/',
-      'https://asilidesign.fr/en/contact',
-    ]);
   });
 });

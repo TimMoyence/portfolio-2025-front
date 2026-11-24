@@ -16,7 +16,7 @@ import type { SignupFormState } from '../../../core/models/signupForm.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { APP_CONFIG } from '../../../core/config/app-config.token';
 import { injecterLocaleDeLaPage, type LocaleDuSite } from '../../../core/config/locale-de-la-page';
-import { estCheminInterne } from '../../../core/seo/chemins';
+import { estCheminInterne } from '../../../core/seo/pages/chemins';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 import type { AuthPort } from '../../../core/ports/auth.port';
 import { AUTH_PORT } from '../../../core/ports/auth.port';
@@ -31,7 +31,6 @@ import { BornesDeSaisieDirective } from '../../../shared/directives/bornes-de-sa
 import type { FormatDeContact } from '../../../shared/directives/format-de-contact.directive';
 import { FormatDeContactDirective } from '../../../shared/directives/format-de-contact.directive';
 import { MotDePasseNeufDirective } from '../../../shared/directives/mot-de-passe-neuf.directive';
-import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
 import { AuthShellComponent } from '../../../shared/components/auth/auth-shell/auth-shell.component';
 import { FieldErrorsComponent } from '../../../shared/components/field-errors/field-errors.component';
 
@@ -73,7 +72,6 @@ interface PanneauAuth {
     FormsModule,
     RouterModule,
     SvgIconComponent,
-    RevealOnScrollDirective,
     AuthShellComponent,
     FieldErrorsComponent,
     BornesDeSaisieDirective,

@@ -15,6 +15,3 @@ export function rendreLaPolitique(): HTMLElement {
   fixture.detectChanges();
   return fixture.nativeElement as HTMLElement;
 }
-
-export const texteNormalise = (element: Element | null): string =>
-  (element?.textContent ?? '').replace(/\s+/g, ' ').trim();

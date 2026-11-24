@@ -225,15 +225,36 @@ describe('buildSitemapXml', () => {
 describe('buildLlmsTxt', () => {
   const baseGlobal = {
     localBusiness: {
+      '@type': 'LocalBusiness',
       name: 'Asili Design',
       description: 'Studio web Tim Moyence',
-      founder: { name: 'Tim Moyence' },
+      founder: { '@id': 'https://asilidesign.fr/#person' },
     },
-    siteNavigation: {},
+    navigation: [],
+    person: { '@type': 'Person', name: 'Tim Moyence' },
   } as never;
 
   const llmsDe = (...pages: PageSeo[]): string =>
     buildLlmsTxt(buildSeoMetadata(pages, { global: baseGlobal }), BASE_URL);
+
+  it('nomme le fondateur par la personne du site et décrit le site dans la langue par défaut', () => {
+    const metadata = buildSeoMetadata([buildPageSeoFr('offer', '/offer')], {
+      global: {
+        localBusiness: { '@type': 'LocalBusiness', name: 'Atelier Rivière' },
+        navigation: [],
+        person: { '@type': 'Person', name: 'Camille Rivière' },
+        textes: {
+          fr: { localBusiness: { description: 'Menuiserie à Pessac' } },
+          en: { localBusiness: { description: 'Joinery in Pessac' } },
+        },
+      },
+    });
+
+    const txt = buildLlmsTxt(metadata, BASE_URL);
+
+    expect(txt).toContain('# Atelier Rivière — Camille Rivière');
+    expect(txt).toContain('> Menuiserie à Pessac');
+  });
 
   it('groupe les pages par section (Services, A propos, Contact, Legal)', () => {
     const txt = llmsDe(
@@ -336,8 +357,8 @@ describe('buildLlmsTxt', () => {
 
 describe('buildLlmsFullTxt', () => {
   const baseGlobal = {
-    localBusiness: { name: 'Asili Design', description: 'Studio web' },
-    siteNavigation: {},
+    localBusiness: { '@type': 'LocalBusiness', name: 'Asili Design', description: 'Studio web' },
+    navigation: [],
   } as never;
 
   const llmsFullDe = (...pages: PageSeo[]): string =>

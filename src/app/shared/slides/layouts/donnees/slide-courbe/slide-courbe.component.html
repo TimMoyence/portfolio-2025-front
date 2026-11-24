@@ -39,4 +39,17 @@
       </div>
     </div>
   </div>
+
+  <div class="slide-courbe__imprime">
+    <app-figure-de-courbe [figure]="figure()" [tangentes]="toutesLesTangentes()" />
+
+    <ol class="slide-courbe__etapes">
+      @for (step of steps(); track $index) {
+        <li>
+          <h3>{{ step.title }}</h3>
+          <p class="slide-courbe__texte texte-servi">{{ step.text }}</p>
+        </li>
+      }
+    </ol>
+  </div>
 </section>

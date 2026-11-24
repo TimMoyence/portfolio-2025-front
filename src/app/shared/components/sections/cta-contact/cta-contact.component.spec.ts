@@ -23,19 +23,13 @@ describe('ContactCtaComponent', () => {
     });
   });
 
-  it('should set href attributes for linkable methods', () => {
+  it('chaque moyen de contact est un lien vers son adresse', () => {
     cta.fixture.detectChanges();
-    const links = Array.from(cta.racine.querySelectorAll('a[href]')) as HTMLAnchorElement[];
-    expect(links.length).toBeGreaterThan(0);
-    cta.composant.contactMethods
-      .filter((method: ContactMethod): method is ContactMethod & { href: string } => !!method.href)
-      .forEach((method) => {
-        const match = links.find(
-          (link) =>
-            link.getAttribute('href') === method.href || link.textContent?.includes(method.value),
-        );
-        expect(match).withContext(`Missing href for ${method.label}`).toBeTruthy();
-      });
+    const liens = [...cta.racine.querySelectorAll('[data-testid^="contact-method-"] a[href]')];
+
+    expect(liens.map((lien) => [lien.getAttribute('href'), lien.textContent?.trim()])).toEqual(
+      cta.composant.contactMethods.map(({ href, value }) => [href, value]),
+    );
   });
 
   it('should render the contact section heading', () => {

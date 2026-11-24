@@ -19,7 +19,7 @@
     font-size: 17px;
     line-height: 1.6;
     color: var(--text);
-    background: transparent;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .14 0 0 0 0 .11 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
     font-weight: 400;
     letter-spacing: -0.005em;
     overflow-x: hidden;
@@ -83,34 +83,17 @@
     text-decoration: none;
   }
   ::selection {
-    background: var(--teal);
+    background: var(--teal-deep);
     color: var(--cream);
   }
   :focus-visible {
     outline: 2px solid var(--glow);
     outline-offset: 3px;
   }
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-      radial-gradient(
-        130% 75% at 82% 4%,
-        rgba(255, 250, 242, 0) 30%,
-        rgba(255, 250, 242, 0.34) 78%
-      ),
-      linear-gradient(180deg, rgba(255, 250, 242, 0.22), rgba(255, 250, 242, 0.34));
-  }
   @media print {
-    html {
+    html,
+    body {
       background: #fff;
-    }
-
-    body::before {
-      display: none;
     }
   }
 }
@@ -130,7 +113,29 @@
   @include mise-en-page.conteneur;
 }
 .section-pad {
+  position: relative;
   padding-block: clamp(80px, 12vh, 160px);
+}
+.section-pad::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: max(var(--gutter), (100% - var(--maxw)) / 2);
+  height: 1px;
+  background: var(--border);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s var(--ease);
+  pointer-events: none;
+}
+.section-pad.filet-trace::before {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-pad::before {
+    transform: none;
+    transition: none;
+  }
 }
 .display {
   font-size: clamp(48px, 8.5vw, 124px);

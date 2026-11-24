@@ -1,3 +1,4 @@
+import { texteDe } from '../../../../testing/texte/textes-dom';
 import { APP_BASE_HREF } from '@angular/common';
 import { ApplicationRef } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
@@ -166,7 +167,7 @@ describe('CoursPresentateurComponent', () => {
   }
 
   function texte(fixture: Fixture, marque: string): string {
-    return cible(fixture, marque).textContent?.replace(/\s+/g, ' ').trim() ?? '';
+    return texteDe(cible(fixture, marque));
   }
 
   function bouton(fixture: Fixture, marque: string): HTMLButtonElement {

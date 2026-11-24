@@ -2,36 +2,32 @@
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-inner">
     <div class="wrap hero-grid">
-      <ng-content select="[chip]">
-        @if (liveChip(); as chip) {
-          <span class="live-chip" appReveal>
-            <span class="live-dot" aria-hidden="true"></span>{{ chip }}
-          </span>
-        } @else if (kicker()) {
-          <span class="kicker" appReveal>{{ kicker() }}</span>
+      <div class="hero-texte">
+        @if (kicker(); as texte) {
+          <span class="kicker">{{ texte }}</span>
         }
-      </ng-content>
 
-      <h1 class="display hero-title" appReveal [appRevealDelay]="1">
-        <ng-content select="[title]">
-          @if (titlePre(); as pre) {
-            {{ pre }}
+        <h1 class="display hero-title">
+          @for (element of elements(); track $index) {
+            @if (element.segments.length > 0) {
+              <span class="mot" [style.--rang]="element.rang">
+                @for (segment of element.segments; track $index) {
+                  <span [class.accent]="segment.accent">{{ segment.texte }}</span>
+                }
+              </span>
+            } @else {
+              &ngsp;
+              @if (element.saut) {
+                <br />
+              }
+            }
           }
-          @if (accent(); as acc) {
-            <span class="accent">{{ acc }}</span>
-          }
-          @if (titlePost(); as post) {
-            {{ post }}
-          }
-        </ng-content>
-      </h1>
+        </h1>
 
-      <div class="hero-sub">
-        @if (lead(); as l) {
-          <p class="lead" appReveal [appRevealDelay]="2">{{ l }}</p>
-        }
-        <div class="hero-meta" appReveal [appRevealDelay]="3">
-          <ng-content select="[meta]"></ng-content>
+        <div class="hero-sub">
+          @if (lead(); as texte) {
+            <p class="lead">{{ texte }}</p>
+          }
           @if (metaRows().length > 0) {
             <div class="hero-meta-rows">
               @for (row of metaRows(); track row.key) {
@@ -43,17 +39,15 @@
             </div>
           }
         </div>
+
+        <div class="hero-cta">
+          <ng-content select="[cta]"></ng-content>
+        </div>
       </div>
 
-      <div class="hero-cta" appReveal [appRevealDelay]="3">
-        <ng-content select="[cta]"></ng-content>
+      <div class="hero-visuel">
+        <ng-content select="[visuel]"></ng-content>
       </div>
     </div>
   </div>
-
-  @if (scrollHint(); as hint) {
-    <div class="scroll-hint" aria-hidden="true">
-      <span class="bar"></span>
-    </div>
-  }
 </section>

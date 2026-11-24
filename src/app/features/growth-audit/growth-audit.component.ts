@@ -36,6 +36,8 @@ import { HeroSectionComponent } from '../../shared/components/sections/hero-sect
 import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
+import { nomCourtServi } from '../../core/seo/site-servi';
+import { COORDONNEES_DU_SITE } from '../../shared/data/coordonnees';
 import { readCheckboxChecked } from '../../shared/utils/dom-event.utils';
 import { zAuditRequestRequestDto } from '../../../../contrat/zod.gen';
 import { bornesDu } from '../../shared/utils/saisie/regles-de-saisie';
@@ -116,9 +118,9 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
   auditSectionBadges: AuditSectionBadge[] = [];
 
   readonly hero = {
-    label: $localize`:audit.hero.label@@auditHeroLabel:Audit gratuit (IA + humain, 24h)`,
-    title: $localize`:audit.hero.title@@auditHeroTitle:Audit Growth — scorecard 7 piliers`,
-    description: $localize`:audit.hero.description@@auditHeroDescription:Vous laissez votre site → je lance un premier scan IA (analyse des pages, SEO, performance, conversion, visibilité IA). Ensuite, sous 24h, je repasse l'audit moi-même et je vous envoie une scorecard claire, un rapport PDF détaillé et des recommandations concrètes priorisées par impact/effort.`,
+    label: $localize`:Kicker du diagnostic@@diagnosticKicker:${nomCourtServi('/growth-audit')}:nom: · IA et relecture humaine, sous 24 h`,
+    title: $localize`:audit.hero.title@@auditHeroTitle:Diagnostic gratuit : ce qui freine votre site, et quoi corriger d’abord`,
+    description: $localize`:audit.hero.description@@auditHeroDescription:Vous laissez l’adresse de votre site. Une première analyse automatique passe vos pages en revue : visibilité sur Google et dans les IA, vitesse, clarté, appels à l’action. Sous 24 h, je relis tout moi-même et je vous envoie une note claire, un rapport détaillé et les corrections à faire en premier.`,
   };
 
   readonly steps = [
@@ -127,11 +129,11 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
       description: $localize`:audit.steps.one.desc@@auditStepOneDesc:Nom du site ou URL + contact (email ou téléphone).`,
     },
     {
-      title: $localize`:audit.steps.two.title@@auditStepTwoTitle:2. Audit instantané (IA)`,
-      description: $localize`:audit.steps.two.desc@@auditStepTwoDesc:Je scanne vos pages (SEO, performance, conversion, visibilité IA) et je sors un premier diagnostic rapide.`,
+      title: $localize`:audit.steps.two.title@@auditStepTwoTitle:2. Première analyse automatique`,
+      description: $localize`:audit.steps.two.desc@@auditStepTwoDesc:Je passe vos pages en revue (visibilité, vitesse, clarté, visibilité IA) et je sors un premier diagnostic rapide.`,
     },
     {
-      title: $localize`:audit.steps.three.title@@auditStepThreeTitle:3. Audit humain sous 24h`,
+      title: $localize`:audit.steps.three.title@@auditStepThreeTitle:3. Diagnostic relu par moi sous 24 h`,
       description: $localize`:audit.steps.three.desc@@auditStepThreeDesc:Je reprends l'analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d'actions concret.`,
       highlights: [
         $localize`:audit.highlights.pdf@@auditHighlightsPdf:Rapport PDF détaillé`,
@@ -142,28 +144,28 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
     },
   ];
 
-  readonly faqTitle = $localize`:audit.faq.title@@auditFaqTitle:Questions fréquentes sur l'audit gratuit`;
-  readonly faqDescription = $localize`:audit.faq.description@@auditFaqDescription:Ce que vous devez savoir avant de demander votre audit Growth — scorecard 7 piliers + recommandations priorisées.`;
+  readonly faqTitle = $localize`:audit.faq.title@@auditFaqTitle:Questions fréquentes sur le diagnostic gratuit`;
+  readonly faqDescription = $localize`:audit.faq.description@@auditFaqDescription:Ce qu’il faut savoir avant de demander votre diagnostic : sept points passés en revue et des corrections classées par priorité.`;
   readonly faqItems: readonly FaqItem[] = [
     {
-      question: $localize`:audit.faq.q1@@auditFaqQ1:Comment fonctionne l'audit gratuit en 24 heures ?`,
-      answer: $localize`:audit.faq.a1@@auditFaqA1:Vous laissez l'URL de votre site et votre contact. Un premier scan IA analyse vos pages en moins de 5 minutes (SEO, performance, signaux de conversion, visibilité IA). Puis, sous 24h, je reprends l'analyse moi-même et vous envoie une scorecard claire, un rapport PDF détaillé et un plan d'actions priorisé par impact/effort.`,
+      question: $localize`:audit.faq.q1@@auditFaqQ1:Comment se déroule le diagnostic gratuit en 24 heures ?`,
+      answer: $localize`:audit.faq.a1@@auditFaqA1:Vous laissez l’adresse de votre site et votre contact. Une première analyse automatique passe vos pages en revue en quelques minutes. Puis, sous 24 h, je relis tout moi-même et vous envoie une note claire, un rapport détaillé et les corrections classées par priorité.`,
     },
     {
-      question: $localize`:audit.faq.q2@@auditFaqQ2:Que contient concrètement l'audit Growth ?`,
-      answer: $localize`:audit.faq.a2@@auditFaqA2:L'audit couvre sept piliers : SEO fondations (titres, meta, indexation, SEO local), vitesse et performance (Core Web Vitals), tech et scalabilité, crédibilité et confiance, conversion et clarté, visibilité IA (ChatGPT / Perplexity / Gemini) et citabilité (llms.txt, FAQ, sources). Vous recevez une scorecard, des quick wins et des recommandations priorisées.`,
+      question: $localize`:audit.faq.q2@@auditFaqQ2:Que contient le diagnostic ?`,
+      answer: $localize`:audit.faq.a2@@auditFaqA2:Le diagnostic passe en revue sept points : les fondations du référencement, la vitesse, la solidité du site, la confiance qu’il inspire, la clarté et les appels à l’action, la visibilité dans les réponses des IA et la matière qu’elles peuvent citer. Vous recevez une note, des gains rapides et des recommandations classées.`,
     },
     {
-      question: $localize`:audit.faq.q3@@auditFaqQ3:L'audit est-il vraiment gratuit ?`,
-      answer: $localize`:audit.faq.a3@@auditFaqA3:Oui, totalement. Aucun engagement, aucune carte bancaire demandée. Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h. L'objectif est de vous apporter de la valeur immédiatement, et de démarrer un échange pertinent si vous le souhaitez.`,
+      question: $localize`:audit.faq.q3@@auditFaqQ3:Le diagnostic est-il vraiment gratuit ?`,
+      answer: $localize`:audit.faq.a3@@auditFaqA3:Oui, totalement. Aucun engagement, aucune carte bancaire. Je limite à 5 diagnostics par semaine pour relire chacun moi-même sous 24 h. Le but : vous être utile tout de suite, et ouvrir un échange si vous le souhaitez.`,
     },
     {
-      question: $localize`:audit.faq.q4@@auditFaqQ4:Qui réalise l'audit : une IA ou un humain ?`,
-      answer: $localize`:audit.faq.a4@@auditFaqA4:Les deux. Un premier scan automatisé tourne instantanément via un pipeline IA (Langchain + OpenAI). Ensuite, je réalise l'audit humain moi-même pour prioriser, contextualiser et formuler des recommandations concrètes adaptées à votre situation.`,
+      question: $localize`:audit.faq.q4@@auditFaqQ4:Qui réalise le diagnostic : une IA ou un humain ?`,
+      answer: $localize`:audit.faq.a4@@auditFaqA4:Les deux. Une première analyse automatique tourne tout de suite. Ensuite, je relis le diagnostic moi-même pour classer les priorités et formuler des recommandations adaptées à votre situation.`,
     },
     {
-      question: $localize`:audit.faq.q5@@auditFaqQ5:Pour quels types de sites l'audit est-il pertinent ?`,
-      answer: $localize`:audit.faq.a5@@auditFaqA5:L'audit est pertinent pour les sites vitrines, sites e-commerce, landing pages et applications métier web. Il est particulièrement adapté aux TPE, PME, indépendants et artisans qui veulent améliorer leur visibilité SEO et leur taux de conversion sans se perdre dans la technique.`,
+      question: $localize`:audit.faq.q5@@auditFaqQ5:Pour quels sites le diagnostic est-il utile ?`,
+      answer: $localize`:audit.faq.a5@@auditFaqA5:Le diagnostic sert aux sites vitrines, aux boutiques en ligne, aux pages de présentation et aux outils en ligne. Il est fait pour les artisans, commerces, indépendants et petites entreprises qui veulent être mieux trouvés et recevoir plus d’appels, sans se perdre dans la technique.`,
     },
   ];
 
@@ -199,8 +201,8 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
   ];
 
   readonly formLabels = {
-    title: $localize`:audit.form.title@@auditFormTitle:Demander un audit gratuit`,
-    description: $localize`:audit.form.description@@auditFormDescription:Je limite à 5 audits par semaine pour garantir un rendu humain sous 24h.`,
+    title: $localize`:audit.form.title@@auditFormTitle:Demander un diagnostic gratuit`,
+    description: $localize`:audit.form.description@@auditFormDescription:Je limite à 5 diagnostics par semaine pour relire chacun moi-même sous 24 h.`,
     websiteLabel: $localize`:audit.form.websiteLabel@@auditFormWebsiteLabel:Nom du site ou URL`,
     websitePlaceholder: $localize`:audit.form.websitePlaceholder@@auditFormWebsitePlaceholder:ex. https://votresite.fr`,
     contactMethodLabel: $localize`:audit.form.contactMethodLabel@@auditFormContactMethodLabel:Méthode de contact`,
@@ -208,24 +210,24 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
     phoneOption: $localize`:audit.form.contactPhone@@auditFormContactPhone:Téléphone`,
     contactValueLabel: $localize`:audit.form.contactValueLabel@@auditFormContactValueLabel:Coordonnée`,
     emailPlaceholder: $localize`:audit.form.emailPlaceholder@@auditFormEmailPlaceholder:ex. hello@votresite.fr`,
-    phonePlaceholder: $localize`:audit.form.phonePlaceholder@@auditFormPhonePlaceholder:ex. +33 6 98 50 32 82`,
-    submit: $localize`:audit.form.submit@@auditFormSubmit:Demander mon audit (scan IA immédiat + audit humain sous 24h)`,
-    success: $localize`:audit.form.success@@auditFormSuccess:Merci ! Scan IA lancé — audit humain envoyé sous 24h.`,
+    phonePlaceholder: $localize`:audit.form.phonePlaceholder@@auditFormPhonePlaceholder:ex. ${COORDONNEES_DU_SITE.telephone}:telephone:`,
+    submit: $localize`:audit.form.submit@@auditFormSubmit:Demander mon diagnostic (analyse immédiate, relue par moi sous 24 h)`,
+    success: $localize`:audit.form.success@@auditFormSuccess:Merci ! L’analyse est lancée, votre diagnostic relu arrive sous 24 h.`,
     confirmationEnvoyee: (heures: number) =>
-      $localize`:@@auditFormConfirmationEnvoyee:Vérifiez votre boîte e-mail : l’audit démarre dès que vous ouvrez le lien de confirmation reçu, valable ${heures}:heures: heures.`,
-    confirmee: $localize`:@@auditFormConfirmee:Adresse confirmée ! Scan IA lancé — audit humain envoyé sous 24h.`,
-    lienDeConfirmationRefuse: $localize`:@@auditFormLienDeConfirmationRefuse:Ce lien de confirmation est invalide ou a expiré : refaites la demande d’audit.`,
+      $localize`:@@auditFormConfirmationEnvoyee:Vérifiez votre boîte e-mail : le diagnostic démarre dès que vous ouvrez le lien de confirmation reçu, valable ${heures}:heures: heures.`,
+    confirmee: $localize`:@@auditFormConfirmee:Adresse confirmée ! L’analyse est lancée, votre diagnostic relu arrive sous 24 h.`,
+    lienDeConfirmationRefuse: $localize`:@@auditFormLienDeConfirmationRefuse:Ce lien de confirmation est invalide ou a expiré : refaites la demande de diagnostic.`,
     error: $localize`:audit.form.error@@auditFormError:Impossible d'envoyer la demande. Réessayez dans un instant.`,
-    rgpdLabel: $localize`:audit.form.rgpdLabel@@auditFormRgpdLabel:J'accepte que mes coordonnées soient utilisées pour traiter ma demande d'audit (voir <a href="/fr/privacy" class="underline">politique de confidentialité</a>).`,
-    rgpdError: $localize`:audit.form.rgpdError@@auditFormRgpdError:Votre consentement RGPD est obligatoire pour lancer l'audit.`,
+    rgpdLabel: $localize`:audit.form.rgpdLabel@@auditFormRgpdLabel:J'accepte que mes coordonnées soient utilisées pour traiter ma demande de diagnostic (voir <a href="/fr/privacy" class="underline">politique de confidentialité</a>).`,
+    rgpdError: $localize`:audit.form.rgpdError@@auditFormRgpdError:Votre consentement est obligatoire pour lancer le diagnostic.`,
   };
 
   auditFormState: AuditRequestPayload = formulaireVierge();
 
-  private readonly etapeTerminee = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Audit terminé`;
-  private readonly echecDeLAudit = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:L'audit a échoué.`;
+  private readonly etapeTerminee = $localize`:growthAudit.step.completed|Audit completed step@@auditStepCompleted:Diagnostic terminé`;
+  private readonly echecDeLAudit = $localize`:growthAudit.error.failed|Audit failed message@@auditErrorFailed:Le diagnostic a échoué.`;
 
-  private readonly connexionPerdue = $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant l'audit. Rechargez la page pour vérifier le résultat.`;
+  private readonly connexionPerdue = $localize`:growthAudit.error.connectionLost|Connection lost during audit@@auditErrorConnectionLost:Connexion interrompue pendant le diagnostic. Rechargez la page pour vérifier le résultat.`;
 
   rgpdConsent = false;
 
@@ -357,7 +359,7 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
   private suivreLAudit(auditId: string): void {
     this.auditId = auditId;
     this.auditProgress = 0;
-    this.auditStep = $localize`:growthAudit.step.pending|Audit pending step@@auditStepPending:Audit en attente...`;
+    this.auditStep = $localize`:growthAudit.step.pending|Audit pending step@@auditStepPending:Diagnostic en attente...`;
     this.resetAuditTimeline();
     this.isAuditRunning = true;
     this.reconnectAttempts = 0;
@@ -434,7 +436,7 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.arreterLAudit(
-          $localize`:growthAudit.error.summaryFetch|Summary fetch error@@auditErrorSummaryFetch:Impossible de récupérer le résumé de l'audit pour le moment.`,
+          $localize`:growthAudit.error.summaryFetch|Summary fetch error@@auditErrorSummaryFetch:Impossible de récupérer le résumé du diagnostic pour le moment.`,
         );
       },
     });

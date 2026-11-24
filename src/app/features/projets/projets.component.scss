@@ -1,3 +1,9 @@
+@use '../../styles-shared/mise-en-page/heads' as heads;
+
 :host {
   display: block;
+}
+
+.method-head__title {
+  max-width: heads.largeur-de-titre(20);
 }

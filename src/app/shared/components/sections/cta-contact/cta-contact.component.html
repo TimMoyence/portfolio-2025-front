@@ -29,26 +29,15 @@
         @for (method of contactMethods; track $index) {
           <div class="flex flex-row" [attr.data-testid]="'contact-method-' + $index">
             <div class="mr-4 flex items-center justify-center md:mb-4">
-              @if (method.icon) {
-                <app-svg-icon
-                  aria-hidden="true"
-                  [name]="method.icon!"
-                  [size]="1.5"
-                  aria-hidden="true"
-                ></app-svg-icon>
-              }
+              <app-svg-icon aria-hidden="true" [name]="method.icon" [size]="1.5"></app-svg-icon>
             </div>
             <div>
               <h3 class="font-heading heading-h6 mb-2 font-bold">
                 {{ method.label }}
               </h3>
-              @if (method.href) {
-                <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value">
-                  {{ method.value }}
-                </a>
-              } @else {
-                <p>{{ method.value }}</p>
-              }
+              <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value">
+                {{ method.value }}
+              </a>
             </div>
           </div>
         }

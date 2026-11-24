@@ -1,5 +1,6 @@
 @use '../../../../styles-shared/mise-en-page/surfaces' as surfaces;
 @use '../../../../styles-shared/mise-en-page/mono';
+@use '../../../../styles-shared/composants/survol';
 :host {
   display: block;
 }
@@ -35,8 +36,12 @@
   @include surfaces.asili-logo(flex);
 }
 
-.asili-logo__name {
-  align-self: center;
+.asili-logo__texte {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15em;
+  line-height: 1;
 }
 
 .asili-logo_img {
@@ -81,10 +86,11 @@
     color 0.25s var(--ease);
 }
 
-.asili-nav__link:hover,
-.asili-nav__link:focus-visible {
-  background: var(--ivory);
-  color: var(--ink);
+.asili-nav__link {
+  @include survol.survol-ou-focus {
+    background: var(--ivory);
+    color: var(--ink);
+  }
 }
 
 .asili-nav__link.active {
@@ -107,36 +113,9 @@
   transform: rotate(180deg);
 }
 
-.asili-nav__trigger--linked {
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-}
-
-.asili-nav__trigger-label {
-  padding-right: 6px;
-}
-
-.asili-nav__chevron-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 9px 12px 9px 0;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  color: var(--ink-soft);
-  border-radius: var(--r-pill);
-  transition: color 0.25s var(--ease);
-}
-
-.asili-nav__chevron-btn:hover,
-.asili-nav__chevron-btn:focus-visible {
-  color: var(--ink);
-}
-
 .asili-dropdown {
   position: absolute;
-  top: calc(100% + 10px);
+  top: 100%;
   left: 50%;
   translate: -50% 0;
   min-width: 300px;
@@ -147,18 +126,16 @@
   box-shadow: var(--shadow-card);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(8px);
   transition:
-    opacity 0.3s var(--ease),
-    transform 0.3s var(--ease),
-    visibility 0.3s var(--ease);
+    opacity 0.2s var(--ease),
+    visibility 0.2s var(--ease);
   z-index: 50;
 }
 
 .asili-dropdown.open {
   opacity: 1;
   visibility: visible;
-  transform: none;
+  transition: opacity 0.2s var(--ease);
 }
 
 .asili-dropdown--user {
@@ -177,9 +154,10 @@
   transition: background 0.2s var(--ease);
 }
 
-.asili-drop-item:hover,
-.asili-drop-item:focus-visible {
-  background: var(--ivory);
+.asili-drop-item {
+  @include survol.survol-ou-focus {
+    background: var(--ivory);
+  }
 }
 
 .asili-drop-item__ic {
@@ -230,9 +208,10 @@
   color: var(--danger);
 }
 
-.asili-drop-item--danger:hover,
-.asili-drop-item--danger:focus-visible {
-  background: rgba(192, 86, 60, 0.08);
+.asili-drop-item--danger {
+  @include survol.survol-ou-focus {
+    background: rgba(164, 64, 43, 0.08);
+  }
 }
 
 .asili-user-head {
@@ -306,10 +285,11 @@
   color: var(--ink-mute);
 }
 
-.asili-lang__switch:hover,
-.asili-lang__switch:focus-visible {
-  color: var(--ink);
-  background: var(--ivory);
+.asili-lang__switch {
+  @include survol.survol-ou-focus {
+    color: var(--ink);
+    background: var(--ivory);
+  }
 }
 
 .asili-avatar {
@@ -319,7 +299,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, var(--teal), var(--teal-ink));
+  background: linear-gradient(135deg, var(--teal-deep), var(--teal-deep));
   color: var(--cream);
   border: 2px solid var(--cream);
   box-shadow: var(--shadow-soft);
@@ -334,9 +314,11 @@
   box-shadow: none;
 }
 
-.asili-avatar--login:hover {
-  background: var(--ivory);
-  color: var(--ink);
+.asili-avatar--login {
+  @include survol.survol {
+    background: var(--ivory);
+    color: var(--ink);
+  }
 }
 
 .asili-avatar--sm {
@@ -419,13 +401,6 @@
   display: block;
 }
 
-.asili-drawer__group-label {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
 .asili-nav__link.is-mobile {
   display: flex;
   align-items: center;
@@ -440,10 +415,11 @@
   color: var(--ink);
 }
 
-.asili-nav__link.is-mobile:hover,
-.asili-nav__link.is-mobile:focus-visible {
-  background: transparent;
-  color: var(--teal-deep);
+.asili-nav__link.is-mobile {
+  @include survol.survol-ou-focus {
+    background: transparent;
+    color: var(--teal-deep);
+  }
 }
 
 .asili-nav__link.is-mobile.active {
@@ -452,13 +428,6 @@
 
 .asili-nav__chevron {
   flex: none;
-}
-
-.asili-drawer__sub {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--ink-mute);
 }
 
 .asili-drawer__sublist {
@@ -474,14 +443,10 @@
   padding: 6px 0;
 }
 
-.asili-drawer__sublink:hover,
-.asili-drawer__sublink:focus-visible {
-  color: var(--teal-deep);
-}
-
-.asili-drawer__sublink--hub {
-  color: var(--ink);
-  font-weight: 600;
+.asili-drawer__sublink {
+  @include survol.survol-ou-focus {
+    color: var(--teal-deep);
+  }
 }
 
 .asili-nav__side.is-mobile {

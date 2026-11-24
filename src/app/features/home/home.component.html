@@ -1,57 +1,103 @@
-<app-asili-hero [liveChip]="heroChip" [lead]="heroLead" [scrollHint]="heroScrollHint">
-  <ng-container title>
-    {{ heroTitlePre }} <span class="accent">{{ heroTitleAccent }}</span>
-    {{ heroTitlePost }}
-  </ng-container>
-
-  <ng-container meta>
-    <div>
-      <div class="n">{{ heroStat1Num }}</div>
-      <div class="l">{{ heroStat1Label }}</div>
-    </div>
-    <div>
-      <div class="n">{{ heroStat2Num }}</div>
-      <div class="l">{{ heroStat2Label }}</div>
-    </div>
-  </ng-container>
-
+<app-asili-hero [titre]="titre" [kicker]="heroChip" [lead]="heroLead">
   <ng-container cta>
-    <a class="btn btn-teal" routerLink="/offer">
-      {{ heroCtaPrimary }} <span class="arrow" aria-hidden="true">→</span>
+    <a class="btn btn-teal" routerLink="/contact" [queryParams]="{ besoin: 'creer' }">
+      <span i18n="@@homeHeroParlerDeMonSite">Parler de mon site</span>
+      <span class="arrow" aria-hidden="true"> →</span>
     </a>
-    <a class="btn btn-ghost" routerLink="/projets">
-      {{ heroCtaSecondary }}
-    </a>
-  </ng-container>
-</app-asili-hero>
-
-<app-asili-method [steps]="methodSteps" [kicker]="methodKicker" [intro]="methodIntro">
-  <h2 heading class="h-lg method-head__title" style="max-width: 18ch">
-    <ng-container i18n="@@homeMethodHeading"
-      >Un fil conducteur, du flou jusqu'à ce qui <em>tient dans le temps</em>.</ng-container
+    <a class="btn btn-ghost" routerLink="/projets" i18n="@@homeHeroVoirMesRealisations"
+      >Voir mes réalisations</a
     >
+  </ng-container>
+
+  @if (siteDuHeros; as site) {
+    <figure visuel class="cadre-navigateur">
+      <div class="cadre-navigateur__barre" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <img
+        [src]="site.image"
+        [attr.srcset]="variantesDuHeros"
+        [attr.sizes]="largeurDuVisuel"
+        [alt]="site.imageAlt"
+        width="1200"
+        height="750"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </figure>
+  }
+</app-asili-hero>
+<section class="probleme section-pad" aria-labelledby="probleme-titre">
+  <div class="wrap probleme-grille">
+    <span class="kicker" i18n="@@homeProblemeKicker">Le problème</span>
+    <h2 id="probleme-titre" class="h-xl" i18n="@@homeProblemeTitre">
+      Un site qui ne dit rien ne vous rapporte rien.
+    </h2>
+    <ol class="probleme-liste">
+      <li i18n="@@homeProbleme1">Il ne dit pas ce que vous faites.</li>
+      <li i18n="@@homeProbleme2">On ne le trouve pas.</li>
+      <li i18n="@@homeProbleme3">Il ne fait pas appeler.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="guide section-pad" aria-labelledby="guide-titre">
+  <div class="wrap guide-grille">
+    <span class="kicker" i18n="@@homeGuideKicker">Votre guide</span>
+    <h2 id="guide-titre" class="h-lg" i18n="@@homeGuideTitre">
+      Je suis Tim, et j’explique sans jargon.
+    </h2>
+    <p class="lead" i18n="@@homeGuideTexte">
+      Six ans manager chez Decathlon, puis formateur à l’Ipac et à l’EPSI. J’enseigne, donc
+      j’explique sans jargon. Je traduis votre métier en un site que vos clients comprennent du
+      premier coup.
+    </p>
+    <a class="link-arrow" routerLink="/presentation">
+      <ng-container i18n="@@homeGuideLien">À propos de mon parcours</ng-container>&ngsp;<span
+        aria-hidden="true"
+        >→</span
+      >
+    </a>
+  </div>
+</section>
+
+<app-asili-method [steps]="planSteps" [kicker]="planKicker">
+  <h2 heading class="h-lg method-head__title" i18n="@@homePlanTitre">
+    Trois étapes, et votre site est en ligne.
   </h2>
 </app-asili-method>
 
-<app-asili-pillars [pillars]="pillars" [kicker]="pillarsKicker">
-  <h2 heading class="h-xl pillars-head__title">
-    <ng-container i18n="@@homePillarsHeading"
-      >Services &amp; Formations, <em>à parts égales</em>.</ng-container
-    >
-  </h2>
-</app-asili-pillars>
-
-<app-asili-manifesto [lines]="manifestoLines"></app-asili-manifesto>
-
-<app-asili-projects-grid [projects]="projects" [kicker]="projectsKicker" [eagerImages]="0">
-  <h2 heading class="h-xl projects-head__title">
-    <ng-container i18n="@@homeProjectsHeading"
-      >Des réalisations,<br />pas des promesses.</ng-container
-    >
+<app-asili-projects-grid [projects]="projects" [kicker]="projectsKicker">
+  <h2 heading class="h-xl projects-head__title" i18n="@@homeRealisationsTitre">
+    Des réalisations, pas des promesses.
   </h2>
   <a headLink class="link-arrow" routerLink="/projets">
     {{ projectsHeadLink }} <span aria-hidden="true">→</span>
   </a>
 </app-asili-projects-grid>
 
-<app-asili-cta-band [contenu]="cta" />
+<section class="formation section-pad" aria-labelledby="formation-titre">
+  <div class="wrap">
+    <span class="kicker" i18n="@@homeFormationKicker">Formation</span>
+    <h2 id="formation-titre" class="h-lg" i18n="@@homeFormationTitre">
+      Après la mise en ligne, je vous rends autonome.
+    </h2>
+    <div class="formation-entrees">
+      @for (entree of formations; track entree.lien) {
+        <a class="formation-entree" [routerLink]="entree.lien">
+          <h3>{{ entree.titre }}</h3>
+          <p>{{ entree.detail }}</p>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<app-asili-faq [kicker]="faqKicker" [title]="faqTitre" [items]="faq" />
+
+<app-asili-cta-band [contenu]="appel">
+  <a cta class="btn btn-teal" routerLink="/contact" [queryParams]="{ besoin: 'creer' }">
+    <span i18n="@@homeHeroParlerDeMonSite">Parler de mon site</span>
+    <span class="arrow" aria-hidden="true"> →</span>
+  </a>
+</app-asili-cta-band>

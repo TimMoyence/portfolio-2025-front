@@ -1,3 +1,4 @@
+import { texteDe } from '../../../../testing/texte/textes-dom';
 import {
   liensAffiches,
   pucesRendues,
@@ -21,8 +22,7 @@ const TOOLKIT = '/formations/ia-solopreneurs/toolkit';
 describe('CAT-03 · recherche dans le catalogue', () => {
   const page = montagePage(FormationsListComponent);
   const racine = (): HTMLElement => page().nativeElement as HTMLElement;
-  const statut = (): string =>
-    racine().querySelector('[role="status"]')?.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+  const statut = (): string => texteDe(racine().querySelector('[role="status"]'));
 
   it('CAT-03 · garde les seules cartes qui contiennent le texte et masque les sections vides', () => {
     saisir(page(), 'amortissement');

@@ -1,8 +1,14 @@
 @use '../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../styles-shared/composants/cartes';
+@use '../../styles-shared/composants/badges';
 @use '../../styles-shared/composants/lists';
 @use '../../styles-shared/mise-en-page/surfaces' as surfaces;
 @use '../../styles-shared/mise-en-page/mono';
+@use '../../styles-shared/mise-en-page/heads' as heads;
+
+.ai-method-title {
+  max-width: heads.largeur-de-titre(18);
+}
 
 .intro-split {
   display: grid;
@@ -92,10 +98,8 @@
   .stack span {
     @include mono.police;
     font-size: 11px;
-    color: var(--teal-deep);
-    background: rgba(var(--teal-rgb), 0.1);
+    @include badges.pastille-opaque(var(--teal-deep));
     padding: 4px 10px;
-    border-radius: var(--r-pill);
   }
 }
 
