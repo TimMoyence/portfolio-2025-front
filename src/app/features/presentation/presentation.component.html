@@ -2,15 +2,7 @@
 
 <section class="section-pad">
   <div class="wrap intro-split">
-    <div class="portrait">
-      @if (portraitImage) {
-        <img [ngSrc]="portraitImage" [alt]="portraitAlt" fill priority />
-      } @else {
-        <div class="placeholder">
-          <span>{{ portraitPlaceholder }}</span>
-        </div>
-      }
-    </div>
+    <app-portrait class="portrait" [priorite]="true" />
     <div class="intro-body">
       <p i18n="@@presentationIntroP1">
         J'ai d'abord managé des équipes pendant six ans chez Decathlon. Le terrain, les gens, les

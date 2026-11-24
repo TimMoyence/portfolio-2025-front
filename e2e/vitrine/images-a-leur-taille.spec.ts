@@ -45,26 +45,34 @@ for (const ecran of ECRANS) {
   test.describe(`REC-15 · une vignette ne télécharge pas plus que ce qu elle affiche (${ecran.nom})`, () => {
     test.use({ viewport: ecran.viewport, deviceScaleFactor: ecran.deviceScaleFactor });
 
-    for (const chemin of ['/', '/projets']) {
-      test(`REC-15 · ${chemin} en ${ecran.nom} : aucune vignette au-delà du gaspillage toléré par Lighthouse`, async ({
-        page,
-      }) => {
+    for (const { titre, chemin, attendue, etat, mesurees } of [
+      ...['/', '/projets'].map((chemin) => ({
+        titre: `REC-15 · ${chemin} en ${ecran.nom} : aucune vignette au-delà du gaspillage toléré par Lighthouse`,
+        chemin,
+        attendue: '.proj-shot img',
+        etat: 'attached' as const,
+        mesurees: '.proj-shot img',
+      })),
+      ...[
+        { chemin: '/', visuels: '.hero-visuel img, .guide app-portrait img' },
+        { chemin: '/offer', visuels: '.hero-visuel img' },
+        { chemin: '/contact', visuels: '.hero-visuel img' },
+        { chemin: '/presentation', visuels: 'app-portrait img' },
+      ].map(({ chemin, visuels }) => ({
+        titre: `VIT2-10 · ${chemin} en ${ecran.nom} : le logo, l illustration et le portrait restent sous le gaspillage toléré par Lighthouse`,
+        chemin,
+        attendue: visuels,
+        etat: 'visible' as const,
+        mesurees: `.asili-logo_img, ${visuels}`,
+      })),
+    ]) {
+      test(titre, async ({ page }) => {
         await sansContenu(page);
         await page.goto(chemin);
-        await expect(page.locator('.proj-shot img').first()).toBeAttached();
+        await page.locator(attendue).first().waitFor({ state: etat });
 
-        expect(await gaspillages(page, '.proj-shot img')).toEqual([]);
+        expect(await gaspillages(page, mesurees)).toEqual([]);
       });
     }
-
-    test(`REC-15 · / en ${ecran.nom} : le logo et la capture du héros restent sous le gaspillage toléré par Lighthouse`, async ({
-      page,
-    }) => {
-      await sansContenu(page);
-      await page.goto('/');
-      await expect(page.locator('.hero-visuel img')).toBeVisible();
-
-      expect(await gaspillages(page, '.asili-logo_img, .hero-visuel img')).toEqual([]);
-    });
   });
 }

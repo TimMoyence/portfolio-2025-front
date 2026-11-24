@@ -66,18 +66,6 @@ describe('REC-08 · Créer mon site dit le prix, le délai et ce qui est inclus'
     ]);
   });
 
-  it('REC-08 · ce qui est inclus se lit en quatre points', () => {
-    const inclus = page.racine.querySelector('.inclus');
-
-    expect(texte(inclus?.querySelector('h2'))).toBe('Inclus');
-    expect(Array.from(inclus?.querySelectorAll('li') ?? []).map(texte)).toEqual([
-      'Rédaction avec vous',
-      'Référencement Google & IA',
-      'Mise en ligne',
-      'Prise en main',
-    ]);
-  });
-
   it('REC-08 · le diagnostic gratuit mène à /growth-audit', () => {
     const diagnostic = page.racine.querySelector('a.diagnostic');
 

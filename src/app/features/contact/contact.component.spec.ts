@@ -16,6 +16,7 @@ import {
   SAISIES_MESUREES,
 } from '../../../testing/dom/saisies-mesurees';
 import { pageMontee } from '../../../testing/page/montage-page';
+import { texteDe } from '../../../testing/texte/textes-dom';
 import { formulaireSoumis } from '../../../testing/http/page-auth';
 import { setupTestBed } from '../../../testing/setup-test-bed';
 
@@ -204,9 +205,17 @@ describe('ContactComponent', () => {
     });
   });
 
-  it('should render main title', () => {
-    const heading = page.racine.querySelector('[data-testid="hero-title"]');
-    expect(heading?.textContent).toContain(page.composant.hero.title);
+  it('VIT2-02 · s ouvre sur le héros de la charte : « Parlons de votre site » et l illustration de Tim au premier plan', () => {
+    const heros = page.racine.querySelector('app-asili-hero');
+
+    expect(texteDe(heros?.querySelector('.kicker'))).toBe('Contact');
+    expect(texteDe(heros?.querySelector('h1'))).toBe('Parlons de votre site');
+    expect(texteDe(heros?.querySelector('.lead'))).toBe(
+      'Dites-moi ce que vous faites et ce dont vous avez besoin. Je vous réponds sous 48 h ouvrées avec une proposition claire.',
+    );
+    expect(heros?.querySelector('.hero-visuel img')?.getAttribute('src')).toBe(
+      '/assets/images/audit.webp',
+    );
   });
 
   it('devrait afficher le formulaire de contact avec les champs texte', () => {

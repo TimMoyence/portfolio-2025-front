@@ -68,6 +68,32 @@ test.describe('REC-16 · hors vitrine, le survol attend (hover: hover) et l acce
   });
 });
 
+test.describe('VIT2-05 · hors vitrine non plus, aucune carte ne se soulève au survol', () => {
+  test.use({ contextOptions: { reducedMotion: 'no-preference' } });
+
+  for (const { chemin, carte } of [
+    { chemin: '/formations/automatiser-avec-ia', carte: '.slide-grid__card' },
+    { chemin: '/formations/ia-solopreneurs/toolkit/jeton-de-test', carte: '.tkp-card--link' },
+  ]) {
+    test(`VIT2-05 · ${chemin} ${carte} : rien ne monte au survol`, async ({ page }) => {
+      await ouvrir(page, chemin);
+      const cible = page.locator(carte).first();
+      await cible.scrollIntoViewIfNeeded();
+      const haut = () =>
+        cible.evaluate(async (element) => {
+          await new Promise((suite) => requestAnimationFrame(() => requestAnimationFrame(suite)));
+          await Promise.all(element.getAnimations().map((animation) => animation.finished));
+          return Math.round(element.getBoundingClientRect().top);
+        });
+      const repos = await haut();
+
+      await cible.hover();
+
+      expect(await haut()).toBe(repos);
+    });
+  }
+});
+
 test.describe('REC-16 · la navigation se lit à 4,5:1 dans chacun de ses états', () => {
   test.beforeEach(async ({ page }) => {
     await intercepterApi(page, servir);

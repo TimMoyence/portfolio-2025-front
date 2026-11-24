@@ -3,12 +3,18 @@ import { RouterLink } from '@angular/router';
 import { FiletDeSectionDirective } from '../../shared/directives/filet-de-section.directive';
 import type { BesoinDeContact } from '../../shared/offre/besoins';
 import { delaiDeMiseEnLigne, faqDuSite, prixPlancher } from '../../shared/offre/prix-et-delai';
+import { ENGAGEMENTS_INCLUS } from '../../shared/offre/socle-et-elan';
 import {
   type AsiliClosing,
   AsiliClosingComponent,
   AsiliHeroComponent,
+  type AsiliProject,
+  AsiliProjectsGridComponent,
+  IllustrationDuHerosComponent,
   type MorceauDeTitre,
+  SocleEtElanComponent,
 } from '../../shared/sections';
+import { carteDeRealisation, REALISATIONS } from '../projets/realisations.data';
 
 interface Formule {
   readonly titre: string;
@@ -20,7 +26,15 @@ interface Formule {
 @Component({
   selector: 'app-offer',
   standalone: true,
-  imports: [RouterLink, AsiliHeroComponent, AsiliClosingComponent, FiletDeSectionDirective],
+  imports: [
+    RouterLink,
+    AsiliHeroComponent,
+    IllustrationDuHerosComponent,
+    SocleEtElanComponent,
+    AsiliProjectsGridComponent,
+    AsiliClosingComponent,
+    FiletDeSectionDirective,
+  ],
   templateUrl: './offer.component.html',
   styleUrl: './offer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,6 +72,16 @@ export class OfferComponent {
       besoin: 'app-mobile',
     },
   ];
+
+  protected readonly methodeKicker = $localize`:@@offreMethodeKicker:La méthode`;
+
+  protected readonly engagements = ENGAGEMENTS_INCLUS;
+
+  protected readonly apercuKicker = $localize`:@@offreApercuKicker:Déjà en ligne`;
+
+  protected readonly apercu: readonly AsiliProject[] = REALISATIONS.filter(
+    ({ famille }) => famille === 'sites',
+  ).map(carteDeRealisation);
 
   protected readonly closing: AsiliClosing = {
     faq: {

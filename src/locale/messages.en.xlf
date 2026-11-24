@@ -948,12 +948,6 @@
       </segment>
     </unit>
 
-    <unit id="auditFaqDescription">
-      <segment>
-        <source>Ce qu’il faut savoir avant de demander votre diagnostic : sept points passés en revue et des corrections classées par priorité.</source>
-        <target>What to know before requesting your diagnosis: seven points reviewed and fixes ranked by priority.</target>
-      </segment>
-    </unit>
 
     <unit id="auditFaqQ1">
       <segment>
@@ -4912,33 +4906,6 @@
         <target>The founder</target>
       </segment>
     </unit>
-    <unit id="presentationHeroTitlePre">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:97</note>
-      </notes>
-      <segment>
-        <source>Développeur full-stack &amp; IA.</source>
-        <target>Full-stack &amp; AI developer.</target>
-      </segment>
-    </unit>
-    <unit id="presentationHeroTitleAccent">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:100</note>
-      </notes>
-      <segment>
-        <source>Manager</source>
-        <target>Manager</target>
-      </segment>
-    </unit>
-    <unit id="presentationHeroTitlePost">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:103</note>
-      </notes>
-      <segment>
-        <source>avant tout.</source>
-        <target>first.</target>
-      </segment>
-    </unit>
     <unit id="presentationHeroLead">
       <notes>
         <note category="location">src/app/features/presentation/presentation.component.ts:106</note>
@@ -4984,12 +4951,6 @@
         <target>Method</target>
       </segment>
     </unit>
-    <unit id="presentationHeroMeta3Value">
-      <segment>
-        <source>Écouter · Écrire · Lancer</source>
-        <target>Listen · Write · Launch</target>
-      </segment>
-    </unit>
     <unit id="presentationHeroMeta4Key">
       <notes>
         <note category="location">src/app/features/presentation/presentation.component.ts:123</note>
@@ -5024,15 +4985,6 @@
       <segment>
         <source>Nouveaux projets · 2026</source>
         <target>New projects · 2026</target>
-      </segment>
-    </unit>
-    <unit id="presentationPortraitPlaceholder">
-      <notes>
-        <note category="location">src/app/features/presentation/presentation.component.ts:135</note>
-      </notes>
-      <segment>
-        <source>portrait — photo du fondateur</source>
-        <target>portrait — photo of the founder</target>
       </segment>
     </unit>
     <unit id="presentationIntroSignature">
@@ -12818,42 +12770,6 @@
         <target>Screenshot of the asilidesign.fr website</target>
       </segment>
     </unit>
-    <unit id="realisationInnovmindSecteur">
-      <segment>
-        <source>Culture &amp; musées</source>
-        <target>Culture &amp; museums</target>
-      </segment>
-    </unit>
-    <unit id="realisationInnovmindResultat">
-      <segment>
-        <source>Reconnaissance d&apos;œuvres par photo</source>
-        <target>Artwork recognition by photo</target>
-      </segment>
-    </unit>
-    <unit id="realisationInnovmindDefi">
-      <segment>
-        <source>Devant une œuvre, une notice figée ne répond ni à la curiosité du visiteur ni à sa langue.</source>
-        <target>In front of an artwork, a fixed label answers neither the visitor&apos;s curiosity nor their language.</target>
-      </segment>
-    </unit>
-    <unit id="realisationInnovmindConstruit">
-      <segment>
-        <source>Une app mobile qui reconnaît l&apos;œuvre à partir d&apos;une photo, puis ouvre une conversation à son sujet dans la langue du visiteur. Co-conception du produit et développement de l&apos;app.</source>
-        <target>A mobile app that recognises the artwork from a photo, then opens a conversation about it in the visitor&apos;s language. Product co-design and app development.</target>
-      </segment>
-    </unit>
-    <unit id="realisationInnovmindResultatRecit">
-      <segment>
-        <source>Le visiteur passe de la photo à une explication qui lui parle, en quelques secondes.</source>
-        <target>The visitor goes from the photo to an explanation that speaks to them, in a few seconds.</target>
-      </segment>
-    </unit>
-    <unit id="realisationInnovmindImageAlt">
-      <segment>
-        <source>Illustration de l&apos;app InnovMind</source>
-        <target>Illustration of the InnovMind app</target>
-      </segment>
-    </unit>
     <unit id="realisationChaisSecteur">
       <segment>
         <source>Viticulture</source>
@@ -12874,8 +12790,8 @@
     </unit>
     <unit id="realisationChaisConstruit">
       <segment>
-        <source>Un outil qui centralise chaque étape, de la vigne au chai puis à la bouteille, avec l&apos;historique de chaque lot.</source>
-        <target>A tool that centralises every stage, from the vine to the cellar and the bottle, with the history of each batch.</target>
+        <source>Un outil web et son app mobile : on dessine ses chais et ses contenants, on compose les assemblages avec les volumes disponibles, et chaque mouvement d&apos;eau-de-vie est tracé lot par lot, notes de dégustation comprises.</source>
+        <target>A web tool and its mobile app: you draw your cellars and containers, build blends from the volumes available, and every movement of spirit is traced batch by batch, tasting notes included.</target>
       </segment>
     </unit>
     <unit id="realisationChaisResultatRecit">
@@ -12958,8 +12874,8 @@
     </unit>
     <unit id="realisationZenfirstImageAlt">
       <segment>
-        <source>Illustration de ZenFirst Renta</source>
-        <target>Illustration of ZenFirst Renta</target>
+        <source>Capture de l&apos;aide à la décision de ZenFirst Renta</source>
+        <target>Screenshot of the ZenFirst Renta decision aid</target>
       </segment>
     </unit>
     <unit id="realisationMorningSecteur">
@@ -12994,8 +12910,8 @@
     </unit>
     <unit id="realisationMorningImageAlt">
       <segment>
-        <source>Illustration de Morning-Brief</source>
-        <target>Illustration of Morning-Brief</target>
+        <source>Capture d&apos;une édition de Morning-Brief</source>
+        <target>Screenshot of a Morning-Brief edition</target>
       </segment>
     </unit>
     <unit id="realisationFicheRetour">
@@ -13114,62 +13030,8 @@
     </unit>
     <unit id="homePlanTitre">
       <segment>
-        <source> Trois étapes, et votre site est en ligne. </source>
-        <target> Three steps, and your website is live. </target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape1Index">
-      <segment>
-        <source>— Écouter</source>
-        <target>— Listen</target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape1Titre">
-      <segment>
-        <source>On se parle</source>
-        <target>We talk</target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape1Texte">
-      <segment>
-        <source>Vous me racontez votre métier, vos clients et ce qui vous fait gagner du travail. Une heure suffit.</source>
-        <target>You tell me about your trade, your customers and what brings you work. One hour is enough.</target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape2Index">
-      <segment>
-        <source>— Écrire</source>
-        <target>— Write</target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape2Titre">
-      <segment>
-        <source>Je raconte et je construis</source>
-        <target>I tell your story and build</target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape2Texte">
-      <segment>
-        <source>J’écris des pages qui parlent comme vous, puis je construis un site rapide que Google et les IA comprennent.</source>
-        <target>I write pages that sound like you, then build a fast website that Google and AI understand.</target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape3Index">
-      <segment>
-        <source>— Lancer</source>
-        <target>— Launch</target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape3Titre">
-      <segment>
-        <source>Vous êtes en ligne, et autonome</source>
-        <target>You’re live, and independent</target>
-      </segment>
-    </unit>
-    <unit id="homePlanEtape3Texte">
-      <segment>
-        <source>Le site est en ligne, et je vous montre comment le faire vivre sans dépendre de moi.</source>
-        <target>Your website is live, and I show you how to keep it alive without depending on me.</target>
+        <source> Socle &amp; Élan : votre site en ligne, puis plus fort. </source>
+        <target>Socle &amp; Élan: your website live, then stronger.</target>
       </segment>
     </unit>
     <unit id="homeRealisationsTitre">
@@ -13252,8 +13114,8 @@
     </unit>
     <unit id="faqDuSiteDelaiReponse">
       <segment>
-        <source>Votre site est <ph id="0" equiv="delai" disp="delai"/>, du premier échange à la mise en ligne, dès que vos textes et vos photos sont prêts.</source>
-        <target>Your website is <ph id="0" equiv="delai" disp="delai"/>, from our first conversation to launch, as soon as your texts and photos are ready.</target>
+        <source>Votre site est <ph id="0" equiv="delai" disp="delai"/>, du premier échange à la mise en ligne. La date est fixée dès le départ : c’est le contenu qui s’ajuste, et j’écris les textes avec vous.</source>
+        <target>Your website is <ph id="0" equiv="delai" disp="delai"/>, from our first conversation to launch. The date is set from the start: the content adjusts, and I write the texts with you.</target>
       </segment>
     </unit>
     <unit id="faqDuSiteApresQuestion">
@@ -13290,30 +13152,6 @@
       <segment>
         <source>Inclus</source>
         <target>Included</target>
-      </segment>
-    </unit>
-    <unit id="offreInclusRedaction">
-      <segment>
-        <source>Rédaction avec vous</source>
-        <target>Writing with you</target>
-      </segment>
-    </unit>
-    <unit id="offreInclusReferencement">
-      <segment>
-        <source>Référencement Google &amp; IA</source>
-        <target>Google &amp; AI visibility</target>
-      </segment>
-    </unit>
-    <unit id="offreInclusMiseEnLigne">
-      <segment>
-        <source>Mise en ligne</source>
-        <target>Launch</target>
-      </segment>
-    </unit>
-    <unit id="offreInclusPriseEnMain">
-      <segment>
-        <source>Prise en main</source>
-        <target>Handover</target>
       </segment>
     </unit>
     <unit id="offreDiagnosticTitre">
@@ -13530,6 +13368,450 @@
       <segment>
         <source>le terrain</source>
         <target>the field</target>
+      </segment>
+    </unit>
+    <unit id="offreApercuTitre">
+      <segment>
+        <source> Des sites déjà en ligne. </source>
+        <target> Websites already live. </target>
+      </segment>
+    </unit>
+    <unit id="offreMethodeKicker">
+      <segment>
+        <source>La méthode</source>
+        <target>The method</target>
+      </segment>
+    </unit>
+    <unit id="offreApercuKicker">
+      <segment>
+        <source>Déjà en ligne</source>
+        <target>Already live</target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroTitreDebut">
+      <segment>
+        <source>Votre site, pensé avec vous, </source>
+        <target>Your website, shaped with you, </target>
+      </segment>
+    </unit>
+    <unit id="presentationHeroTitreAccent">
+      <segment>
+        <source>prouvé avant d’être promis.</source>
+        <target>proven before it’s promised.</target>
+      </segment>
+    </unit>
+    <unit id="realisationFicheDepot">
+      <segment>
+        <source>Voir le code</source>
+        <target>View the code</target>
+      </segment>
+    </unit>
+    <unit id="realisationsFamilleOutils">
+      <segment>
+        <source>Outils</source>
+        <target>Tools</target>
+      </segment>
+    </unit>
+    <unit id="realisationsFamilleOutilsPrecision">
+      <segment>
+        <source>Ce que je construis pour travailler mieux</source>
+        <target>What I build to work better</target>
+      </segment>
+    </unit>
+    <unit id="realisationMusaiumSecteur">
+      <segment>
+        <source>Culture &amp; musées</source>
+        <target>Culture &amp; museums</target>
+      </segment>
+    </unit>
+    <unit id="realisationMusaiumResultat">
+      <segment>
+        <source>App mobile et site vitrine</source>
+        <target>Mobile app and showcase website</target>
+      </segment>
+    </unit>
+    <unit id="realisationMusaiumDefi">
+      <segment>
+        <source>Devant une œuvre ou un monument, une notice figée ne répond ni à la curiosité du visiteur ni à sa langue.</source>
+        <target>In front of an artwork or a monument, a fixed label answers neither the visitor’s curiosity nor their language.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMusaiumConstruit">
+      <segment>
+        <source>Une app mobile qui reconnaît l&apos;œuvre à partir d&apos;une photo, en parle avec le visiteur, à la voix ou par écrit, dans sa langue, et garde un carnet de visite. Un site vitrine présente l&apos;app aux visiteurs et aux musées.</source>
+        <target>A mobile app that recognises the artwork from a photo, talks about it with the visitor, by voice or in writing, in their language, and keeps a visit log. A showcase website presents the app to visitors and museums.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMusaiumResultatRecit">
+      <segment>
+        <source>Le visiteur passe de la photo à une explication qui lui parle, et repart avec le carnet de sa visite.</source>
+        <target>Visitors go from a photo to an explanation that speaks to them, and leave with the log of their visit.</target>
+      </segment>
+    </unit>
+    <unit id="realisationMusaiumImageAlt">
+      <segment>
+        <source>Capture de l&apos;app mobile Musaium : accueil, conversation sur une œuvre et carte des musées</source>
+        <target>Screenshot of the Musaium mobile app: home, a conversation about an artwork and a map of museums</target>
+      </segment>
+    </unit>
+    <unit id="realisationPortailSecteur">
+      <segment>
+        <source>Expertise comptable</source>
+        <target>Chartered accountancy</target>
+      </segment>
+    </unit>
+    <unit id="realisationPortailResultat">
+      <segment>
+        <source>Chaque dossier client au même endroit</source>
+        <target>Every client file in one place</target>
+      </segment>
+    </unit>
+    <unit id="realisationPortailDefi">
+      <segment>
+        <source>L&apos;intranet du cabinet devait être refait pour accompagner chaque dossier client, de l&apos;entrée en relation au diagnostic de l&apos;entreprise.</source>
+        <target>The firm’s intranet had to be rebuilt to support every client file, from the first contact to the company diagnosis.</target>
+      </segment>
+    </unit>
+    <unit id="realisationPortailConstruit">
+      <segment>
+        <source>Un portail qui reprend la fiche de chaque client, déduit sa forme juridique des données publiques quand elle est certaine et laisse la question à l&apos;expert sinon, puis guide le diagnostic pas à pas.</source>
+        <target>A portal that brings together each client’s record, infers the legal form from public data when it is certain and leaves the question to the accountant otherwise, then guides the diagnosis step by step.</target>
+      </segment>
+    </unit>
+    <unit id="realisationPortailResultatRecit">
+      <segment>
+        <source>Les collaborateurs suivent chaque dossier au même endroit, et l&apos;expert ne tranche que ce qui demande son jugement.</source>
+        <target>The team follows every file in one place, and the accountant only decides what calls for their judgement.</target>
+      </segment>
+    </unit>
+    <unit id="realisationPortailImageAlt">
+      <segment>
+        <source>Capture du portail d&apos;un cabinet comptable</source>
+        <target>Screenshot of an accountancy firm’s portal</target>
+      </segment>
+    </unit>
+    <unit id="realisationSchemaSecteur">
+      <segment>
+        <source>Outil de développement</source>
+        <target>Developer tool</target>
+      </segment>
+    </unit>
+    <unit id="realisationSchemaResultat">
+      <segment>
+        <source>Deux niveaux de lecture</source>
+        <target>Two levels of reading</target>
+      </segment>
+    </unit>
+    <unit id="realisationSchemaDefi">
+      <segment>
+        <source>Un fichier de schéma décrit des tables, mais ne dit ni quelle table est au centre du modèle, ni ce que ses auteurs avaient en tête.</source>
+        <target>A schema file describes tables, but says neither which table sits at the centre of the model nor what its authors had in mind.</target>
+      </segment>
+    </unit>
+    <unit id="realisationSchemaConstruit">
+      <segment>
+        <source>Un rendu en deux profondeurs : la carte des domaines pour comprendre l&apos;ensemble, le diagramme d&apos;un domaine pour travailler, et les notes des auteurs affichées plutôt qu&apos;ignorées. Le même schéma donne toujours le même rendu.</source>
+        <target>A rendering at two depths: the map of domains to grasp the whole, the diagram of one domain to work in, and the authors’ notes shown rather than ignored. The same schema always gives the same rendering.</target>
+      </segment>
+    </unit>
+    <unit id="realisationSchemaResultatRecit">
+      <segment>
+        <source>Le cœur du rendu est écrit et vérifié par ses tests ; le produit qui l&apos;entoure est en construction.</source>
+        <target>The core of the rendering is written and checked by its tests; the product around it is under construction.</target>
+      </segment>
+    </unit>
+    <unit id="realisationSchemaImageAlt">
+      <segment>
+        <source>Capture de Schema-Atlas</source>
+        <target>Screenshot of Schema-Atlas</target>
+      </segment>
+    </unit>
+    <unit id="realisationSlideSecteur">
+      <segment>
+        <source>Outil libre</source>
+        <target>Open-source tool</target>
+      </segment>
+    </unit>
+    <unit id="realisationSlideResultat">
+      <segment>
+        <source>Tout reste sur votre machine</source>
+        <target>Everything stays on your machine</target>
+      </segment>
+    </unit>
+    <unit id="realisationSlideDefi">
+      <segment>
+        <source>Réutiliser les diapositives d&apos;un support de cours demandait des captures d&apos;écran, une par une.</source>
+        <target>Reusing the slides of a course deck meant taking screenshots, one by one.</target>
+      </segment>
+    </unit>
+    <unit id="realisationSlideConstruit">
+      <segment>
+        <source>Une petite application : on glisse le PDF, on coche les diapositives voulues, et chacune est enregistrée en image haute définition, sans que rien ne quitte la machine.</source>
+        <target>A small application: you drop in the PDF, tick the slides you want, and each one is saved as a high-definition image, without anything leaving the machine.</target>
+      </segment>
+    </unit>
+    <unit id="realisationSlideResultatRecit">
+      <segment>
+        <source>Un support entier devient une série d&apos;images prêtes à l&apos;emploi, et le code est ouvert à tous.</source>
+        <target>A whole deck becomes a set of ready-to-use images, and the code is open to everyone.</target>
+      </segment>
+    </unit>
+    <unit id="realisationSlideImageAlt">
+      <segment>
+        <source>Capture de Slide-Shot</source>
+        <target>Screenshot of Slide-Shot</target>
+      </segment>
+    </unit>
+    <unit id="realisationOutillageSecteur">
+      <segment>
+        <source>Outil libre</source>
+        <target>Open-source tool</target>
+      </segment>
+    </unit>
+    <unit id="realisationOutillageResultat">
+      <segment>
+        <source>Chaque livraison prouvée</source>
+        <target>Every delivery proven</target>
+      </segment>
+    </unit>
+    <unit id="realisationOutillageDefi">
+      <segment>
+        <source>Un assistant de code écrit vite, mais rien ne garantit que ce qu&apos;il annonce soit vrai.</source>
+        <target>A coding assistant writes fast, but nothing guarantees that what it announces is true.</target>
+      </segment>
+    </unit>
+    <unit id="realisationOutillageConstruit">
+      <segment>
+        <source>Un ensemble de règles et de gardes : un contrat validé avant le code, un test vu en échec puis réussi, une contre-preuve sur l&apos;ancien code, et un relecteur qui cherche le contre-exemple.</source>
+        <target>A set of rules and guards: a contract approved before the code, a test seen failing then passing, a counter-proof on the old code, and a reviewer who hunts for the counter-example.</target>
+      </segment>
+    </unit>
+    <unit id="realisationOutillageResultatRecit">
+      <segment>
+        <source>C&apos;est la méthode qui a construit ce site : chaque livraison annoncée s&apos;accompagne de sa preuve.</source>
+        <target>It is the method that built this website: every announced delivery comes with its proof.</target>
+      </segment>
+    </unit>
+    <unit id="realisationOutillageImageAlt">
+      <segment>
+        <source>Capture d&apos;Outillage-Claude</source>
+        <target>Screenshot of Outillage-Claude</target>
+      </segment>
+    </unit>
+    <unit id="realisationFourmizzzSecteur">
+      <segment>
+        <source>Jeu en ligne</source>
+        <target>Online game</target>
+      </segment>
+    </unit>
+    <unit id="realisationFourmizzzResultat">
+      <segment>
+        <source>Calculs vérifiés sur de vrais rapports</source>
+        <target>Calculations checked against real reports</target>
+      </segment>
+    </unit>
+    <unit id="realisationFourmizzzDefi">
+      <segment>
+        <source>Dans ce jeu de stratégie, chaque décision d&apos;alliance reposait sur des calculs faits à la main, longs et source d&apos;erreurs.</source>
+        <target>In this strategy game, every alliance decision relied on calculations done by hand, slow and error-prone.</target>
+      </segment>
+    </unit>
+    <unit id="realisationFourmizzzConstruit">
+      <segment>
+        <source>Une suite d&apos;outils qui lit les rapports de jeu, calcule chasses et attaques, et partage la coordination du terrain entre les membres de l&apos;alliance.</source>
+        <target>A suite of tools that reads game reports, works out hunts and attacks, and shares the coordination of territory between alliance members.</target>
+      </segment>
+    </unit>
+    <unit id="realisationFourmizzzResultatRecit">
+      <segment>
+        <source>Le moteur de calcul est vérifié au chiffre près sur de vrais rapports : l&apos;alliance décide sur des chiffres justes.</source>
+        <target>The calculation engine is checked to the exact figure against real reports: the alliance decides on accurate numbers.</target>
+      </segment>
+    </unit>
+    <unit id="realisationFourmizzzImageAlt">
+      <segment>
+        <source>Capture de Fourmizzz-Suite</source>
+        <target>Screenshot of Fourmizzz-Suite</target>
+      </segment>
+    </unit>
+    <unit id="methodeCadrerTitre">
+      <segment>
+        <source>Cadrer</source>
+        <target>Frame</target>
+      </segment>
+    </unit>
+    <unit id="methodeCadrerPhrase">
+      <segment>
+        <source>Vous fixez votre budget et votre date de mise en ligne : le contenu s’ajuste, jamais la date.</source>
+        <target>You set your budget and your launch date: the content adjusts, never the date.</target>
+      </segment>
+    </unit>
+    <unit id="methodeCadrerLivrable">
+      <segment>
+        <source>Le carnet de décisions</source>
+        <target>The decision log</target>
+      </segment>
+    </unit>
+    <unit id="methodeCadrerDuree">
+      <segment>
+        <source>jours 1-2</source>
+        <target>days 1-2</target>
+      </segment>
+    </unit>
+    <unit id="methodeEcrireTitre">
+      <segment>
+        <source>Écrire</source>
+        <target>Write</target>
+      </segment>
+    </unit>
+    <unit id="methodeEcrirePhrase">
+      <segment>
+        <source>Vous validez des textes écrits avec vous, dans vos mots, et votre démo est en ligne avant la fin de la semaine.</source>
+        <target>You approve texts written with you, in your own words, and your demo is online before the end of the week.</target>
+      </segment>
+    </unit>
+    <unit id="methodeEcrireLivrable">
+      <segment>
+        <source>Les textes de la version 1 et la démo en ligne</source>
+        <target>The version 1 texts and the online demo</target>
+      </segment>
+    </unit>
+    <unit id="methodeEcrireDuree">
+      <segment>
+        <source>semaine 1</source>
+        <target>week 1</target>
+      </segment>
+    </unit>
+    <unit id="methodeConstruireTitre">
+      <segment>
+        <source>Construire</source>
+        <target>Build</target>
+      </segment>
+    </unit>
+    <unit id="methodeConstruirePhrase">
+      <segment>
+        <source>Chaque semaine, vous voyez la démo avancer lors d’un point de trente minutes.</source>
+        <target>Every week, you see the demo move forward in a thirty-minute check-in.</target>
+      </segment>
+    </unit>
+    <unit id="methodeConstruireLivrable">
+      <segment>
+        <source>La démo, mise à jour chaque semaine</source>
+        <target>The demo, updated every week</target>
+      </segment>
+    </unit>
+    <unit id="methodeConstruireDuree">
+      <segment>
+        <source>semaines 2 à <ph id="0" equiv="min" disp="min"/></source>
+        <target>weeks 2 to <ph id="0" equiv="min" disp="min"/></target>
+      </segment>
+    </unit>
+    <unit id="methodeLancerTitre">
+      <segment>
+        <source>Lancer</source>
+        <target>Launch</target>
+      </segment>
+    </unit>
+    <unit id="methodeLancerPhrase">
+      <segment>
+        <source>Votre site passe le contrôle point par point, puis il est en ligne et vous savez le faire vivre.</source>
+        <target>Your website passes the check point by point, then it goes live and you know how to keep it alive.</target>
+      </segment>
+    </unit>
+    <unit id="methodeLancerLivrable">
+      <segment>
+        <source>Le rapport de vérification, le site en ligne, la prise en main</source>
+        <target>The verification report, the live website, the handover</target>
+      </segment>
+    </unit>
+    <unit id="methodeLancerDuree">
+      <segment>
+        <source>semaines <ph id="0" equiv="min" disp="min"/> à <ph id="1" equiv="max" disp="max"/></source>
+        <target>weeks <ph id="0" equiv="min" disp="min"/> to <ph id="1" equiv="max" disp="max"/></target>
+      </segment>
+    </unit>
+    <unit id="methodeElanTitre">
+      <segment>
+        <source>Élan</source>
+        <target>Momentum</target>
+      </segment>
+    </unit>
+    <unit id="methodeElanPhrase">
+      <segment>
+        <source>Un mois après, on lit vos vraies visites et on améliore ce qui freine.</source>
+        <target>A month later, we read your real visits and improve what holds them back.</target>
+      </segment>
+    </unit>
+    <unit id="methodeElanLivrable">
+      <segment>
+        <source>Le bilan et l’amélioration prioritaire</source>
+        <target>The review and the top-priority improvement</target>
+      </segment>
+    </unit>
+    <unit id="methodeElanDuree">
+      <segment>
+        <source>30 jours après</source>
+        <target>30 days later</target>
+      </segment>
+    </unit>
+    <unit id="inclusDemoTitre">
+      <segment>
+        <source>Une démo dès la semaine 1</source>
+        <target>A demo from week 1</target>
+      </segment>
+    </unit>
+    <unit id="inclusDemoPhrase">
+      <segment>
+        <source>Vous voyez votre site en ligne, sur un lien privé, avant la fin de la première semaine.</source>
+        <target>You see your website online, on a private link, before the end of the first week.</target>
+      </segment>
+    </unit>
+    <unit id="inclusCarnetTitre">
+      <segment>
+        <source>Un carnet de décisions</source>
+        <target>A decision log</target>
+      </segment>
+    </unit>
+    <unit id="inclusCarnetPhrase">
+      <segment>
+        <source>Chaque choix est noté avec ma recommandation, et vous le gardez.</source>
+        <target>Every choice is recorded with my recommendation, and you keep it.</target>
+      </segment>
+    </unit>
+    <unit id="inclusRapportTitre">
+      <segment>
+        <source>Un rapport de vérification</source>
+        <target>A verification report</target>
+      </segment>
+    </unit>
+    <unit id="inclusRapportPhrase">
+      <segment>
+        <source>Vitesse, affichage mobile et lisibilité par Google et les IA sont contrôlés avant la mise en ligne.</source>
+        <target>Speed, mobile display and readability by Google and AI are checked before launch.</target>
+      </segment>
+    </unit>
+    <unit id="inclusBilanTitre">
+      <segment>
+        <source>Un bilan à 30 jours</source>
+        <target>A 30-day review</target>
+      </segment>
+    </unit>
+    <unit id="inclusBilanPhrase">
+      <segment>
+        <source>Un mois après, vos vraies visites disent quoi améliorer en premier, et je le fais.</source>
+        <target>A month later, your real visits show what to improve first, and I do it.</target>
+      </segment>
+    </unit>
+    <unit id="illustrationDuHerosAlt">
+      <segment>
+        <source>Tim Moyence au travail sur son ordinateur portable</source>
+        <target>Tim Moyence working on a laptop</target>
+      </segment>
+    </unit>
+    <unit id="auditFaqKicker">
+      <segment>
+        <source>Questions fréquentes</source>
+        <target>Frequently asked questions</target>
       </segment>
     </unit>
   </file>

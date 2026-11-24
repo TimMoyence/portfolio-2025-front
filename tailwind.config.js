@@ -3,11 +3,6 @@ module.exports = {
   content: ['./src/**/*.{html,ts}'],
   future: { hoverOnlyWhenSupported: true },
   theme: {
-    container: {
-      center: true,
-      screens: { sm: '640px', md: '768px', lg: '1024px', xl: '1280px' },
-      padding: '1rem',
-    },
     extend: {
       colors: {
         'scheme-background': 'var(--bg)',

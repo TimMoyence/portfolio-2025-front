@@ -1,8 +1,10 @@
-<app-hero-section [contenu]="hero" />
+<app-asili-hero [titre]="heroTitre" [kicker]="heroKicker" [lead]="heroLead">
+  <app-illustration-du-heros visuel />
+</app-asili-hero>
 
-<section class="px-[5%] py-6 md:py-8 lg:py-12">
+<section class="py-6 md:py-8 lg:py-12">
   <div
-    class="container grid grid-cols-1 items-start gap-y-12 md:grid-flow-row md:grid-cols-3 md:gap-x-12 lg:grid-flow-col lg:gap-x-20 lg:gap-y-16"
+    class="wrap grid grid-cols-1 items-start gap-y-12 md:grid-flow-row md:grid-cols-3 md:gap-x-12 lg:grid-flow-col lg:gap-x-20 lg:gap-y-16"
   >
     <form
       class="col-span-full md:col-span-3 grid md:grid-cols-2 gap-3"
@@ -87,7 +89,7 @@
         }
       </fieldset>
 
-      <div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      <div class="grid grid-cols-1 content-start gap-3 lg:grid-cols-2">
         @for (field of contactFields; track field.key) {
           <div class="relative">
             <input
@@ -243,10 +245,10 @@
 </section>
 
 <section
-  class="px-[5%] py-10 md:py-12 lg:py-16 border-t border-scheme-border"
+  class="py-10 md:py-12 lg:py-16 border-t border-scheme-border"
   aria-labelledby="contact-faq-heading"
 >
-  <div class="container">
+  <div class="wrap">
     <h2
       id="contact-faq-heading"
       class="mb-6 font-heading heading-h2 text-h3"

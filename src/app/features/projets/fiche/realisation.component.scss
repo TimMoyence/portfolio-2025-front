@@ -62,6 +62,10 @@
 }
 
 .fiche-fin {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
   margin-top: clamp(48px, 8vh, 96px);
 }
 

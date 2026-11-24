@@ -4,7 +4,7 @@ import { baseAnglaise, baseSsr, exigerLaPorteSsr } from '../porte-ssr';
 
 const PAGES = ['/', '/offer', '/projets', '/presentation', '/contact'];
 
-const PORTRAIT = 'portrait-tim-asili-design.webp';
+const PORTRAIT = '/assets/images/portrait/1000.webp';
 
 const noterLesPremiersNoeuds = (): void => {
   const premiers: Record<string, Element | undefined> = {};

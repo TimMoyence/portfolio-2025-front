@@ -3,33 +3,6 @@
 @use '../../styles-shared/composants/cartes';
 @use '../../styles-shared/composants/survol';
 
-.cadre-navigateur {
-  margin: 0;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--line);
-  background: var(--ivory);
-  box-shadow: var(--shadow-lift);
-  overflow: hidden;
-}
-
-.cadre-navigateur__barre {
-  display: flex;
-  gap: 6px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--line);
-}
-
-.cadre-navigateur__barre span {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--line);
-}
-
-.cadre-navigateur img {
-  @include cartes.capture-de-site;
-}
-
 .probleme-grille,
 .guide-grille {
   display: grid;
@@ -69,6 +42,13 @@
   font-size: 13px;
   letter-spacing: 0.08em;
   color: var(--text-mute);
+}
+
+.guide-split {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 32px;
+  align-items: center;
 }
 
 .guide-grille {
@@ -117,7 +97,8 @@
 }
 
 @include bp.tablet {
-  .formation-entrees {
+  .formation-entrees,
+  .guide-split {
     grid-template-columns: 1fr;
   }
 }

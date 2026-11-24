@@ -119,7 +119,7 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  @include cartes.carte-soulevee(-6px);
+  @include cartes.carte-survolee;
 
   &--bonus {
     border-style: dashed;
@@ -199,6 +199,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+
+  .link-arrow {
+    @include cartes.lien-etire;
+  }
 }
 
 .price {

@@ -1,8 +1,8 @@
-import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { nomCourtServi } from '../../core/seo/site-servi';
 import { FiletDeSectionDirective } from '../../shared/directives/filet-de-section.directive';
+import { phasesDeLaMethode } from '../../shared/offre/socle-et-elan';
 import {
   AsiliAiMethodComponent,
   type AsiliAiMethodStep,
@@ -12,6 +12,7 @@ import {
   type AsiliHeroMetaRow,
   type MorceauDeTitre,
   AsiliSectionTeteComponent,
+  PortraitComponent,
 } from '../../shared/sections';
 
 interface PresentationSkill {
@@ -60,13 +61,13 @@ interface PresentationMilestone {
   selector: 'app-presentation',
   standalone: true,
   imports: [
-    NgOptimizedImage,
     RouterLink,
     FiletDeSectionDirective,
     AsiliHeroComponent,
     AsiliAiMethodComponent,
     AsiliSectionTeteComponent,
     AsiliClosingComponent,
+    PortraitComponent,
   ],
   templateUrl: './presentation.component.html',
   styleUrl: './presentation.component.scss',
@@ -76,10 +77,12 @@ export class PresentationComponent {
   protected readonly heroKicker = $localize`:@@presentationHeroKicker:Le fondateur`;
 
   protected readonly titre: readonly MorceauDeTitre[] = [
-    { texte: $localize`:@@presentationHeroTitlePre:Développeur full-stack & IA.` },
-    { texte: $localize`:@@presentationHeroTitleAccent:Manager`, aLaLigne: true },
-    { texte: ' ' },
-    { texte: $localize`:@@presentationHeroTitlePost:avant tout.`, accent: true },
+    { texte: $localize`:@@presentationHeroTitreDebut:Votre site, pensé avec vous, ` },
+    {
+      texte: $localize`:@@presentationHeroTitreAccent:prouvé avant d’être promis.`,
+      aLaLigne: true,
+      accent: true,
+    },
   ];
 
   protected readonly heroLead = $localize`:@@presentationHeroLead:Je m'appelle Tim Moyence — développeur full-stack & IA, freelance à Bordeaux (remote). Six ans manager chez Decathlon avant de me reconvertir au code. J'aide TPE, PME et solopreneurs à transformer un besoin flou en outils nets, robustes et durables — avec une exigence d'ingénierie forte.`;
@@ -95,7 +98,9 @@ export class PresentationComponent {
     },
     {
       key: $localize`:@@presentationHeroMeta3Key:Méthode`,
-      value: $localize`:@@presentationHeroMeta3Value:Écouter · Écrire · Lancer`,
+      value: phasesDeLaMethode()
+        .map(({ titre }) => titre)
+        .join(' · '),
     },
     {
       key: $localize`:@@presentationHeroMeta4Key:Aussi`,
@@ -106,12 +111,6 @@ export class PresentationComponent {
       value: $localize`:@@presentationHeroMeta5Value:Nouveaux projets · 2026`,
     },
   ];
-
-  protected readonly portraitPlaceholder = $localize`:@@presentationPortraitPlaceholder:portrait — photo du fondateur`;
-
-  protected readonly portraitImage = '/assets/images/portrait-tim-asili-design.webp';
-
-  protected readonly portraitAlt = $localize`:@@presentationPortraitAlt:Tim Moyence, fondateur d'Asili Design`;
 
   protected readonly introSignature = $localize`:@@presentationIntroSignature:— Tim Moyence, Asili Design`;
 

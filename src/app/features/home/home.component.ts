@@ -8,21 +8,14 @@ import {
   type AsiliCta,
   AsiliFaqComponent,
   AsiliHeroComponent,
-  AsiliMethodComponent,
-  type AsiliMethodStep,
   AsiliProjectsGridComponent,
   type AsiliProject,
-  LARGEUR_DU_CONTENEUR,
+  IllustrationDuHerosComponent,
   type MorceauDeTitre,
-  PLEINE_LARGEUR_SUR_TABLETTE,
+  PortraitComponent,
+  SocleEtElanComponent,
 } from '../../shared/sections';
-import {
-  carteDeRealisation,
-  REALISATIONS,
-  variantesDeLaCapture,
-  vitrineDeLAccueil,
-} from '../projets/realisations.data';
-import { realisationDuHeros } from './realisation-du-heros';
+import { carteDeRealisation, vitrineDeLAccueil } from '../projets/realisations.data';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +24,9 @@ import { realisationDuHeros } from './realisation-du-heros';
     RouterLink,
     FiletDeSectionDirective,
     AsiliHeroComponent,
-    AsiliMethodComponent,
+    IllustrationDuHerosComponent,
+    PortraitComponent,
+    SocleEtElanComponent,
     AsiliProjectsGridComponent,
     AsiliFaqComponent,
     AsiliCtaBandComponent,
@@ -56,41 +51,13 @@ export class HomeComponent {
 
   protected readonly heroLead = $localize`:@@homeHeroAccroche:Je crée le site des artisans, commerces et indépendants : clair à lire, facile à trouver, sur Google comme dans les réponses des IA, avant vos concurrents. Vous parlez de votre métier, je m’occupe du reste.`;
 
-  protected readonly siteDuHeros = realisationDuHeros(REALISATIONS);
-
-  protected readonly variantesDuHeros = this.siteDuHeros && variantesDeLaCapture(this.siteDuHeros);
-
-  protected readonly largeurDuVisuel = `${PLEINE_LARGEUR_SUR_TABLETTE}, calc((${LARGEUR_DU_CONTENEUR} - 32px) * 0.425)`;
-
   protected readonly planKicker = $localize`:@@homePlanKicker:Le plan`;
-
-  protected readonly planSteps: readonly AsiliMethodStep[] = [
-    {
-      num: '01',
-      index: $localize`:@@homePlanEtape1Index:— Écouter`,
-      title: $localize`:@@homePlanEtape1Titre:On se parle`,
-      desc: $localize`:@@homePlanEtape1Texte:Vous me racontez votre métier, vos clients et ce qui vous fait gagner du travail. Une heure suffit.`,
-    },
-    {
-      num: '02',
-      index: $localize`:@@homePlanEtape2Index:— Écrire`,
-      title: $localize`:@@homePlanEtape2Titre:Je raconte et je construis`,
-      desc: $localize`:@@homePlanEtape2Texte:J’écris des pages qui parlent comme vous, puis je construis un site rapide que Google et les IA comprennent.`,
-    },
-    {
-      num: '03',
-      index: $localize`:@@homePlanEtape3Index:— Lancer`,
-      title: $localize`:@@homePlanEtape3Titre:Vous êtes en ligne, et autonome`,
-      desc: $localize`:@@homePlanEtape3Texte:Le site est en ligne, et je vous montre comment le faire vivre sans dépendre de moi.`,
-    },
-  ];
 
   protected readonly projectsKicker = $localize`:@@homeProjectsKicker:Preuve de savoir-faire`;
   protected readonly projectsHeadLink = $localize`:@@homeProjectsHeadLink:Voir toutes les réalisations`;
 
-  protected readonly projects: readonly AsiliProject[] = vitrineDeLAccueil().map((realisation) =>
-    carteDeRealisation(realisation, 'small'),
-  );
+  protected readonly projects: readonly AsiliProject[] =
+    vitrineDeLAccueil().map(carteDeRealisation);
 
   protected readonly formations = ENTREES_DE_FORMATION;
 

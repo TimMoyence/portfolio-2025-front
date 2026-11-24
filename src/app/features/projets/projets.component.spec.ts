@@ -40,6 +40,21 @@ describe('ProjetsComponent', () => {
     ).toEqual([]);
   });
 
+  it('VIT2-07 · toutes les cartes ont le même cadre', () => {
+    const cartes = [...page.racine.querySelectorAll<HTMLElement>('.proj')];
+    const cadres = new Set(
+      cartes.map((carte) => {
+        const capture = carte.querySelector<HTMLImageElement>('.proj-shot img');
+        return [capture?.getAttribute('width'), capture?.getAttribute('height'), capture?.sizes]
+          .map(String)
+          .join(' | ');
+      }),
+    );
+
+    expect(cartes.length).toBe(REALISATIONS.length);
+    expect([...cadres].map((cadre) => cadre.split(' | ').slice(0, 2))).toEqual([['800', '600']]);
+  });
+
   it('should render the four-step method banner (le fil rouge)', () => {
     const steps = page.racine.querySelectorAll('app-asili-method .method-steps .step');
     expect(steps.length).toBe(4);

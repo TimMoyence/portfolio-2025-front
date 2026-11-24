@@ -1,82 +1,51 @@
 import { expect, test, type Page } from '@playwright/test';
 import { ouvrir, sansAnimationNiContenu, sansContenu } from './ouvrir';
 
-const PAGES_A_HEROS = ['/', '/offer', '/projets', '/presentation', '/articles'];
+const PAGES_A_HEROS = ['/', '/offer', '/projets', '/presentation', '/articles', '/contact'];
 
-interface EtatDesMots {
-  readonly mots: readonly string[];
-  readonly texteDuTitre: readonly string[];
-  readonly animes: number;
+interface EtatDuTitre {
+  readonly texte: string;
+  readonly animations: number;
   readonly ecarts: readonly string[];
 }
 
-const relever = (page: Page): Promise<EtatDesMots> =>
-  page.evaluate(async () => {
-    const titre = document.querySelector('h1');
-    const mots = Array.from(titre?.querySelectorAll<HTMLElement>('.mot') ?? []);
+const relever = (page: Page): Promise<EtatDuTitre> =>
+  page.evaluate(() => {
+    const titre = document.querySelector('h1') as HTMLElement;
     const ecarts: string[] = [];
-    const opacite = (element: Element): number => {
-      let produit = 1;
-      for (let e: Element | null = element; e !== null; e = e.parentElement) {
-        produit *= Number(getComputedStyle(e).opacity);
-      }
-      return produit;
-    };
-    const verifier = (instant: string): void => {
-      for (const mot of mots) {
-        if (opacite(mot) < 1)
-          ecarts.push(`${instant} « ${mot.textContent} » opacité ${opacite(mot)}`);
-        const boite = mot.getBoundingClientRect();
-        for (let e = mot.parentElement; e !== null; e = e.parentElement) {
-          const style = getComputedStyle(e);
-          const rogne =
-            style.overflowX !== 'visible' ||
-            style.overflowY !== 'visible' ||
-            style.clipPath !== 'none';
-          if (!rogne || e === document.body || e === document.documentElement) continue;
-          const cadre = e.getBoundingClientRect();
-          const dedans =
-            boite.top >= cadre.top - 0.5 &&
-            boite.bottom <= cadre.bottom + 0.5 &&
-            boite.left >= cadre.left - 0.5 &&
-            boite.right <= cadre.right + 0.5;
-          if (!dedans) ecarts.push(`${instant} « ${mot.textContent} » rogné par ${e.className}`);
-        }
-      }
-    };
-    const animations = mots.flatMap((mot) => mot.getAnimations());
-    animations.forEach((animation) => animation.pause());
-    const fin = Math.max(
-      0,
-      ...animations.map((animation) => Number(animation.effect?.getComputedTiming().endTime ?? 0)),
-    );
-    for (const part of [0, 0.25, 0.5, 0.75, 1]) {
-      animations.forEach((animation) => {
-        animation.currentTime = fin * part;
-      });
-      await new Promise((suite) => requestAnimationFrame(() => suite(null)));
-      verifier(`t=${Math.round(fin * part)}ms`);
+    let opacite = 1;
+    for (let e: Element | null = titre; e !== null; e = e.parentElement) {
+      opacite *= Number(getComputedStyle(e).opacity);
     }
-    animations.forEach((animation) => animation.finish());
+    if (opacite < 1) ecarts.push(`opacité ${opacite}`);
+    const boite = titre.getBoundingClientRect();
+    for (let e = titre.parentElement; e !== null; e = e.parentElement) {
+      const style = getComputedStyle(e);
+      const rogne =
+        style.overflowX !== 'visible' || style.overflowY !== 'visible' || style.clipPath !== 'none';
+      if (!rogne || e === document.body || e === document.documentElement) continue;
+      const cadre = e.getBoundingClientRect();
+      const dedans =
+        boite.top >= cadre.top - 0.5 &&
+        boite.bottom <= cadre.bottom + 0.5 &&
+        boite.left >= cadre.left - 0.5 &&
+        boite.right <= cadre.right + 0.5;
+      if (!dedans) ecarts.push(`rogné par ${e.className}`);
+    }
+    if (titre.scrollWidth > titre.clientWidth + 1) ecarts.push('déborde en largeur');
     return {
-      mots: mots.map((mot) => mot.textContent ?? ''),
-      texteDuTitre: (titre?.textContent ?? '').split(/\s+/).filter(Boolean),
-      animes: animations.filter(
-        (animation) =>
-          animation.effect?.getTiming().iterations === 1 &&
-          (animation.effect as KeyframeEffect).getKeyframes().some((cle) => 'transform' in cle) &&
-          (animation.effect as KeyframeEffect).getKeyframes().every((cle) => !('opacity' in cle)),
-      ).length,
+      texte: (titre.textContent ?? '').trim(),
+      animations: titre.getAnimations({ subtree: true }).length,
       ecarts,
     };
   });
 
-const titreEntier = async (page: Page, chemin: string): Promise<EtatDesMots> => {
+const TITRE_IMMOBILE = { animations: 0, ecarts: [], mots: 0, vide: false };
+
+const titreServi = async (page: Page, chemin: string) => {
   await ouvrir(page, chemin);
-  const etat = await relever(page);
-  expect(etat.mots).toEqual(etat.texteDuTitre);
-  expect(etat.ecarts).toEqual([]);
-  return etat;
+  const { texte, animations, ecarts } = await relever(page);
+  return { animations, ecarts, mots: await page.locator('h1 .mot').count(), vide: texte === '' };
 };
 
 const textesAnimesHorsTitre = (page: Page): Promise<string[]> =>
@@ -87,7 +56,6 @@ const textesAnimesHorsTitre = (page: Page): Promise<string[]> =>
       .filter((effet) => effet?.pseudoElement === null)
       .map((effet) => effet?.target)
       .filter((cible): cible is Element => cible instanceof Element)
-      .filter((cible) => !cible.classList.contains('mot'))
       .filter((cible) => (cible.textContent ?? '').trim() !== '')
       .map((cible) => `${cible.tagName.toLowerCase()}.${cible.className}`.slice(0, 60)),
   );
@@ -108,12 +76,8 @@ test.describe('REC-17 · trois signatures de mouvement qui ne cachent rien', () 
   });
 
   for (const chemin of PAGES_A_HEROS) {
-    test(`REC-17 · ${chemin} : le titre s ouvre mot par mot, chaque mot visible et entier`, async ({
-      page,
-    }) => {
-      const etat = await titreEntier(page, chemin);
-
-      expect(etat.animes).toBe(etat.mots.length);
+    test(`VIT2-06 · ${chemin} : le titre arrive immobile, visible et entier`, async ({ page }) => {
+      expect(await titreServi(page, chemin)).toEqual(TITRE_IMMOBILE);
     });
   }
 
@@ -166,14 +130,25 @@ test.describe('REC-17 · trois signatures de mouvement qui ne cachent rien', () 
 test.describe('REC-17 · sous « réduire les animations », tout est dans son état final', () => {
   sansAnimationNiContenu();
 
-  test('REC-17 · titre complet immobile, filets tracés, aucune animation', async ({ page }) => {
-    await ouvrir(page, '/');
+  for (const chemin of ['/', '/offer', '/projets']) {
+    test(`VIT2-05 · ${chemin} : titre complet immobile, filets tracés, aucune animation`, async ({
+      page,
+    }) => {
+      await ouvrir(page, chemin);
 
-    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
-    const filets = await etatDesFilets(page);
-    expect(filets.length).toBeGreaterThan(0);
-    for (const filet of filets) expect(filet).toMatch(FILET_TRACE);
-  });
+      expect(
+        await page.evaluate(() =>
+          document
+            .getAnimations()
+            .map((animation) => (animation.effect as KeyframeEffect | null)?.target)
+            .map((cible) => (cible instanceof Element ? cible.className : '')),
+        ),
+      ).toEqual([]);
+      const filets = await etatDesFilets(page);
+      expect(filets.length).toBeGreaterThan(0);
+      for (const filet of filets) expect(filet).toMatch(FILET_TRACE);
+    });
+  }
 
   test('REC-17 · la capture reste immobile sur son haut au survol', async ({ page }) => {
     await page.goto('/projets');
@@ -219,15 +194,113 @@ test.describe('REC-17 · sous « réduire les animations », tout est dans son �
   });
 });
 
-test.describe('REC-17 · sur un téléphone de 390 px, aucun mot du titre n est rogné', () => {
+test.describe('VIT2-06 · sur un téléphone de 390 px, aucun titre n est rogné', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   for (const chemin of PAGES_A_HEROS) {
-    test(`REC-17 · ${chemin} en 390 px : chaque mot visible et entier`, async ({ page }) => {
+    test(`VIT2-06 · ${chemin} en 390 px : le titre est visible et entier`, async ({ page }) => {
       await sansContenu(page);
-      const etat = await titreEntier(page, chemin);
 
-      expect(etat.mots.length).toBeGreaterThan(0);
+      expect(await titreServi(page, chemin)).toEqual(TITRE_IMMOBILE);
+    });
+  }
+});
+
+const ecartsDesFilets = (page: Page): Promise<string[]> =>
+  page.evaluate(() =>
+    Array.from(document.querySelectorAll<HTMLElement>('main .section-pad')).flatMap((section) => {
+      const contenu = section.querySelector<HTMLElement>(':scope > .wrap, :scope .wrap');
+      if (contenu === null) return [];
+      const filet = getComputedStyle(section, '::before');
+      const cadre = section.getBoundingClientRect();
+      const gauche = cadre.left + parseFloat(filet.left);
+      const droite = cadre.right - parseFloat(filet.right);
+      const boite = contenu.getBoundingClientRect();
+      const style = getComputedStyle(contenu);
+      const attendueGauche = boite.left + parseFloat(style.paddingLeft);
+      const attendueDroite = boite.right - parseFloat(style.paddingRight);
+      return Math.abs(gauche - attendueGauche) <= 1 && Math.abs(droite - attendueDroite) <= 1
+        ? []
+        : [
+            `${section.className.slice(0, 30)} filet ${Math.round(gauche)}→${Math.round(droite)}, contenu ${Math.round(attendueGauche)}→${Math.round(attendueDroite)}`,
+          ];
+    }),
+  );
+
+for (const largeur of [1440, 390]) {
+  test.describe(`VIT2-10 · en ${largeur} px, chaque filet de section couvre la largeur du contenu`, () => {
+    test.use({ viewport: { width: largeur, height: 900 } });
+
+    for (const chemin of ['/', '/offer', '/projets', '/presentation']) {
+      test(`VIT2-10 · ${chemin} en ${largeur} px : filets au bord du contenu`, async ({ page }) => {
+        await sansContenu(page);
+        await ouvrir(page, chemin);
+
+        expect(await ecartsDesFilets(page)).toEqual([]);
+      });
+    }
+  });
+}
+
+const grilleDuPlan = (page: Page) =>
+  page.locator('app-asili-method .method-steps').evaluate((grille) => ({
+    colonnes: getComputedStyle(grille).gridTemplateColumns.split(' ').length,
+    etapes: grille.querySelectorAll('.step').length,
+    livrables: grille.querySelectorAll('.step .livrable').length,
+  }));
+
+test.describe('VIT2-10 · le plan prend autant de colonnes que d étapes', () => {
+  test('VIT2-10 · accueil en 1440 px : cinq colonnes pour cinq phases, chacune avec son livrable', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await sansContenu(page);
+    await ouvrir(page, '/');
+
+    expect(await grilleDuPlan(page)).toEqual({ colonnes: 5, etapes: 5, livrables: 5 });
+  });
+
+  test('VIT2-10 · /projets en 1440 px : quatre colonnes, sans livrable', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await sansContenu(page);
+    await ouvrir(page, '/projets');
+
+    expect(await grilleDuPlan(page)).toEqual({ colonnes: 4, etapes: 4, livrables: 0 });
+  });
+
+  test('VIT2-10 · accueil en 390 px : une colonne, sans défilement horizontal', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await sansContenu(page);
+    await ouvrir(page, '/');
+
+    expect((await grilleDuPlan(page)).colonnes).toBe(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      390,
+    );
+  });
+});
+
+test.describe('VIT2-07 · toute la carte survolée mène à sa page', () => {
+  for (const { chemin, carte, texte } of [
+    { chemin: '/', carte: '.proj', texte: 'h3' },
+    { chemin: '/offer', carte: '.apercu .proj', texte: 'h3' },
+    { chemin: '/projets', carte: '.proj', texte: '.proj-body p' },
+    { chemin: '/formations', carte: '.formation', texte: 'h3' },
+  ]) {
+    test(`VIT2-07 · ${chemin} : un clic sur ${carte} ${texte} ouvre sa page`, async ({ page }) => {
+      await sansContenu(page);
+      await ouvrir(page, chemin);
+      const premiere = page.locator(carte).first();
+      const destination = await premiere.locator('a').first().getAttribute('href');
+      const cible = premiere.locator(texte).first();
+      await cible.scrollIntoViewIfNeeded();
+      const boite = await cible.boundingBox();
+      if (boite === null || destination === null) throw new Error(`${carte} ${texte} absent`);
+      await page.mouse.click(boite.x + boite.width / 2, boite.y + boite.height / 2);
+
+      await expect(page).toHaveURL(new RegExp(`${destination.split('/').at(-1)}$`));
     });
   }
 });

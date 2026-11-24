@@ -1,5 +1,6 @@
 @use '../../../../styles-shared/mise-en-page/surfaces' as surfaces;
 @use '../../../../styles-shared/mise-en-page/mono';
+@use '../../../../styles-shared/mise-en-page/mise-en-page';
 @use '../../../../styles-shared/composants/survol';
 :host {
   display: block;
@@ -24,9 +25,8 @@
 }
 
 .asili-nav__inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 16px var(--gutter);
+  @include mise-en-page.conteneur;
+  padding-block: 16px;
   display: flex;
   align-items: center;
   gap: var(--s-4);
@@ -34,21 +34,7 @@
 
 .asili-logo {
   @include surfaces.asili-logo(flex);
-}
-
-.asili-logo__texte {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.15em;
-  line-height: 1;
-}
-
-.asili-logo_img {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  align-self: center;
+  flex-shrink: 0;
 }
 
 .asili-nav__links {
@@ -81,6 +67,7 @@
   background: transparent;
   border: 0;
   cursor: pointer;
+  white-space: nowrap;
   transition:
     background 0.25s var(--ease),
     color 0.25s var(--ease);
@@ -499,9 +486,32 @@
   }
 }
 
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .asili-nav__inner {
+    gap: var(--s-2);
+  }
+
+  .asili-nav__link {
+    padding: 9px;
+    font-size: 14px;
+  }
+
+  .asili-nav__side {
+    gap: 8px;
+  }
+
+  .asili-nav__cta {
+    padding: 9px 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .asili-nav,
+  .asili-nav__link,
   .asili-nav__chevron,
+  .asili-drop-item,
+  .asili-lang__current,
+  .asili-lang__switch,
   .asili-dropdown,
   .asili-drawer,
   .asili-drawer__backdrop {

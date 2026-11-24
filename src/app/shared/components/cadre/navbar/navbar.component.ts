@@ -23,6 +23,7 @@ import type { DropdownSection, NavLink } from '../../../models/navbar.model';
 import { A11yDialogService } from '../../../services/a11y-dialog.service';
 import { initialeDe } from '../../../utils/initiale.utils';
 import { SvgIconComponent } from '../../svg-icon.component';
+import { MarqueComponent } from '../marque/marque.component';
 import { ENTREES_DE_FORMATION } from '../../../../core/config/familles-de-formation';
 import { CHEMINS_DE_LA_NAVIGATION, nomCourtServi } from '../../../../core/seo/site-servi';
 
@@ -35,7 +36,7 @@ const lienDuMenu = (href: string): NavLink => ({ label: nomCourtServi(href), hre
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, SvgIconComponent],
+  imports: [CommonModule, RouterModule, SvgIconComponent, MarqueComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

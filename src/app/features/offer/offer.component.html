@@ -1,4 +1,6 @@
-<app-asili-hero [titre]="titre" [kicker]="heroKicker" [lead]="heroLead" />
+<app-asili-hero [titre]="titre" [kicker]="heroKicker" [lead]="heroLead"
+  ><app-illustration-du-heros visuel
+/></app-asili-hero>
 
 <section class="section-pad" aria-labelledby="formules-titre">
   <div class="wrap">
@@ -26,14 +28,24 @@
   </div>
 </section>
 
+<app-socle-et-elan [kicker]="methodeKicker" />
+
+<app-asili-projects-grid class="apercu" [projects]="apercu" [kicker]="apercuKicker">
+  <h2 heading class="h-xl projects-head__title" i18n="@@offreApercuTitre">
+    Des sites déjà en ligne.
+  </h2>
+</app-asili-projects-grid>
+
 <section class="inclus section-pad" aria-labelledby="inclus-titre">
   <div class="wrap inclus-grille">
     <h2 id="inclus-titre" class="h-lg" i18n="@@offreInclusTitre">Inclus</h2>
     <ul>
-      <li i18n="@@offreInclusRedaction">Rédaction avec vous</li>
-      <li i18n="@@offreInclusReferencement">Référencement Google &amp; IA</li>
-      <li i18n="@@offreInclusMiseEnLigne">Mise en ligne</li>
-      <li i18n="@@offreInclusPriseEnMain">Prise en main</li>
+      @for (engagement of engagements; track engagement.titre) {
+        <li>
+          <h3>{{ engagement.titre }}</h3>
+          <p>{{ engagement.phrase }}</p>
+        </li>
+      }
     </ul>
   </div>
 </section>

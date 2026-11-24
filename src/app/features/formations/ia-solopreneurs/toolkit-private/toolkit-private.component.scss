@@ -172,13 +172,7 @@
   }
 
   @include survol.en-mouvement {
-    transition:
-      border-color 0.25s,
-      transform 0.3s var(--ease);
-
-    @include survol.survol {
-      transform: translateY(-3px);
-    }
+    transition: border-color 0.25s;
   }
 }
 

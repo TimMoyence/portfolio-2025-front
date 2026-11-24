@@ -32,6 +32,9 @@ export const PERMANENT_REDIRECTS: Readonly<Record<string, string>> = {
   '/formations/audit-seo-diy/toolkit': '/fr/formations/audit-seo-diy',
   '/fr/formations/audit-seo-diy/toolkit': '/fr/formations/audit-seo-diy',
   '/en/formations/audit-seo-diy/toolkit': '/en/formations/audit-seo-diy',
+  '/projets/innovmind': '/fr/projets/musaium',
+  '/fr/projets/innovmind': '/fr/projets/musaium',
+  '/en/projets/innovmind': '/en/projets/musaium',
 };
 
 const PERMANENT_SUBTREE_REDIRECTS: Readonly<Record<string, string>> = {

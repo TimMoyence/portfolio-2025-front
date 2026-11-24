@@ -1,6 +1,6 @@
-<app-hero-section [contenu]="hero" />
+<app-asili-hero [titre]="heroTitre" [kicker]="heroKicker" [lead]="heroLead" />
 
-<section class="container px-2 py-4 grid gap-6 grid-cols-12">
+<section class="wrap py-4 grid gap-6 grid-cols-12">
   <div class="rounded-form border border-scheme-border bg-scheme-surface p-6 col-span-12">
     <h2 class="font-heading heading-h3 text-h3 mb-2">{{ formLabels.title }}</h2>
     <p class="text-sm md:text-base text-scheme-text-muted mb-6">
@@ -258,7 +258,7 @@
   </div>
 </section>
 
-<section class="container px-2 py-4 grid gap-6 grid-cols-12">
+<section class="wrap py-4 grid gap-6 grid-cols-12">
   <div class="border border-scheme-border col-span-12 md:col-span-6 bg-scheme-surface p-6">
     <h2 class="font-heading heading-h3 text-h3 mb-2" i18n="@@auditPillarsTitle">
       Le diagnostic en 7 points
@@ -296,9 +296,4 @@
   </div>
 </section>
 
-<app-faq-section
-  [title]="faqTitle"
-  [description]="faqDescription"
-  [items]="faqItems"
-  headingId="audit-faq-heading"
-></app-faq-section>
+<app-asili-faq [kicker]="faqKicker" [title]="faqTitle" [items]="faqItems" />

@@ -1,0 +1,34 @@
+@use '../../../../styles-shared/mise-en-page/mono';
+
+:host {
+  display: contents;
+}
+
+.asili-logo_img {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  align-self: center;
+}
+
+.asili-logo__texte {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15em;
+  line-height: 1;
+}
+
+.asili-logo__name {
+  font-family: var(--font-display);
+}
+
+.asili-logo__metier {
+  @include mono.capitales-mono(0.625rem, 0.14em, var(--ink-mute));
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  :host-context(.asili-nav__inner) .asili-logo__metier {
+    display: none;
+  }
+}

@@ -91,6 +91,7 @@
     "navigation": [
       "/offer",
       "/projets",
+      "/articles",
       "/formations/digitale",
       "/formations/cours",
       "/presentation",
@@ -312,20 +313,20 @@
       }
     },
     {
-      "id": "projet-innovmind",
-      "path": "/projets/innovmind",
+      "id": "projet-musaium",
+      "path": "/projets/musaium",
       "index": true,
       "changefreq": "yearly",
       "priority": 0.6,
-      "lastmod": "2026-11-23",
+      "lastmod": "2026-11-24",
       "locales": {
         "fr": {
-          "title": "InnovMind — Asili Design",
-          "description": "Une app de médiation culturelle : on photographie une œuvre, l'app la reconnaît et répond aux questions du visiteur, dans sa langue."
+          "title": "Musaium — Asili Design",
+          "description": "Une app de médiation culturelle et son site vitrine : on photographie une œuvre, l'app la reconnaît et en parle avec le visiteur, dans sa langue."
         },
         "en": {
-          "title": "InnovMind — Asili Design",
-          "description": "A cultural mediation app: take a photo of an artwork, the app recognises it and answers the visitor's questions in their language."
+          "title": "Musaium — Asili Design",
+          "description": "A cultural mediation app and its showcase website: take a photo of an artwork, the app recognises it and talks about it with the visitor, in their language."
         }
       }
     },
@@ -398,6 +399,96 @@
         "en": {
           "title": "Morning-Brief — Asili Design",
           "description": "Automated news monitoring: dozens of sources read, deduplicated and summarised, delivered every morning."
+        }
+      }
+    },
+    {
+      "id": "projet-portail-eg",
+      "path": "/projets/portail-eg",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-24",
+      "locales": {
+        "fr": {
+          "title": "Portail-EG — Asili Design",
+          "description": "L'intranet d'un cabinet d'expertise comptable : la fiche de chaque client et le diagnostic de son entreprise, réunis dans un seul outil."
+        },
+        "en": {
+          "title": "Portail-EG — Asili Design",
+          "description": "An accounting firm's intranet: each client's record and the diagnosis of their business, brought together in a single tool."
+        }
+      }
+    },
+    {
+      "id": "projet-schema-atlas",
+      "path": "/projets/schema-atlas",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-24",
+      "locales": {
+        "fr": {
+          "title": "Schema-Atlas — Asili Design",
+          "description": "Un outil qui rend lisible un schéma de base de données : une carte des domaines, un diagramme par domaine et le détail de chaque table au clic."
+        },
+        "en": {
+          "title": "Schema-Atlas — Asili Design",
+          "description": "A tool that makes a database schema readable: a map of domains, a diagram per domain and each table's details on click."
+        }
+      }
+    },
+    {
+      "id": "projet-slide-shot",
+      "path": "/projets/slide-shot",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-24",
+      "locales": {
+        "fr": {
+          "title": "Slide-Shot — Asili Design",
+          "description": "Une petite application libre qui enregistre chaque diapositive d'une présentation PDF en image haute définition, sans que rien ne quitte votre machine."
+        },
+        "en": {
+          "title": "Slide-Shot — Asili Design",
+          "description": "A small open-source app that saves each slide of a PDF presentation as a high-definition image, without anything leaving your computer."
+        }
+      }
+    },
+    {
+      "id": "projet-outillage-claude",
+      "path": "/projets/outillage-claude",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-24",
+      "locales": {
+        "fr": {
+          "title": "Outillage-Claude — Asili Design",
+          "description": "Ma méthode de travail avec l'IA, publiée en code ouvert : chaque changement est prouvé par un test, attaqué par un relecteur, puis contrôlé avant d'être livré."
+        },
+        "en": {
+          "title": "Outillage-Claude — Asili Design",
+          "description": "My way of working with AI, published as open source: each change is proven by a test, challenged by a reviewer, then checked before delivery."
+        }
+      }
+    },
+    {
+      "id": "projet-fourmizzz-suite",
+      "path": "/projets/fourmizzz-suite",
+      "index": true,
+      "changefreq": "yearly",
+      "priority": 0.6,
+      "lastmod": "2026-11-24",
+      "locales": {
+        "fr": {
+          "title": "Fourmizzz-Suite — Asili Design",
+          "description": "Des outils de décision pour une alliance d'un jeu de stratégie en ligne : chasses, attaques et coordination, calculés sur de vrais rapports de jeu."
+        },
+        "en": {
+          "title": "Fourmizzz-Suite — Asili Design",
+          "description": "Decision tools for an alliance in an online strategy game: hunts, attacks and coordination, computed from real game reports."
         }
       }
     },

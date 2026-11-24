@@ -4,10 +4,16 @@ export {
   type MorceauDeTitre,
 } from './tete/asili-hero/asili-hero.component';
 
+export { IllustrationDuHerosComponent } from './tete/illustration-du-heros/illustration-du-heros.component';
+
+export { PortraitComponent } from './tete/portrait/portrait.component';
+
 export {
   AsiliMethodComponent,
   type AsiliMethodStep,
 } from './methode/asili-method/asili-method.component';
+
+export { SocleEtElanComponent } from './methode/socle-et-elan/socle-et-elan.component';
 
 export {
   AsiliCtaBandComponent,
@@ -24,10 +30,7 @@ export { AsiliFaqComponent } from './fin/asili-faq/asili-faq.component';
 
 export {
   AsiliProjectsGridComponent,
-  LARGEUR_DU_CONTENEUR,
-  PLEINE_LARGEUR_SUR_TABLETTE,
   type AsiliProject,
-  type AsiliProjectSize,
 } from './fin/asili-projects-grid/asili-projects-grid.component';
 
 export { AsiliSectionTeteComponent } from './tete/asili-section-tete/asili-section-tete.component';

@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { pageMontee } from '../../../testing/page/montage-page';
 import { ENTREES_DE_FORMATION } from '../../core/config/familles-de-formation';
 import { faqDuSite } from '../../shared/offre/prix-et-delai';
+import { PresentationComponent } from '../presentation/presentation.component';
 import { HomeComponent } from './home.component';
 
 describe('REC-06 · l accueil raconte l histoire du client dans l ordre', () => {
@@ -15,7 +16,7 @@ describe('REC-06 · l accueil raconte l histoire du client dans l ordre', () => 
     expect([...page.racine.querySelectorAll('h2')].map(texte)).toEqual([
       'Un site qui ne dit rien ne vous rapporte rien.',
       'Je suis Tim, et j’explique sans jargon.',
-      'Trois étapes, et votre site est en ligne.',
+      'Socle & Élan : votre site en ligne, puis plus fort.',
       'Des réalisations, pas des promesses.',
       'Après la mise en ligne, je vous rends autonome.',
       'Vos questions, avant de vous lancer.',
@@ -39,11 +40,24 @@ describe('REC-06 · l accueil raconte l histoire du client dans l ordre', () => 
     expect(guide).toContain('J’enseigne, donc j’explique sans jargon.');
   });
 
-  it('REC-06 · le plan en trois étapes', () => {
-    expect([...page.racine.querySelectorAll('app-asili-method .step h3')].map(texte)).toEqual([
-      'On se parle',
-      'Je raconte et je construis',
-      'Vous êtes en ligne, et autonome',
+  it('VIT2-10 · Le plan déroule les cinq phases de Socle & Élan, chacune avec son livrable et sa durée, sous un titre qui nomme la méthode', () => {
+    const plan = page.racine.querySelector('app-asili-method') as Element;
+    const etapes = [...plan.querySelectorAll('.step')].map((etape) => [
+      texte(etape.querySelector('h3')),
+      texte(etape.querySelector('.duree')),
+      texte(etape.querySelector('.livrable')).length > 0,
+    ]);
+
+    expect(texte(plan.querySelector('h2'))).toBe(
+      'Socle & Élan : votre site en ligne, puis plus fort.',
+    );
+    expect(texte(plan.querySelector('h2'))).not.toMatch(/trois|quatre|three|four/i);
+    expect(etapes).toEqual([
+      ['Cadrer', 'jours 1-2', true],
+      ['Écrire', 'semaine 1', true],
+      ['Construire', 'semaines 2 à 3', true],
+      ['Lancer', 'semaines 3 à 4', true],
+      ['Élan', '30 jours après', true],
     ]);
   });
 
@@ -79,5 +93,41 @@ describe('REC-06 · l accueil raconte l histoire du client dans l ordre', () => 
   it('REC-06 · plus de piliers « à parts égales »', () => {
     expect(page.racine.querySelector('app-asili-pillars')).toBeNull();
     expect(texte(page.racine)).not.toContain('à parts égales');
+  });
+});
+
+describe('VIT2-10 · « Votre guide » montre le portrait d À propos, servi à sa largeur', () => {
+  const VARIANTES = [360, 400, 480, 560, 640, 800, 1000]
+    .map((largeur) => `/assets/images/portrait/${largeur}.webp ${largeur}w`)
+    .join(', ');
+  const portraitDe = (image: Element | null) =>
+    ['src', 'srcset', 'width', 'height', 'alt'].map((attribut) => image?.getAttribute(attribut));
+  const PORTRAIT = [
+    '/assets/images/portrait/1000.webp',
+    VARIANTES,
+    '1000',
+    '1145',
+    "Tim Moyence, fondateur d'Asili Design",
+  ];
+  describe('l accueil', () => {
+    const accueil = pageMontee(HomeComponent);
+
+    it('VIT2-10 · l accueil le montre dans « Votre guide », chargé à l approche', () => {
+      const image = accueil.racine.querySelector('section.guide img');
+
+      expect(portraitDe(image)).toEqual(PORTRAIT);
+      expect(image?.getAttribute('loading')).toBe('lazy');
+    });
+  });
+
+  describe('À propos', () => {
+    const aPropos = pageMontee(PresentationComponent);
+
+    it('VIT2-10 · À propos montre le même, en priorité', () => {
+      const image = aPropos.racine.querySelector('.portrait img');
+
+      expect(portraitDe(image)).toEqual(PORTRAIT);
+      expect(image?.getAttribute('fetchpriority')).toBe('high');
+    });
   });
 });

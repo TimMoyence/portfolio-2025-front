@@ -5,7 +5,14 @@ import { jsonLdDeLaPage } from '../../../../core/seo/json-ld';
 import { navbarMontee } from '../../../../../testing/page/navbar-montee';
 import { FooterComponent } from '../footer/footer.component';
 
-const MENU = ['Créer mon site', 'Réalisations', 'Formation', 'À propos', 'Parler de mon site'];
+const MENU = [
+  'Créer mon site',
+  'Réalisations',
+  'Articles',
+  'Formation',
+  'À propos',
+  'Parler de mon site',
+];
 
 const entrees = (zone: Element): string[] =>
   [...zone.querySelectorAll('.asili-nav__link, .asili-nav__cta')].map(texte);
@@ -29,7 +36,7 @@ describe('REC-02 · le menu raconte site, réalisations, formation, à propos, e
     return navbar.racine.querySelector('#mobile-nav .asili-drawer__body') as Element;
   };
 
-  it('REC-02 · le menu ordinateur suit le récit, bouton en dernier', () => {
+  it('VIT2-04 · le menu ordinateur suit le récit, Articles après Réalisations, bouton en dernier', () => {
     expect(entrees(ordinateur())).toEqual(MENU);
   });
 
@@ -50,13 +57,13 @@ describe('REC-02 · le menu raconte site, réalisations, formation, à propos, e
     expect(zone.querySelector('a[href="/login"][aria-label="Espace utilisateur"]')).not.toBeNull();
   });
 
-  it('REC-02 · Articles, Contact sans besoin et le diagnostic quittent le menu', () => {
+  it('VIT2-04 · Contact sans besoin et le diagnostic restent hors du menu', () => {
     for (const zone of [ordinateur(), tiroir()]) {
       const adresses = liens(zone).map(([adresse]) => adresse);
 
-      expect(
-        adresses.filter((adresse) => ['/articles', '/contact', '/growth-audit'].includes(adresse)),
-      ).toEqual([]);
+      expect(adresses.filter((adresse) => ['/contact', '/growth-audit'].includes(adresse))).toEqual(
+        [],
+      );
     }
   });
 

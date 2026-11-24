@@ -87,53 +87,56 @@ describe('AsiliHeroComponent', () => {
     racine.remove();
   });
 
-  function motsEtLignes(titre: readonly MorceauDeTitre[]): {
-    mots: (string | null)[];
+  function rendreLeTitre(titre: readonly MorceauDeTitre[]): {
+    animations: number;
     lignes: string[];
     accents: (string | null)[];
   } {
     setup();
     fixture.componentRef.setInput('titre', titre);
+    attachSoGetComputedStyleAppliesTheCascade(fixture);
     fixture.detectChanges();
     const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1') as HTMLElement;
     const copie = h1.cloneNode(true) as HTMLElement;
     copie.querySelectorAll('br').forEach((saut) => saut.replaceWith('\n'));
-    return {
-      mots: [...h1.querySelectorAll('.mot')].map((mot) => mot.textContent),
+    const rendu = {
+      animations: h1.getAnimations({ subtree: true }).length,
       lignes: (copie.textContent ?? '')
         .split('\n')
         .map((ligne) => ligne.replace(/\s+/g, ' ').trim()),
       accents: [...h1.querySelectorAll('.accent')].map((accent) => accent.textContent),
     };
+    (fixture.nativeElement as HTMLElement).remove();
+    return rendu;
   }
 
-  it('passe à la ligne avant un morceau aLaLigne et colle la ponctuation à l accent', () => {
+  it('VIT2-06 · le titre arrive immobile, passe à la ligne avant un morceau aLaLigne et garde l accent sur son morceau', () => {
     expect(
-      motsEtLignes([
+      rendreLeTitre([
         { texte: 'Des preuves,' },
         { texte: 'pas des ', aLaLigne: true },
         { texte: 'promesses', accent: true },
         { texte: '.' },
       ]),
     ).toEqual({
-      mots: ['Des', 'preuves,', 'pas', 'des', 'promesses.'],
+      animations: 0,
       lignes: ['Des preuves,', 'pas des promesses.'],
       accents: ['promesses'],
     });
   });
 
-  it('un morceau fait d une espace sépare deux mots sans créer de mot vide', () => {
+  it('VIT2-06 · un morceau fait d une espace sépare deux mots, l accent couvre son morceau entier', () => {
     expect(
-      motsEtLignes([{ texte: 'Manager' }, { texte: ' ' }, { texte: 'avant tout.', accent: true }]),
+      rendreLeTitre([{ texte: 'Manager' }, { texte: ' ' }, { texte: 'avant tout.', accent: true }]),
     ).toEqual({
-      mots: ['Manager', 'avant', 'tout.'],
+      animations: 0,
       lignes: ['Manager avant tout.'],
-      accents: ['avant', 'tout.'],
+      accents: ['avant tout.'],
     });
   });
 
-  it('un premier morceau aLaLigne n ouvre pas le titre sur une ligne vide', () => {
-    expect(motsEtLignes([{ texte: 'Des idées', aLaLigne: true }]).lignes).toEqual(['Des idées']);
+  it('VIT2-06 · un premier morceau aLaLigne n ouvre pas le titre sur une ligne vide', () => {
+    expect(rendreLeTitre([{ texte: 'Des idées', aLaLigne: true }]).lignes).toEqual(['Des idées']);
   });
 
   decrireRenduServeur(
@@ -166,16 +169,10 @@ describe('AsiliHeroComponent', () => {
       ];
     }
 
-    it('rend le titre mot par mot, projette les CTA et le visuel fournis par la page', () => {
+    it('rend le titre, projette les CTA et le visuel fournis par la page', () => {
       const host = rendreLHoteNavigateur(HostComponent);
 
       expect(host.querySelector('h1.hero-title .accent')?.textContent).toBe('mieux');
-      expect([...host.querySelectorAll('h1 .mot')].map((mot) => mot.textContent)).toEqual([
-        'Votre',
-        'métier',
-        'mérite',
-        'mieux.',
-      ]);
       expect(texteDe(host.querySelector('h1'))).toBe('Votre métier mérite mieux.');
       expect(
         [...host.querySelectorAll('.hero-cta a[cta]')].map((lien) => lien.getAttribute('href')),

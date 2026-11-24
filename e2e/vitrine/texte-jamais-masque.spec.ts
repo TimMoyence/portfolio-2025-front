@@ -18,7 +18,7 @@ const textesTransparents = (page: Page): Promise<string[]> =>
       .map((element) => (element.textContent ?? '').trim().slice(0, 40)),
   );
 
-for (const chemin of ['/', '/offer', '/projets', '/presentation']) {
+for (const chemin of ['/', '/offer', '/projets', '/presentation', '/contact']) {
   test(`REC-15 · aucun texte de ${chemin} n est à opacité 0, en haut comme sous le pli`, async ({
     page,
   }) => {

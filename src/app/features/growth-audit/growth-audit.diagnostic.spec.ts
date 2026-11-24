@@ -32,7 +32,7 @@ describe('REC-08 · le diagnostic porte un seul nom', () => {
   });
 
   it('REC-08 · la FAQ parle du diagnostic', () => {
-    const faq = page.racine.querySelector('app-faq-section');
+    const faq = page.racine.querySelector('app-asili-faq');
 
     expect(texte(faq?.querySelector('h2'))).toContain('diagnostic');
   });

@@ -25,7 +25,11 @@ import { bornesDu } from '../../shared/utils/saisie/regles-de-saisie';
 import { telephoneFacultatif } from '../../shared/utils/telephone.utils';
 import { ContactCtaComponent } from '../../shared/components/sections/cta-contact/cta-contact.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
-import { HeroSectionComponent } from '../../shared/components/sections/hero-section/hero-section.component';
+import {
+  AsiliHeroComponent,
+  IllustrationDuHerosComponent,
+  type MorceauDeTitre,
+} from '../../shared/sections';
 import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
 import type { FormatDeContact } from '../../shared/directives/format-de-contact.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
@@ -59,7 +63,8 @@ const OPTION_DE_DEMANDE_D_ACCES: OptionDeBesoin = {
     CommonModule,
     RouterModule,
     FormsModule,
-    HeroSectionComponent,
+    AsiliHeroComponent,
+    IllustrationDuHerosComponent,
     ContactCtaComponent,
     FieldErrorsComponent,
     BornesDeSaisieDirective,
@@ -80,11 +85,13 @@ export class ContactComponent {
   private readonly hote: ElementRef<HTMLElement> = inject(ElementRef);
   private debutDeSaisie = instantMonotone();
 
-  readonly hero = {
-    label: $localize`:contact.hero.label@@contactHeroLabel:Contact`,
-    title: $localize`:contact.hero.title@@contactHeroTitle:Parlons de votre site`,
-    description: $localize`:contact.hero.description@@contactHeroDescription:Dites-moi ce que vous faites et ce dont vous avez besoin. Je vous réponds sous 48 h ouvrées avec une proposition claire.`,
-  };
+  protected readonly heroKicker = $localize`:contact.hero.label@@contactHeroLabel:Contact`;
+
+  protected readonly heroTitre: readonly MorceauDeTitre[] = [
+    { texte: $localize`:contact.hero.title@@contactHeroTitle:Parlons de votre site` },
+  ];
+
+  protected readonly heroLead = $localize`:contact.hero.description@@contactHeroDescription:Dites-moi ce que vous faites et ce dont vous avez besoin. Je vous réponds sous 48 h ouvrées avec une proposition claire.`;
 
   readonly activites = [
     $localize`:Activité du contact@@contactActiviteArtisan:Artisan`,
