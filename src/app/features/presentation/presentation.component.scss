@@ -4,6 +4,11 @@
 @use '../../styles-shared/composants/lists';
 @use '../../styles-shared/mise-en-page/surfaces' as surfaces;
 @use '../../styles-shared/mise-en-page/mono';
+@use '../../styles-shared/mise-en-page/heads' as heads;
+
+.ai-method-title {
+  max-width: heads.largeur-de-titre(18);
+}
 
 .intro-split {
   display: grid;

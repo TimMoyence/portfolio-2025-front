@@ -1,3 +1,4 @@
+@use '../../../../styles-shared/mise-en-page/heads' as heads;
 @use '../../../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../../../styles-shared/mise-en-page/surfaces' as surfaces;
 @use '../../../../styles-shared/mise-en-page/mono';
@@ -30,7 +31,7 @@
 
 .ai-method-title {
   margin-top: 18px;
-  max-width: 18ch;
+  max-width: heads.largeur-de-titre(18);
   color: #fff;
 }
 

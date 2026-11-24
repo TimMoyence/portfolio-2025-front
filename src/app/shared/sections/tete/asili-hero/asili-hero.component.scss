@@ -1,3 +1,4 @@
+@use '../../../../styles-shared/mise-en-page/heads' as heads;
 @use '../../../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../../../styles-shared/mise-en-page/hero-meta' as hero;
 :host {
@@ -46,7 +47,7 @@
 }
 
 .hero-title {
-  max-width: 7.36em;
+  max-width: heads.largeur-de-titre(16);
   margin-top: 8px;
 }
 .hero-title .accent {

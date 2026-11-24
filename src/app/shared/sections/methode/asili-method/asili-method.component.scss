@@ -17,7 +17,7 @@
 
 .method-head__title {
   margin-top: 18px;
-  max-width: 18ch;
+  max-width: heads.largeur-de-titre(18);
 }
 
 .method-steps {

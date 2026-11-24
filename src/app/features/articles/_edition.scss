@@ -1,3 +1,5 @@
+@use '../../styles-shared/mise-en-page/heads';
+
 @mixin point-dore {
   content: '';
   width: 6px;
@@ -40,4 +42,9 @@
   &:first-child {
     border-top: 0;
   }
+}
+
+@mixin titre-d-edition($signes) {
+  max-width: heads.largeur-de-titre($signes);
+  text-wrap: balance;
 }

@@ -1,3 +1,4 @@
+@use '../../../styles-shared/mise-en-page/heads' as heads;
 @use '../../../styles-shared/composants/lists';
 @use '../../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../../styles-shared/mise-en-page/mono';
@@ -36,12 +37,11 @@
 }
 
 .edition__titre {
-  max-width: 18ch;
+  @include edition.titre-d-edition(18);
   margin-block: 1rem 2rem;
   font-size: clamp(2.6rem, 6.5vw, 4.75rem);
   line-height: 0.98;
   letter-spacing: -0.02em;
-  text-wrap: balance;
 }
 
 .edition__lecture {
@@ -231,10 +231,9 @@
 }
 
 .recit__titre {
-  max-width: 20ch;
+  @include edition.titre-d-edition(20);
   font-size: clamp(2rem, 4.5vw, 3.1rem);
   line-height: 1.05;
-  text-wrap: balance;
 }
 
 .recit__accroche {
@@ -390,7 +389,7 @@
 }
 
 .article-detail__header h1 {
-  max-width: 16ch;
+  max-width: heads.largeur-de-titre(16);
   margin-block: 2rem 1rem;
 }
 

@@ -1,3 +1,9 @@
+$chasse-du-zero-instrument-serif: 0.46em;
+
+@function largeur-de-titre($signes) {
+  @return $signes * $chasse-du-zero-instrument-serif;
+}
+
 @mixin section-head($margin-bottom: var(--s-5)) {
   display: flex;
   justify-content: space-between;
@@ -25,7 +31,7 @@
     font-size: clamp(40px, 6vw, 80px);
     line-height: 1;
     letter-spacing: -0.025em;
-    max-width: 18ch;
+    max-width: largeur-de-titre(18);
     margin-top: 16px;
   }
 }

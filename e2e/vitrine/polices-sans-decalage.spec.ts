@@ -47,6 +47,22 @@ const clsUneFoisLesPolicesArrivees = async (page: Page): Promise<number> => {
   });
 };
 
+interface FenetreQuiBorne extends Window {
+  bornesDesTitres: () => string[];
+  bornesAvantLesPolices: string[];
+}
+
+const releverLesBornesAvantLesPolices = (): void => {
+  const fenetre = window as unknown as FenetreQuiBorne;
+  fenetre.bornesDesTitres = () =>
+    [...document.querySelectorAll('h1, h2, h3, h4')].map(
+      (titre) => `${titre.textContent?.trim().slice(0, 30)} : ${getComputedStyle(titre).maxWidth}`,
+    );
+  document.addEventListener('DOMContentLoaded', () => {
+    fenetre.bornesAvantLesPolices = fenetre.bornesDesTitres();
+  });
+};
+
 for (const ecran of ECRANS_DE_LIGHTHOUSE) {
   test.describe(`REC-15 · ${ecran.nom} : des polices en retard ne décalent pas la page`, () => {
     test.use({ viewport: ecran.viewport, deviceScaleFactor: ecran.deviceScaleFactor });
@@ -58,16 +74,34 @@ for (const ecran of ECRANS_DE_LIGHTHOUSE) {
         await route.continue();
       });
       await page.addInitScript(mesurerLeCls);
+      await page.addInitScript(releverLesBornesAvantLesPolices);
     });
+
+    const clsDeLaPage = async (page: Page, chemin: string): Promise<number> => {
+      exigerLaPorteSsr();
+      await ouvrir(page, `${baseSsr}/fr${chemin}`);
+      return clsUneFoisLesPolicesArrivees(page);
+    };
 
     for (const chemin of PAGES_A_HEROS) {
       test(`REC-15 · ${chemin} en ${ecran.nom} : CLS sous le seuil de Lighthouse quand les polices arrivent`, async ({
         page,
       }) => {
-        exigerLaPorteSsr();
-        await ouvrir(page, `${baseSsr}/fr${chemin}`);
+        expect(await clsDeLaPage(page, chemin)).toBeLessThan(SEUIL_DE_LIGHTHOUSE);
+      });
 
-        expect(await clsUneFoisLesPolicesArrivees(page)).toBeLessThan(SEUIL_DE_LIGHTHOUSE);
+      test(`REC-15 · ${chemin} en ${ecran.nom} : la largeur d un titre ne dépend pas de la police chargée`, async ({
+        page,
+      }) => {
+        await clsDeLaPage(page, chemin);
+
+        const { avant, apres } = await page.evaluate(() => {
+          const fenetre = window as unknown as FenetreQuiBorne;
+          return { avant: fenetre.bornesAvantLesPolices, apres: fenetre.bornesDesTitres() };
+        });
+
+        expect(avant.length).toBeGreaterThan(0);
+        expect(apres).toEqual(avant);
       });
     }
   });
