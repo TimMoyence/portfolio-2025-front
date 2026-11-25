@@ -3,6 +3,7 @@ import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { pageMontee } from '../../../testing/page/montage-page';
 import { ENTREES_DE_FORMATION } from '../../core/config/familles-de-formation';
+import { variantesDeLargeur } from '../../shared/images/variantes-de-largeur';
 import { faqDuSite } from '../../shared/offre/prix-et-delai';
 import { PresentationComponent } from '../presentation/presentation.component';
 import { HomeComponent } from './home.component';
@@ -97,14 +98,11 @@ describe('REC-06 · l accueil raconte l histoire du client dans l ordre', () => 
 });
 
 describe('VIT2-10 · « Votre guide » montre le portrait d À propos, servi à sa largeur', () => {
-  const VARIANTES = [360, 400, 480, 560, 640, 800, 1000]
-    .map((largeur) => `/assets/images/portrait/${largeur}.webp ${largeur}w`)
-    .join(', ');
   const portraitDe = (image: Element | null) =>
     ['src', 'srcset', 'width', 'height', 'alt'].map((attribut) => image?.getAttribute(attribut));
   const PORTRAIT = [
     '/assets/images/portrait/1000.webp',
-    VARIANTES,
+    variantesDeLargeur('/assets/images/portrait', 1000),
     '1000',
     '1145',
     "Tim Moyence, fondateur d'Asili Design",

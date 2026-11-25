@@ -1,5 +1,6 @@
 import { texteDe as texte } from '../../../testing/texte/textes-dom';
 import { pageMontee } from '../../../testing/page/montage-page';
+import { variantesDeLargeur } from '../../shared/images/variantes-de-largeur';
 import { HomeComponent } from './home.component';
 
 describe('REC-05 · le héros promet un site qu on trouve', () => {
@@ -34,9 +35,7 @@ describe('REC-05 · le héros promet un site qu on trouve', () => {
 
       expect(illustration?.getAttribute('src')).toBe('/assets/images/audit.webp');
       expect(illustration?.getAttribute('srcset')).toBe(
-        [360, 400, 480, 560, 640, 800, 1000, 1022]
-          .map((largeur) => `/assets/images/audit/${largeur}.webp ${largeur}w`)
-          .join(', '),
+        variantesDeLargeur('/assets/images/audit', 1022),
       );
       expect([illustration?.getAttribute('width'), illustration?.getAttribute('height')]).toEqual([
         '1022',

@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { ouvrir } from '../ouvrir';
-import { opaciteAutour, sansMouvement, surLaToile } from './toile';
+import { opaciteAutour, placer, sansMouvement, surLaToile } from './toile';
 
 surLaToile();
 sansMouvement();
@@ -69,7 +69,7 @@ test('MET-01 · /presentation : chaque chiffre de la méthode IA est dans le mê
   const socle = await formeDuRond(page.locator('app-asili-method .num').first());
   await ouvrir(page, '/presentation');
   const ronds = page.locator('.ai-n');
-  await ronds.first().scrollIntoViewIfNeeded();
+  await placer(page, '.ai-steps', 200);
   await page.clock.runFor(500);
 
   const tous = await ronds.all();

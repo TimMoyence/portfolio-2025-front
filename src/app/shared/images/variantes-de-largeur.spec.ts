@@ -3,7 +3,7 @@ import { variantesDeLargeur } from './variantes-de-largeur';
 describe('variantesDeLargeur', () => {
   it('sert chaque largeur sous la largeur naturelle, puis la largeur naturelle', () => {
     expect(variantesDeLargeur('/a', 700)).toBe(
-      '/a/360.webp 360w, /a/400.webp 400w, /a/480.webp 480w, /a/560.webp 560w, /a/640.webp 640w, /a/700.webp 700w',
+      '/a/360.webp 360w, /a/400.webp 400w, /a/480.webp 480w, /a/560.webp 560w, /a/640.webp 640w, /a/680.webp 680w, /a/700.webp 700w',
     );
   });
 

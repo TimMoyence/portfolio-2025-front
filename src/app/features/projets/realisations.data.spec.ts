@@ -58,7 +58,9 @@ describe('variantesDeLaCapture', () => {
       '480w',
       '560w',
       '640w',
+      '680w',
       '800w',
+      '960w',
       '1000w',
       '1200w',
     ]);

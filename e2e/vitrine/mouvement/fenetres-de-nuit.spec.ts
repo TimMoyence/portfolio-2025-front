@@ -121,7 +121,7 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
       await page.clock.runFor(100);
       expect(await etatDeLaCouche()).toEqual({ dessins: 0, largeur: 300, hauteur: 150 });
 
-      await page.locator('.cta .btn-teal').first().scrollIntoViewIfNeeded();
+      await placer(page, '.cta', 100);
       await page.clock.runFor(300);
       const bande = await page.locator('.cta').first().boundingBox();
       const etat = await etatDeLaCouche();

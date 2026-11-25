@@ -23,7 +23,10 @@ const gaspillages = (page: Page, selecteur: string): Promise<string[]> =>
         const seuil = image.srcset === '' ? seuils.sansVariantes : seuils.avecVariantes;
         const boite = image.getBoundingClientRect();
         const affichee = boite.width * boite.height * devicePixelRatio ** 2;
-        const naturelle = image.naturalWidth * image.naturalHeight;
+        const fichier = new Image();
+        fichier.src = image.currentSrc;
+        await fichier.decode();
+        const naturelle = fichier.naturalWidth * fichier.naturalHeight;
         const ressource = performance
           .getEntriesByType('resource')
           .find((entree) => entree.name === image.currentSrc) as
@@ -32,7 +35,7 @@ const gaspillages = (page: Page, selecteur: string): Promise<string[]> =>
         const gaspille = octets * Math.max(0, 1 - affichee / naturelle);
         if (octets === 0 || gaspille > seuil) {
           ecarts.push(
-            `${image.currentSrc.split('/').pop()} ${image.naturalWidth}px pour ${Math.round(boite.width * devicePixelRatio)}px : ${Math.round(gaspille)} o gaspillés sur ${octets}`,
+            `${image.currentSrc.split('/').slice(-2).join('/')} ${fichier.naturalWidth}px pour ${Math.round(boite.width * devicePixelRatio)}px : ${Math.round(gaspille)} o gaspillés sur ${octets}`,
           );
         }
       }
