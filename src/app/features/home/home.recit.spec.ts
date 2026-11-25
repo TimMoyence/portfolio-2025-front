@@ -1,5 +1,5 @@
 import { texteDe as texte } from '../../../testing/texte/textes-dom';
-import { LOCALE_ID } from '@angular/core';
+import { LOCALE_ID, type Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { pageMontee } from '../../../testing/page/montage-page';
 import { ENTREES_DE_FORMATION } from '../../core/config/familles-de-formation';
@@ -107,25 +107,35 @@ describe('VIT2-10 · « Votre guide » montre le portrait d À propos, servi à 
     '1145',
     "Tim Moyence, fondateur d'Asili Design",
   ];
-  describe('l accueil', () => {
-    const accueil = pageMontee(HomeComponent);
+  const pages: readonly {
+    titre: string;
+    composant: Type<unknown>;
+    selecteur: string;
+    chargement: readonly [string, string];
+  }[] = [
+    {
+      titre: 'VIT2-10 · l accueil le montre dans « Votre guide », chargé à l approche',
+      composant: HomeComponent,
+      selecteur: 'section.guide img',
+      chargement: ['loading', 'lazy'],
+    },
+    {
+      titre: 'VIT2-10 · À propos montre le même, en priorité',
+      composant: PresentationComponent,
+      selecteur: '.portrait img',
+      chargement: ['fetchpriority', 'high'],
+    },
+  ];
+  for (const { titre, composant, selecteur, chargement } of pages) {
+    describe(titre, () => {
+      const page = pageMontee(composant);
 
-    it('VIT2-10 · l accueil le montre dans « Votre guide », chargé à l approche', () => {
-      const image = accueil.racine.querySelector('section.guide img');
+      it(titre, () => {
+        const image = page.racine.querySelector(selecteur);
 
-      expect(portraitDe(image)).toEqual(PORTRAIT);
-      expect(image?.getAttribute('loading')).toBe('lazy');
+        expect(portraitDe(image)).toEqual(PORTRAIT);
+        expect(image?.getAttribute(chargement[0])).toBe(chargement[1]);
+      });
     });
-  });
-
-  describe('À propos', () => {
-    const aPropos = pageMontee(PresentationComponent);
-
-    it('VIT2-10 · À propos montre le même, en priorité', () => {
-      const image = aPropos.racine.querySelector('.portrait img');
-
-      expect(portraitDe(image)).toEqual(PORTRAIT);
-      expect(image?.getAttribute('fetchpriority')).toBe('high');
-    });
-  });
+  }
 });
