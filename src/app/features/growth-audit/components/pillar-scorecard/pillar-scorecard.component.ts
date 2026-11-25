@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import type { ClientReport, StatutScore } from '../../../../core/models/audit-client-report.model';
+import { nomDuPilier } from '../../piliers';
 
 @Component({
   selector: 'app-pillar-scorecard',
@@ -13,19 +14,7 @@ import type { ClientReport, StatutScore } from '../../../../core/models/audit-cl
 export class PillarScorecardComponent {
   @Input({ required: true }) scorecard!: ClientReport['pillarScorecard'];
 
-  private static readonly PILLAR_LABELS: Readonly<Record<string, string>> = {
-    seo: 'SEO',
-    performance: $localize`:@@auditPillarPerformance:Performance`,
-    technical: $localize`:@@auditPillarTechnical:Tech & scalabilité`,
-    trust: $localize`:@@auditPillarTrust:Crédibilité`,
-    conversion: $localize`:@@auditPillarConversion:Conversion`,
-    aiVisibility: $localize`:@@auditPillarAiVisibility:Visibilité IA`,
-    citationWorthiness: $localize`:@@auditPillarCitationWorthiness:Citabilité IA`,
-  };
-
-  formatPillarName(pillar: string): string {
-    return PillarScorecardComponent.PILLAR_LABELS[pillar] ?? pillar;
-  }
+  protected readonly formatPillarName = nomDuPilier;
 
   statusClass(status: StatutScore): string {
     return `pillar-card__status pillar-card__status--${status}`;

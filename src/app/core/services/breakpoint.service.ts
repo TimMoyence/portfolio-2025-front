@@ -1,35 +1,19 @@
 import { isPlatformBrowser } from '@angular/common';
-import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BreakpointService {
-  private readonly platformId = inject(PLATFORM_ID);
+  private readonly tabletteOuMoins = signal(false);
 
-  private readonly _isMobile = signal(false);
-
-  private readonly _isTabletOrBelow = signal(false);
-
-  readonly isMobile = computed(() => {
-    if (!isPlatformBrowser(this.platformId)) return false;
-    return this._isMobile();
-  });
-
-  readonly isTabletOrBelow = computed(() => {
-    if (!isPlatformBrowser(this.platformId)) return false;
-    return this._isTabletOrBelow();
-  });
+  readonly isTabletOrBelow = this.tabletteOuMoins.asReadonly();
 
   constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      const mobileMq = window.matchMedia('(max-width: 768px)');
-      this._isMobile.set(mobileMq.matches);
-      mobileMq.addEventListener('change', (e) => this._isMobile.set(e.matches));
-
-      const tabletMq = window.matchMedia('(max-width: 1024px)');
-      this._isTabletOrBelow.set(tabletMq.matches);
-      tabletMq.addEventListener('change', (e) => this._isTabletOrBelow.set(e.matches));
+    if (isPlatformBrowser(inject(PLATFORM_ID))) {
+      const requete = window.matchMedia('(max-width: 1024px)');
+      this.tabletteOuMoins.set(requete.matches);
+      requete.addEventListener('change', ({ matches }) => this.tabletteOuMoins.set(matches));
     }
   }
 }

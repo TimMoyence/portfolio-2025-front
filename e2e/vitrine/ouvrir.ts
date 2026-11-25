@@ -16,6 +16,10 @@ export function sansAnimationNiContenu(): void {
   });
 }
 
+export const attendreAngular = async (page: Page): Promise<void> => {
+  await page.waitForFunction(() => document.querySelector('app-root[ng-version]') !== null);
+};
+
 export async function ouvrir(page: Page, chemin: string): Promise<void> {
   await page.goto(chemin);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();

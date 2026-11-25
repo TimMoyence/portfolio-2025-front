@@ -47,6 +47,7 @@ test.describe('SEO-5 · un nom court ne s écrit qu une fois, et /en/ le sert en
     ).toEqual([
       ['/en/offer', 'Build my website'],
       ['/en/projets', 'Work'],
+      ['/en/articles', 'Articles'],
       ['/en/formations/digitale', 'Digital training'],
       ['/en/formations/cours', 'Classroom courses'],
       ['/en/presentation', 'About'],

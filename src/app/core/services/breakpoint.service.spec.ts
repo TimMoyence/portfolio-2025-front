@@ -9,39 +9,28 @@ function serviceSur(plateforme: 'browser' | 'server'): BreakpointService {
 }
 
 describe('BreakpointService', () => {
-  describe('en contexte navigateur', () => {
-    let service: BreakpointService;
+  it('le menu bascule quand la fenêtre franchit 1024 px, dans un sens puis dans l autre', () => {
+    const ecouteurs: ((evenement: { matches: boolean }) => void)[] = [];
+    const changer = (matches: boolean) => ecouteurs.forEach((ecouteur) => ecouteur({ matches }));
+    const requete = spyOn(window, 'matchMedia').and.returnValue({
+      matches: false,
+      addEventListener: (_type: string, ecouteur: (typeof ecouteurs)[number]) =>
+        ecouteurs.push(ecouteur),
+    } as unknown as MediaQueryList);
+    const service = serviceSur('browser');
 
-    beforeEach(() => {
-      service = serviceSur('browser');
-    });
-
-    it('devrait se creer', () => {
-      expect(service).toBeTruthy();
-    });
-
-    it('devrait exposer un signal isMobile booleen quelle que soit la taille du viewport', () => {
-      expect(typeof service.isMobile()).toBe('boolean');
-    });
-
-    it('devrait exposer un signal isTabletOrBelow', () => {
-      expect(typeof service.isTabletOrBelow()).toBe('boolean');
-    });
+    expect(requete).toHaveBeenCalledWith('(max-width: 1024px)');
+    expect(service.isTabletOrBelow()).toBeFalse();
+    changer(true);
+    expect(service.isTabletOrBelow()).toBeTrue();
+    changer(false);
+    expect(service.isTabletOrBelow()).toBeFalse();
   });
 
-  describe('en contexte SSR', () => {
-    let service: BreakpointService;
+  it('au rendu serveur, le menu n est pas en tablette et l écran n est pas interrogé', () => {
+    const requete = spyOn(window, 'matchMedia');
 
-    beforeEach(() => {
-      service = serviceSur('server');
-    });
-
-    it('devrait retourner false pour isMobile en SSR', () => {
-      expect(service.isMobile()).toBeFalse();
-    });
-
-    it('devrait retourner false pour isTabletOrBelow en SSR', () => {
-      expect(service.isTabletOrBelow()).toBeFalse();
-    });
+    expect(serviceSur('server').isTabletOrBelow()).toBeFalse();
+    expect(requete).not.toHaveBeenCalled();
   });
 });

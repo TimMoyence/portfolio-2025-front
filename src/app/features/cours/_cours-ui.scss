@@ -1,5 +1,6 @@
 @use '../../styles-shared/composants/segments';
 @use '../../styles-shared/mise-en-page/mono';
+@use '../../styles-shared/composants/ronds';
 @use '../../styles-shared/composants/survol';
 
 .cours-presentateur,
@@ -685,15 +686,7 @@
 }
 
 .student-entry__steps li > span:first-child {
-  display: inline-grid;
-  width: 30px;
-  height: 30px;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid rgba(var(--teal-rgb), 0.32);
-  border-radius: 50%;
-  color: var(--teal-deep);
-  @include mono.police;
+  @include ronds.rond(30px);
   font-size: 0.68rem;
   font-weight: 700;
 }

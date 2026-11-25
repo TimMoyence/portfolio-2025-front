@@ -55,24 +55,6 @@
   color: var(--teal-deep);
 }
 
-.mot {
-  display: inline-block;
-  animation: mot-qui-monte 0.7s var(--ease) both;
-  animation-delay: calc(var(--rang) * 55ms);
-}
-
-@keyframes mot-qui-monte {
-  from {
-    transform: translateY(0.16em);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mot {
-    animation: none;
-  }
-}
-
 .hero-sub {
   display: flex;
   flex-wrap: wrap;

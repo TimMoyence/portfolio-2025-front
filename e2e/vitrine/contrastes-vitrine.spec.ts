@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { expect, test, type Page, type Route } from '@playwright/test';
 import { zContactResponseDto } from '../../contrat/zod.gen';
 import { contrastesInsuffisants } from '../../src/testing/texte/contrastes-insuffisants';
@@ -5,18 +6,19 @@ import { intercepterApi, servirJson, servirRefus, servirSansContenu } from '../f
 import { parcourir, survolsHorsHover, violationsAxe } from '../sondes-de-style';
 import { ouvrir as ouvrirLaPage, sansContenu } from './ouvrir';
 
+const FICHES = (
+  JSON.parse(readFileSync('src/assets/seo/seo-metadata.json', 'utf8')) as {
+    pages: readonly { id: string; path: string }[];
+  }
+).pages
+  .filter(({ id }) => id.startsWith('projet-'))
+  .map(({ path }) => path);
+
 const PAGES_VITRINE = [
   '/',
   '/offer',
   '/projets',
-  '/projets/atlanticbike',
-  '/projets/maria-naumenko',
-  '/projets/asilidesign',
-  '/projets/innovmind',
-  '/projets/gestion-de-chais',
-  '/projets/ifs-academy',
-  '/projets/zenfirst-renta',
-  '/projets/morning-brief',
+  ...FICHES,
   '/presentation',
   '/formations',
   '/formations/cours',

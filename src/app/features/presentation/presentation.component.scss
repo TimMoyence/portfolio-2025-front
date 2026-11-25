@@ -17,25 +17,6 @@
   align-items: start;
 }
 
-.portrait {
-  border-radius: var(--r-xl);
-  overflow: hidden;
-  aspect-ratio: 4 / 5;
-  position: relative;
-  border: 1px solid var(--line);
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .placeholder {
-    @include cartes.placeholder-raye(16px, 6px 12px);
-  }
-}
-
 .intro-body {
   p {
     font-size: clamp(18px, 1.5vw, 21px);
@@ -72,7 +53,7 @@
   background: rgba(255, 250, 242, 0.55);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  @include cartes.carte-soulevee(-5px);
+  @include cartes.carte-survolee;
 
   .s-ic {
     @include surfaces.icon-tile;

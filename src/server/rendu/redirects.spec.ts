@@ -112,6 +112,13 @@ describe('redirects', () => {
       });
     }
 
+    it('VIT2-07 · redirige la fiche InnovMind vers Musaium, locale préservée, sans sous-page', () => {
+      expect(resolveRedirect('/projets/innovmind')).toBe('/fr/projets/musaium');
+      expect(resolveRedirect('/fr/projets/innovmind')).toBe('/fr/projets/musaium');
+      expect(resolveRedirect('/EN/Projets/InnovMind/')).toBe('/en/projets/musaium');
+      expect(resolveRedirect('/fr/projets/innovmind/plus')).toBeNull();
+    });
+
     it('laisse servir la boîte à outils d ia-solopreneurs', () => {
       expect(resolveRedirect('/fr/formations/ia-solopreneurs/toolkit')).toBeNull();
       expect(resolveRedirect('/en/formations/ia-solopreneurs/toolkit')).toBeNull();

@@ -12,21 +12,40 @@ import {
 
 const titresDe = (zone: Element): string[] => [...zone.querySelectorAll('h3')].map(texte);
 
-const RETIREES = ['Fourmizzz', 'Slide-Shot', 'Schema-Atlas', 'Portail-EG'];
+const FAMILLES = [
+  ['Sites web', ['AtlanticBike', 'Maria Naumenko', 'asilidesign.fr']],
+  ['Apps mobiles', ['Musaium']],
+  [
+    'Sur-mesure',
+    ['Gestion de chais', 'IFS Academy', 'ZenFirst Renta', 'Morning-Brief', 'Portail-EG'],
+  ],
+  ['Outils', ['Schema-Atlas', 'Slide-Shot', 'Outillage-Claude', 'Fourmizzz-Suite']],
+] as const;
 
-describe('REC-10 · les réalisations se rangent en sites, apps et sur-mesure', () => {
+const VITRINE = [
+  'AtlanticBike',
+  'Maria Naumenko',
+  'Musaium',
+  'Gestion de chais',
+  'IFS Academy',
+  'ZenFirst Renta',
+];
+
+describe('VIT2-08 · les réalisations se rangent en sites, apps, sur-mesure et outils', () => {
   describe('la liste', () => {
-    it('REC-10 · trois familles dans l ordre, et les réalisations de chacune', () => {
+    it('VIT2-08 · quatre familles dans l ordre, et les réalisations de chacune', () => {
       expect(
         FAMILLES_DE_REALISATIONS.map(({ id, titre }) => [
           titre,
           REALISATIONS.filter(({ famille }) => famille === id).map(({ titre: nom }) => nom),
         ]),
-      ).toEqual([
-        ['Sites web', ['AtlanticBike', 'Maria Naumenko', 'asilidesign.fr']],
-        ['Apps mobiles', ['InnovMind']],
-        ['Sur-mesure', ['Gestion de chais', 'IFS Academy', 'ZenFirst Renta', 'Morning-Brief']],
-      ]);
+      ).toEqual(FAMILLES.map(([titre, noms]) => [titre, [...noms]]));
+    });
+
+    it('VIT2-08 · un outil mène au contact avec le besoin sur-mesure', () => {
+      expect(FAMILLES_DE_REALISATIONS.find(({ titre }) => titre === 'Outils')?.besoin).toBe(
+        'sur-mesure',
+      );
     });
 
     it('REC-10 · chaque carte porte un secteur et un résultat, et aucun résultat ne contient de chiffre', () => {
@@ -43,67 +62,49 @@ describe('REC-10 · les réalisations se rangent en sites, apps et sur-mesure', 
       }
     });
 
-    it('REC-10 · au moins un site web est marqué « En ligne », reconnu par son identifiant', () => {
+    it('REC-10 · au moins un site web porte l étiquette « En ligne »', () => {
       const enLigne = REALISATIONS.filter(
-        ({ famille, etiquettes }) =>
-          famille === 'sites' && etiquettes.some(({ id }) => id === ETIQUETTE_EN_LIGNE.id),
+        ({ famille, etiquettes }) => famille === 'sites' && etiquettes.includes(ETIQUETTE_EN_LIGNE),
       );
 
-      expect(ETIQUETTE_EN_LIGNE).toEqual(
-        jasmine.objectContaining({ libelle: 'En ligne', genre: 'resultat' }),
-      );
+      expect(ETIQUETTE_EN_LIGNE).toEqual({ libelle: 'En ligne', genre: 'resultat' });
       expect(enLigne.length).toBeGreaterThan(0);
     });
 
-    it('REC-10 · l accueil montre la première réalisation de chaque famille', () => {
-      expect(vitrineDeLAccueil().map(({ titre }) => titre)).toEqual([
-        'AtlanticBike',
-        'InnovMind',
-        'Gestion de chais',
-      ]);
+    it('VIT2-08 · la vitrine de l accueil suit sa liste de six réalisations', () => {
+      expect(vitrineDeLAccueil().map(({ titre }) => titre)).toEqual(VITRINE);
     });
   });
 
   describe('/projets', () => {
     const page = pageMontee(ProjetsComponent);
 
-    it('REC-10 · un titre de famille puis ses cartes, dans l ordre de la liste', () => {
+    it('VIT2-08 · un titre de famille puis ses cartes, dans l ordre de la liste', () => {
       const familles = [...page.racine.querySelectorAll('app-asili-projects-grid')].map(
         (grille) => [texte(grille.querySelector('h2')), titresDe(grille)],
       );
 
-      expect(familles).toEqual([
-        [
-          jasmine.stringMatching(/^Sites web/),
-          ['AtlanticBike', 'Maria Naumenko', 'asilidesign.fr'],
-        ],
-        [jasmine.stringMatching(/^Apps mobiles/), ['InnovMind']],
-        [
-          jasmine.stringMatching(/^Sur-mesure/),
-          ['Gestion de chais', 'IFS Academy', 'ZenFirst Renta', 'Morning-Brief'],
-        ],
-      ]);
+      expect(familles).toEqual(
+        FAMILLES.map(([titre, noms]) => [jasmine.stringMatching(`^${titre}`), [...noms]]),
+      );
     });
 
-    it('REC-10 · chaque carte mène à sa fiche, et les projets retirés ne paraissent plus', () => {
+    it('REC-10 · chaque carte mène à sa fiche', () => {
       const liens = [...page.racine.querySelectorAll('a.proj-link')].map((lien) =>
         lien.getAttribute('href'),
       );
 
       expect(liens).toEqual(REALISATIONS.map(({ slug }) => `/projets/${slug}`));
-      for (const retire of RETIREES) {
-        expect(texte(page.racine)).not.toContain(retire);
-      }
     });
   });
 
   describe('l accueil', () => {
     const accueil = pageMontee(HomeComponent);
 
-    it('REC-10 · trois cartes, une par famille, et aucune carte hors de la liste', () => {
+    it('VIT2-08 · six cartes en deux rangées pleines, et aucune carte hors de la liste', () => {
       const grille = accueil.racine.querySelector('app-asili-projects-grid') as Element;
 
-      expect(titresDe(grille)).toEqual(['AtlanticBike', 'InnovMind', 'Gestion de chais']);
+      expect(titresDe(grille)).toEqual(VITRINE);
       expect(texte(grille)).not.toContain('Audit de visibilité web');
       expect(texte(grille)).not.toContain('Formations actionnables');
     });

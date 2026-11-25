@@ -7,16 +7,21 @@
       </div>
     </div>
 
-    <div class="method-steps">
-      <div class="method-line" aria-hidden="true"></div>
+    <div class="method-steps" [style.--etapes]="steps().length">
       @for (step of steps(); track step.num; let i = $index) {
         <div class="step">
           <div class="num">{{ step.num }}</div>
           @if (step.index) {
             <span class="ix">{{ step.index }}</span>
           }
+          @if (step.duree) {
+            <span class="duree">{{ step.duree }}</span>
+          }
           <h3>{{ step.title }}</h3>
           <p>{{ step.desc }}</p>
+          @if (step.livrable) {
+            <p class="livrable">{{ step.livrable }}</p>
+          }
         </div>
       }
     </div>

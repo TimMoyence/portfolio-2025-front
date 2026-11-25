@@ -9,23 +9,7 @@
     >
   </ng-container>
 
-  @if (siteDuHeros; as site) {
-    <figure visuel class="cadre-navigateur">
-      <div class="cadre-navigateur__barre" aria-hidden="true">
-        <span></span><span></span><span></span>
-      </div>
-      <img
-        [src]="site.image"
-        [attr.srcset]="variantesDuHeros"
-        [attr.sizes]="largeurDuVisuel"
-        [alt]="site.imageAlt"
-        width="1200"
-        height="750"
-        fetchpriority="high"
-        decoding="async"
-      />
-    </figure>
-  }
+  <app-illustration-du-heros visuel />
 </app-asili-hero>
 <section class="probleme section-pad" aria-labelledby="probleme-titre">
   <div class="wrap probleme-grille">
@@ -42,30 +26,29 @@
 </section>
 
 <section class="guide section-pad" aria-labelledby="guide-titre">
-  <div class="wrap guide-grille">
-    <span class="kicker" i18n="@@homeGuideKicker">Votre guide</span>
-    <h2 id="guide-titre" class="h-lg" i18n="@@homeGuideTitre">
-      Je suis Tim, et j’explique sans jargon.
-    </h2>
-    <p class="lead" i18n="@@homeGuideTexte">
-      Six ans manager chez Decathlon, puis formateur à l’Ipac et à l’EPSI. J’enseigne, donc
-      j’explique sans jargon. Je traduis votre métier en un site que vos clients comprennent du
-      premier coup.
-    </p>
-    <a class="link-arrow" routerLink="/presentation">
-      <ng-container i18n="@@homeGuideLien">À propos de mon parcours</ng-container>&ngsp;<span
-        aria-hidden="true"
-        >→</span
-      >
-    </a>
+  <div class="wrap guide-split">
+    <div class="guide-grille">
+      <span class="kicker" i18n="@@homeGuideKicker">Votre guide</span>
+      <h2 id="guide-titre" class="h-lg" i18n="@@homeGuideTitre">
+        Je suis Tim, et j’explique sans jargon.
+      </h2>
+      <p class="lead" i18n="@@homeGuideTexte">
+        Six ans manager chez Decathlon, puis formateur à l’Ipac et à l’EPSI. J’enseigne, donc
+        j’explique sans jargon. Je traduis votre métier en un site que vos clients comprennent du
+        premier coup.
+      </p>
+      <a class="link-arrow" routerLink="/presentation">
+        <ng-container i18n="@@homeGuideLien">À propos de mon parcours</ng-container>&ngsp;<span
+          aria-hidden="true"
+          >→</span
+        >
+      </a>
+    </div>
+    <app-portrait />
   </div>
 </section>
 
-<app-asili-method [steps]="planSteps" [kicker]="planKicker">
-  <h2 heading class="h-lg method-head__title" i18n="@@homePlanTitre">
-    Trois étapes, et votre site est en ligne.
-  </h2>
-</app-asili-method>
+<app-socle-et-elan [kicker]="planKicker" />
 
 <app-asili-projects-grid [projects]="projects" [kicker]="projectsKicker">
   <h2 heading class="h-xl projects-head__title" i18n="@@homeRealisationsTitre">

@@ -36,7 +36,7 @@ module.exports = function configureKarma(config) {
       reporters: [{ type: 'json' }],
     },
     reporters: ['progress', 'kjhtml'],
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadlessNoSandbox'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',

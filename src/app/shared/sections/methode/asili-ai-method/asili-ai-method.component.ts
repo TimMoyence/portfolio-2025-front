@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { CoucheDeNuitComponent } from '../../../components/cadre/couche-de-nuit/couche-de-nuit.component';
 import { AsiliEnTeteDirective, EN_TETE_ASILI } from '../../asili-en-tete.directive';
 
 export interface AsiliAiMethodStep {
@@ -10,7 +11,7 @@ export interface AsiliAiMethodStep {
 @Component({
   selector: 'app-asili-ai-method',
   standalone: true,
-  imports: [EN_TETE_ASILI],
+  imports: [EN_TETE_ASILI, CoucheDeNuitComponent],
   templateUrl: './asili-ai-method.component.html',
   styleUrls: ['./asili-ai-method.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

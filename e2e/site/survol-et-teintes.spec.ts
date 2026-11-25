@@ -9,6 +9,7 @@ import { buildToolkitPageData } from '../../src/testing/factories/lead-magnet.fa
 import { contrastesInsuffisants } from '../../src/testing/texte/contrastes-insuffisants';
 import { intercepterApi, MOCK_SESSION, servirJson, servirSansContenu } from '../fixtures';
 import { parcourir, survolsHorsHover, violationsAxe } from '../sondes-de-style';
+import { attendreAngular } from '../vitrine/ouvrir';
 
 const ARTICLE = buildRecitDuMatin({ slug: 'morning-brief-2026-11-10' });
 
@@ -63,9 +64,38 @@ test.describe('REC-16 · hors vitrine, le survol attend (hover: hover) et l acce
     await ouvrir(page, '/formations/ia-solopreneurs/toolkit/jeton-de-test');
     const copier = page.locator('.tkp-copy').first();
     await copier.hover();
+    await copier.evaluate((bouton) =>
+      Promise.all(bouton.getAnimations().map(({ finished }) => finished)),
+    );
 
     expect(await copier.evaluate(contrastesInsuffisants)).toEqual([]);
   });
+});
+
+test.describe('VIT2-05 · hors vitrine non plus, aucune carte ne se soulève au survol', () => {
+  test.use({ contextOptions: { reducedMotion: 'no-preference' } });
+
+  for (const { chemin, carte } of [
+    { chemin: '/formations/automatiser-avec-ia', carte: '.slide-grid__card' },
+    { chemin: '/formations/ia-solopreneurs/toolkit/jeton-de-test', carte: '.tkp-card--link' },
+  ]) {
+    test(`VIT2-05 · ${chemin} ${carte} : rien ne monte au survol`, async ({ page }) => {
+      await ouvrir(page, chemin);
+      const cible = page.locator(carte).first();
+      await cible.scrollIntoViewIfNeeded();
+      const haut = () =>
+        cible.evaluate(async (element) => {
+          await new Promise((suite) => requestAnimationFrame(() => requestAnimationFrame(suite)));
+          await Promise.all(element.getAnimations().map((animation) => animation.finished));
+          return Math.round(element.getBoundingClientRect().top);
+        });
+      const repos = await haut();
+
+      await cible.hover();
+
+      expect(await haut()).toBe(repos);
+    });
+  }
 });
 
 test.describe('REC-16 · la navigation se lit à 4,5:1 dans chacun de ses états', () => {
@@ -104,6 +134,7 @@ test.describe('REC-16 · la navigation se lit à 4,5:1 dans chacun de ses états
 
     test('REC-16 · le tiroir ouvert', async ({ page }) => {
       await page.goto('/');
+      await attendreAngular(page);
       await page.locator('.asili-burger').click();
       await expect(page.locator('.asili-drawer')).toBeVisible();
 

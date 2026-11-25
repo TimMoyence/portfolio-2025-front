@@ -14,7 +14,7 @@ describe('EngineCoverageMatrixComponent', () => {
     expect(text).toContain('72');
     expect(text).toContain('34');
     expect(text).toContain('Visibilité Google');
-    expect(text).toContain('Visibilité IA');
+    expect(text).toContain('Visibilité dans les IA');
   });
 
   it('devrait afficher les summaries Google et IA', () => {

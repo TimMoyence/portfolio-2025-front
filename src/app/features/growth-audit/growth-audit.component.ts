@@ -29,10 +29,9 @@ import {
 import type { AuditRequestPort } from '../../core/ports/audit-request.port';
 import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { handleFormSubmit } from '../../shared/utils/form-submit.utils';
-import type { FaqItem } from '../../shared/components/sections/faq-section/faq-section.component';
-import { FaqSectionComponent } from '../../shared/components/sections/faq-section/faq-section.component';
 import { FieldErrorsComponent } from '../../shared/components/field-errors/field-errors.component';
-import { HeroSectionComponent } from '../../shared/components/sections/hero-section/hero-section.component';
+import type { QuestionDeFaq } from '../../shared/offre/prix-et-delai';
+import { AsiliFaqComponent, AsiliHeroComponent, type MorceauDeTitre } from '../../shared/sections';
 import { BornesDeSaisieDirective } from '../../shared/directives/bornes-de-saisie.directive';
 import { FormatDeContactDirective } from '../../shared/directives/format-de-contact.directive';
 import { HoneypotDirective } from '../../shared/directives/honeypot.directive';
@@ -52,11 +51,7 @@ import {
   formatTaskLabel,
   sectionBadgeClass as sectionBadgeClassFn,
 } from './growth-audit-format.utils';
-
-interface AuditPillar {
-  title: string;
-  description: string;
-}
+import { PILIERS } from './piliers';
 
 function formulaireVierge(): AuditRequestPayload {
   return {
@@ -73,8 +68,8 @@ function formulaireVierge(): AuditRequestPayload {
   imports: [
     CommonModule,
     FormsModule,
-    HeroSectionComponent,
-    FaqSectionComponent,
+    AsiliHeroComponent,
+    AsiliFaqComponent,
     AuditClientReportSectionComponent,
     FieldErrorsComponent,
     BornesDeSaisieDirective,
@@ -117,88 +112,60 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
   auditRecentCompletedUrls: string[] = [];
   auditSectionBadges: AuditSectionBadge[] = [];
 
-  readonly hero = {
-    label: $localize`:Kicker du diagnostic@@diagnosticKicker:${nomCourtServi('/growth-audit')}:nom: · IA et relecture humaine, sous 24 h`,
-    title: $localize`:audit.hero.title@@auditHeroTitle:Diagnostic gratuit : ce qui freine votre site, et quoi corriger d’abord`,
-    description: $localize`:audit.hero.description@@auditHeroDescription:Vous laissez l’adresse de votre site. Une première analyse automatique passe vos pages en revue : visibilité sur Google et dans les IA, vitesse, clarté, appels à l’action. Sous 24 h, je relis tout moi-même et je vous envoie une note claire, un rapport détaillé et les corrections à faire en premier.`,
-  };
+  protected readonly heroKicker = $localize`:Kicker du diagnostic@@diagnosticKicker:${nomCourtServi('/growth-audit')}:nom: · IA et relecture humaine, sous 24 h`;
+
+  protected readonly heroTitre: readonly MorceauDeTitre[] = [
+    {
+      texte: $localize`:audit.hero.title@@auditHeroTitle:Diagnostic gratuit : ce qui freine votre site, et quoi corriger d’abord`,
+    },
+  ];
+
+  protected readonly heroLead = $localize`:audit.hero.description@@auditHeroDescription:Vous laissez l’adresse de votre site. Une première analyse automatique passe vos pages en revue : visibilité sur Google et dans les IA, vitesse, clarté, appels à l’action. Sous 24 h, je relis tout moi-même et je vous envoie une note claire, un rapport détaillé et les corrections à faire en premier.`;
 
   readonly steps = [
     {
       title: $localize`:audit.steps.one.title@@auditStepOneTitle:1. Vous laissez vos infos`,
-      description: $localize`:audit.steps.one.desc@@auditStepOneDesc:Nom du site ou URL + contact (email ou téléphone).`,
     },
     {
       title: $localize`:audit.steps.two.title@@auditStepTwoTitle:2. Première analyse automatique`,
-      description: $localize`:audit.steps.two.desc@@auditStepTwoDesc:Je passe vos pages en revue (visibilité, vitesse, clarté, visibilité IA) et je sors un premier diagnostic rapide.`,
     },
     {
       title: $localize`:audit.steps.three.title@@auditStepThreeTitle:3. Diagnostic relu par moi sous 24 h`,
-      description: $localize`:audit.steps.three.desc@@auditStepThreeDesc:Je reprends l'analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d'actions concret.`,
       highlights: [
         $localize`:audit.highlights.pdf@@auditHighlightsPdf:Rapport PDF détaillé`,
-        $localize`:audit.highlights.score@@auditHighlightsScore:Scorecard claire`,
-        $localize`:audit.highlights.wins@@auditHighlightsWins:Quick wins + priorités (impact/effort)`,
+        $localize`:audit.highlights.score@@auditHighlightsScore:Une note claire, point par point`,
+        $localize`:audit.highlights.wins@@auditHighlightsWins:Les corrections rapides d’abord, puis les priorités`,
         $localize`:audit.highlights.noObligation@@auditHighlightsNoObligation:Aucun engagement`,
       ],
     },
   ];
 
   readonly faqTitle = $localize`:audit.faq.title@@auditFaqTitle:Questions fréquentes sur le diagnostic gratuit`;
-  readonly faqDescription = $localize`:audit.faq.description@@auditFaqDescription:Ce qu’il faut savoir avant de demander votre diagnostic : sept points passés en revue et des corrections classées par priorité.`;
-  readonly faqItems: readonly FaqItem[] = [
+  readonly faqKicker = $localize`:@@auditFaqKicker:Questions fréquentes`;
+  readonly faqItems: readonly QuestionDeFaq[] = [
     {
       question: $localize`:audit.faq.q1@@auditFaqQ1:Comment se déroule le diagnostic gratuit en 24 heures ?`,
-      answer: $localize`:audit.faq.a1@@auditFaqA1:Vous laissez l’adresse de votre site et votre contact. Une première analyse automatique passe vos pages en revue en quelques minutes. Puis, sous 24 h, je relis tout moi-même et vous envoie une note claire, un rapport détaillé et les corrections classées par priorité.`,
+      reponse: $localize`:audit.faq.a1@@auditFaqA1:Vous laissez l’adresse de votre site et votre contact. Une première analyse automatique passe vos pages en revue en quelques minutes. Puis, sous 24 h, je relis tout moi-même et vous envoie une note claire, un rapport détaillé et les corrections classées par priorité.`,
     },
     {
       question: $localize`:audit.faq.q2@@auditFaqQ2:Que contient le diagnostic ?`,
-      answer: $localize`:audit.faq.a2@@auditFaqA2:Le diagnostic passe en revue sept points : les fondations du référencement, la vitesse, la solidité du site, la confiance qu’il inspire, la clarté et les appels à l’action, la visibilité dans les réponses des IA et la matière qu’elles peuvent citer. Vous recevez une note, des gains rapides et des recommandations classées.`,
+      reponse: $localize`:audit.faq.a2@@auditFaqA2:Le diagnostic passe en revue sept points : clarté et appels, vitesse, être trouvé sur Google, confiance, solidité du site, visibilité dans les IA et matière à citer. Vous recevez une note point par point, les corrections rapides d’abord, puis les priorités.`,
     },
     {
       question: $localize`:audit.faq.q3@@auditFaqQ3:Le diagnostic est-il vraiment gratuit ?`,
-      answer: $localize`:audit.faq.a3@@auditFaqA3:Oui, totalement. Aucun engagement, aucune carte bancaire. Je limite à 5 diagnostics par semaine pour relire chacun moi-même sous 24 h. Le but : vous être utile tout de suite, et ouvrir un échange si vous le souhaitez.`,
+      reponse: $localize`:audit.faq.a3@@auditFaqA3:Oui, totalement. Aucun engagement, aucune carte bancaire. Je limite à 5 diagnostics par semaine pour relire chacun moi-même sous 24 h. Le but : vous être utile tout de suite, et ouvrir un échange si vous le souhaitez.`,
     },
     {
       question: $localize`:audit.faq.q4@@auditFaqQ4:Qui réalise le diagnostic : une IA ou un humain ?`,
-      answer: $localize`:audit.faq.a4@@auditFaqA4:Les deux. Une première analyse automatique tourne tout de suite. Ensuite, je relis le diagnostic moi-même pour classer les priorités et formuler des recommandations adaptées à votre situation.`,
+      reponse: $localize`:audit.faq.a4@@auditFaqA4:Les deux. Une première analyse automatique tourne tout de suite. Ensuite, je relis le diagnostic moi-même pour classer les priorités et formuler des recommandations adaptées à votre situation.`,
     },
     {
       question: $localize`:audit.faq.q5@@auditFaqQ5:Pour quels sites le diagnostic est-il utile ?`,
-      answer: $localize`:audit.faq.a5@@auditFaqA5:Le diagnostic sert aux sites vitrines, aux boutiques en ligne, aux pages de présentation et aux outils en ligne. Il est fait pour les artisans, commerces, indépendants et petites entreprises qui veulent être mieux trouvés et recevoir plus d’appels, sans se perdre dans la technique.`,
+      reponse: $localize`:audit.faq.a5@@auditFaqA5:Le diagnostic sert aux sites vitrines, aux boutiques en ligne, aux pages de présentation et aux outils en ligne. Il est fait pour les artisans, commerces, indépendants et petites entreprises qui veulent être mieux trouvés et recevoir plus d’appels, sans se perdre dans la technique.`,
     },
   ];
 
-  readonly pillars: AuditPillar[] = [
-    {
-      title: $localize`:audit.pillar.conversion.title@@auditPillarConversionTitle:Conversion & clarté`,
-      description: $localize`:audit.pillar.conversion.desc@@auditPillarConversionDesc:Proposition de valeur, CTA, friction contact, mobile.`,
-    },
-    {
-      title: $localize`:audit.pillar.performance.title@@auditPillarPerformanceTitle:Vitesse & performance`,
-      description: $localize`:audit.pillar.performance.desc@@auditPillarPerformanceDesc:PageSpeed, poids images, Core Web Vitals.`,
-    },
-    {
-      title: $localize`:audit.pillar.seo.title@@auditPillarSeoTitle:SEO fondations`,
-      description: $localize`:audit.pillar.seo.desc@@auditPillarSeoDesc:Titres, H1, meta, indexation, SEO local.`,
-    },
-    {
-      title: $localize`:audit.pillar.trust.title@@auditPillarTrustTitle:Crédibilité & confiance`,
-      description: $localize`:audit.pillar.trust.desc@@auditPillarTrustDesc:Preuves sociales, portfolio, signaux de confiance.`,
-    },
-    {
-      title: $localize`:audit.pillar.tech.title@@auditPillarTechTitle:Tech & scalabilité`,
-      description: $localize`:audit.pillar.tech.desc@@auditPillarTechDesc:CMS, sécurité, erreurs, maintenabilité.`,
-    },
-    {
-      title: $localize`:audit.pillar.aiVisibility.title@@auditPillarAiVisibilityTitle:Visibilité IA`,
-      description: $localize`:audit.pillar.aiVisibility.desc@@auditPillarAiVisibilityDesc:Compréhension par les assistants IA, données structurées, réponses génératives.`,
-    },
-    {
-      title: $localize`:audit.pillar.citationWorthiness.title@@auditPillarCitationWorthinessTitle:Citabilité`,
-      description: $localize`:audit.pillar.citationWorthiness.desc@@auditPillarCitationWorthinessDesc:Sources, preuves, FAQ et contenus que les moteurs peuvent citer.`,
-    },
-  ];
+  readonly pillars = Object.values(PILIERS);
 
   readonly formLabels = {
     title: $localize`:audit.form.title@@auditFormTitle:Demander un diagnostic gratuit`,
@@ -241,11 +208,11 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
       : this.formLabels.phonePlaceholder;
   }
 
-  get scoreEntries(): Array<{ key: PillarKey; score: number }> {
+  get scoreEntries(): Array<{ key: PillarKey; nom: string; score: number }> {
     const scores = this.auditSummary?.pillarScores ?? {};
     return PILLAR_KEYS.flatMap((key) => {
       const score = scores[key];
-      return score === undefined ? [] : [{ key, score }];
+      return score === undefined ? [] : [{ key, nom: PILIERS[key].nom, score }];
     });
   }
 

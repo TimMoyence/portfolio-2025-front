@@ -50,11 +50,25 @@ describe('FooterComponent', () => {
     expect(legalList?.querySelectorAll('li').length).toBe(pied.composant.legalLinks.length);
   });
 
-  it('should render the Asili brand logo with name and teal dot', () => {
+  it('VIT2-03 · porte le lotus de l en-tête, sans rond, et l adresse une seule fois, en lien vers la carte', () => {
     const logo = pied.racine.querySelector('.asili-logo');
-    expect(logo).toBeTruthy();
+    const adresses = pied.racine.querySelectorAll(
+      'address a[href*="google"], address a[href*="maps"]',
+    );
+
     expect(logo?.querySelector('.asili-logo__name')?.textContent).toContain('Asili');
-    expect(logo?.querySelector('.asili-logo__dot')).toBeTruthy();
+    expect(
+      logo
+        ?.querySelector('img.asili-logo_img')
+        ?.getAttribute('srcset')
+        ?.replace(/\s+/g, ' ')
+        .trim(),
+    ).toBe(
+      '/assets/images/logo/64.webp 64w, /assets/images/logo/128.webp 128w, /assets/images/logo/192.webp 192w',
+    );
+    expect(logo?.querySelector('.asili-logo__dot')).toBeNull();
+    expect(pied.racine.textContent?.match(/33100/g)?.length).toBe(1);
+    expect(adresses.length).toBe(1);
   });
 
   it('should render the brand baseline', () => {

@@ -1,3 +1,4 @@
+import { METADONNEES_DU_SITE } from '../../core/seo/site-servi';
 import {
   carteDeRealisation,
   cheminDeLaFiche,
@@ -19,14 +20,13 @@ const realisation: Realisation = {
     { libelle: 'Réservation en ligne', genre: 'resultat' },
   ],
   recit: { defi: 'Défi', construit: 'Construit', resultat: 'Résultat' },
-  taille: 'big',
-  image: '/assets/images/projects/atelier-test.webp',
+  image: '/assets/images/projects/apps/atelier-test/627.webp',
   largeurDeLaCapture: 627,
   imageAlt: 'Capture',
 };
 
 describe('carteDeRealisation', () => {
-  it('garde la taille de la réalisation, mène à sa fiche et nomme sa capture', () => {
+  it('mène à sa fiche et nomme sa capture', () => {
     expect(carteDeRealisation(realisation)).toEqual({
       title: 'Atelier test',
       desc: 'Une description',
@@ -34,27 +34,20 @@ describe('carteDeRealisation', () => {
         { label: 'Artisanat', prod: false },
         { label: 'Réservation en ligne', prod: true },
       ],
-      image: '/assets/images/projects/atelier-test.webp',
+      image: '/assets/images/projects/apps/atelier-test/627.webp',
       srcset: [360, 400, 480, 560, 627]
-        .map(
-          (largeur) => `/assets/images/projects/vignettes/atelier-test/${largeur}.webp ${largeur}w`,
-        )
+        .map((largeur) => `/assets/images/projects/apps/atelier-test/${largeur}.webp ${largeur}w`)
         .join(', '),
       imageAlt: 'Capture',
       href: '/projets/atelier-test',
       vignette: 'realisation-atelier-test',
-      size: 'big',
     });
-  });
-
-  it('impose la taille demandée par la vitrine', () => {
-    expect(carteDeRealisation(realisation, 'small').size).toBe('small');
   });
 });
 
 describe('variantesDeLaCapture', () => {
   const largeurs = (largeurDeLaCapture: number): string[] =>
-    variantesDeLaCapture({ slug: 'atelier-test', largeurDeLaCapture })
+    variantesDeLaCapture({ slug: 'atelier-test', famille: 'apps', largeurDeLaCapture })
       .split(', ')
       .map((variante) => variante.split(' ')[1]);
 
@@ -65,7 +58,9 @@ describe('variantesDeLaCapture', () => {
       '480w',
       '560w',
       '640w',
+      '680w',
       '800w',
+      '960w',
       '1000w',
       '1200w',
     ]);
@@ -79,26 +74,35 @@ describe('variantesDeLaCapture', () => {
     expect(largeurs(627)).toEqual(['360w', '400w', '480w', '560w', '627w']);
   });
 
-  it('chaque variante pointe le dossier de sa réalisation', () => {
-    expect(variantesDeLaCapture({ slug: 'atelier-test', largeurDeLaCapture: 300 })).toBe(
-      '/assets/images/projects/vignettes/atelier-test/300.webp 300w',
-    );
+  it('chaque variante pointe le dossier de sa réalisation, rangé par famille', () => {
+    expect(
+      variantesDeLaCapture({ slug: 'atelier-test', famille: 'outils', largeurDeLaCapture: 300 }),
+    ).toBe('/assets/images/projects/outils/atelier-test/300.webp 300w');
   });
 });
 
 describe('les repères d une réalisation', () => {
   it('dérivent du slug : chemin, clé de référencement et nom de transition', () => {
     expect([
-      cheminDeLaFiche('innovmind'),
-      cleSeoDeLaRealisation('innovmind'),
-      vignetteDeLaRealisation('innovmind'),
-    ]).toEqual(['projets/innovmind', 'projet-innovmind', 'realisation-innovmind']);
+      cheminDeLaFiche('musaium'),
+      cleSeoDeLaRealisation('musaium'),
+      vignetteDeLaRealisation('musaium'),
+    ]).toEqual(['projets/musaium', 'projet-musaium', 'realisation-musaium']);
   });
 
   it('retrouvent une réalisation par son slug exact, jamais par une autre casse', () => {
-    expect(realisationDuSlug('innovmind')?.titre).toBe('InnovMind');
-    expect(realisationDuSlug('InnovMind')).toBeUndefined();
+    expect(realisationDuSlug('musaium')?.titre).toBe('Musaium');
+    expect(realisationDuSlug('Musaium')).toBeUndefined();
     expect(realisationDuSlug(undefined)).toBeUndefined();
+  });
+
+  it('VIT2-07 · InnovMind est devenue Musaium : plus de fiche ni de page SEO à l ancien nom', () => {
+    expect(realisationDuSlug('innovmind')).toBeUndefined();
+    expect(
+      METADONNEES_DU_SITE.pages
+        .filter(({ id }) => id === 'projet-innovmind' || id === 'projet-musaium')
+        .map(({ id, path }) => [id, path]),
+    ).toEqual([['projet-musaium', '/projets/musaium']]);
   });
 
   it('rattachent une réalisation au besoin de contact de sa famille', () => {

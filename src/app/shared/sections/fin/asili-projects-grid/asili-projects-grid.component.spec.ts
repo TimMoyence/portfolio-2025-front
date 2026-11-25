@@ -22,7 +22,6 @@ const PROJECTS: readonly AsiliProject[] = [
     imageAlt: 'Capture du site de reliure',
     href: '/projets/reliure',
     vignette: 'realisation-reliure',
-    size: 'big',
   },
   {
     title: 'Cave du port',
@@ -33,7 +32,6 @@ const PROJECTS: readonly AsiliProject[] = [
     imageAlt: 'Capture de la cave',
     href: '/projets/cave',
     vignette: 'realisation-cave',
-    size: 'small',
   },
   {
     title: 'Suivi de chantier',
@@ -44,7 +42,6 @@ const PROJECTS: readonly AsiliProject[] = [
     imageAlt: 'Capture du suivi de chantier',
     href: '/projets/chantier',
     vignette: 'realisation-chantier',
-    size: 'small',
   },
 ];
 
@@ -70,13 +67,6 @@ describe('AsiliProjectsGridComponent', () => {
     );
 
     expect(titres).toEqual(['Atelier de reliure', 'Cave du port', 'Suivi de chantier']);
-  });
-
-  it('applique la taille via .big / .small', () => {
-    const racine = hote();
-
-    expect(racine.querySelectorAll('.proj.big').length).toBe(1);
-    expect(racine.querySelectorAll('.proj.small').length).toBe(2);
   });
 
   it('rend les etiquettes et marque les resultats via .tag-prod', () => {
@@ -130,13 +120,13 @@ describe('AsiliProjectsGridComponent', () => {
         image.getAttribute('height'),
       ]),
     ).toEqual([
-      ['lazy', 'async', '1600', '1000'],
+      ['lazy', 'async', '800', '600'],
       ['lazy', 'async', '800', '600'],
       ['lazy', 'async', '800', '600'],
     ]);
   });
 
-  it('sert chaque capture par ses variantes, à la largeur de sa carte dans la grille', () => {
+  it('sert chaque capture par ses variantes, au tiers de la grille', () => {
     const images = [...hote().querySelectorAll<HTMLImageElement>('.proj-shot img')];
     const grille = 'min(100vw, 1280px) - 2 * clamp(20px, 5vw, 72px)';
     const tablette = `(max-width: 860px) calc(${grille})`;
@@ -144,15 +134,15 @@ describe('AsiliProjectsGridComponent', () => {
     expect(images.map((image) => [image.getAttribute('srcset'), image.sizes])).toEqual([
       [
         '/assets/images/projects/vignettes/reliure/360.webp 360w',
-        `${tablette}, calc((${grille} - 110px) * 2 / 3 + 66px)`,
+        `${tablette}, calc((${grille} - 44px) / 3)`,
       ],
       [
         '/assets/images/projects/vignettes/cave/360.webp 360w',
-        `${tablette}, calc((${grille} - 110px) / 3 + 22px)`,
+        `${tablette}, calc((${grille} - 44px) / 3)`,
       ],
       [
         '/assets/images/projects/vignettes/chantier/360.webp 360w',
-        `${tablette}, calc((${grille} - 110px) / 3 + 22px)`,
+        `${tablette}, calc((${grille} - 44px) / 3)`,
       ],
     ]);
   });

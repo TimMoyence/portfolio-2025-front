@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { ECRANS_DE_LIGHTHOUSE, ouvrir, sansContenu } from './ouvrir';
 import { baseSsr, exigerLaPorteSsr } from '../porte-ssr';
 
-const PAGES_A_HEROS = ['/', '/offer', '/projets', '/presentation', '/articles'];
+const PAGES_A_HEROS = ['/', '/offer', '/projets', '/presentation', '/articles', '/contact'];
 
 const RETARD_DES_POLICES_MS = 1500;
 

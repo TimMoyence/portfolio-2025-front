@@ -22,12 +22,13 @@ const cheminDe = (url: string): string => new URL(url, 'https://asilidesign.fr')
 describe('SEO-4 · la navigation du site reprend le menu, écrite une seule fois', () => {
   const page = navbarMontee();
 
-  it('SEO-4 · en français : six entrées du menu, nommées par leur nom court, sur des liens /fr/ sans paramètre', () => {
+  it('VIT2-04 · en français : sept entrées du menu, Articles entre Réalisations et Formation, nommées par leur nom court, sur des liens /fr/ sans paramètre', () => {
     expect(navigationDuSite('fr')).toEqual(
       jasmine.objectContaining({
         name: [
           'Créer mon site',
           'Réalisations',
+          'Articles',
           'Formation digitale',
           'Formation cours',
           'À propos',
@@ -36,6 +37,7 @@ describe('SEO-4 · la navigation du site reprend le menu, écrite une seule fois
         url: [
           'https://asilidesign.fr/fr/offer',
           'https://asilidesign.fr/fr/projets',
+          'https://asilidesign.fr/fr/articles',
           'https://asilidesign.fr/fr/formations/digitale',
           'https://asilidesign.fr/fr/formations/cours',
           'https://asilidesign.fr/fr/presentation',
@@ -45,12 +47,13 @@ describe('SEO-4 · la navigation du site reprend le menu, écrite une seule fois
     );
   });
 
-  it('SEO-4 · en anglais : les mêmes entrées, nommées en anglais, sur des liens /en/', () => {
+  it('VIT2-04 · en anglais : les mêmes entrées, nommées en anglais, sur des liens /en/', () => {
     expect(navigationDuSite('en')).toEqual(
       jasmine.objectContaining({
         name: [
           'Build my website',
           'Work',
+          'Articles',
           'Digital training',
           'Classroom courses',
           'About',
@@ -59,6 +62,7 @@ describe('SEO-4 · la navigation du site reprend le menu, écrite une seule fois
         url: [
           'https://asilidesign.fr/en/offer',
           'https://asilidesign.fr/en/projets',
+          'https://asilidesign.fr/en/articles',
           'https://asilidesign.fr/en/formations/digitale',
           'https://asilidesign.fr/en/formations/cours',
           'https://asilidesign.fr/en/presentation',
@@ -76,7 +80,7 @@ describe('SEO-4 · la navigation du site reprend le menu, écrite une seule fois
     expect(noms).not.toContain('Formations');
   });
 
-  it('SEO-4 · les liens du menu sur ordinateur suivent, dans l ordre, la liste de navigation', () => {
+  it('VIT2-04 · les liens du menu sur ordinateur suivent, dans l ordre, la liste de navigation', () => {
     const liens = Array.from(page.racine.querySelectorAll(LIENS_DU_MENU)).map((lien) =>
       cheminDe(lien.getAttribute('href') ?? ''),
     );
@@ -84,6 +88,7 @@ describe('SEO-4 · la navigation du site reprend le menu, écrite une seule fois
     expect(liens).toEqual([
       '/offer',
       '/projets',
+      '/articles',
       '/formations/digitale',
       '/formations/cours',
       '/presentation',

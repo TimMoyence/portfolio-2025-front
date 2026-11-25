@@ -1,10 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
-import { sansContenu } from './ouvrir';
+import { attendreAngular, sansContenu } from './ouvrir';
 import { baseAnglaise, baseSsr, exigerLaPorteSsr } from '../porte-ssr';
 
 const PAGES = ['/', '/offer', '/projets', '/presentation', '/contact'];
 
-const PORTRAIT = 'portrait-tim-asili-design.webp';
+const PORTRAIT = '/assets/images/portrait/1000.webp';
 
 const noterLesPremiersNoeuds = (): void => {
   const premiers: Record<string, Element | undefined> = {};
@@ -31,7 +31,7 @@ const ouvrirStable = async (page: Page, url: string): Promise<string[]> => {
   await sansContenu(page);
   await page.addInitScript(noterLesPremiersNoeuds);
   await page.goto(url, { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => document.querySelector('app-root[ng-version]') !== null);
+  await attendreAngular(page);
   return erreurs;
 };
 

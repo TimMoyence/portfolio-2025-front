@@ -8,19 +8,11 @@
         }
 
         <h1 class="display hero-title">
-          @for (element of elements(); track $index) {
-            @if (element.segments.length > 0) {
-              <span class="mot" [style.--rang]="element.rang">
-                @for (segment of element.segments; track $index) {
-                  <span [class.accent]="segment.accent">{{ segment.texte }}</span>
-                }
-              </span>
-            } @else {
-              &ngsp;
-              @if (element.saut) {
-                <br />
-              }
+          @for (morceau of titre(); track $index; let premier = $first) {
+            @if (morceau.aLaLigne && !premier) {
+              <br />
             }
+            <span [class.accent]="morceau.accent">{{ morceau.texte }}</span>
           }
         </h1>
 

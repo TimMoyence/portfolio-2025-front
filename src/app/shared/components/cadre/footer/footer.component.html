@@ -8,11 +8,7 @@
           aria-label="Asili Design — accueil"
           i18n-aria-label="footer.logo.alt|Footer logo alt@@footerLogoAlt"
         >
-          <span class="asili-logo__dot" aria-hidden="true"></span>
-          <span class="asili-logo__texte">
-            <span class="asili-logo__name">{{ nomDuSite }}</span>
-            <small class="asili-logo__metier" i18n="@@marqueMetier">Sites web & apps mobiles</small>
-          </span>
+          <app-marque />
         </a>
         <p class="asili-footer__baseline">{{ brandBaseline }}</p>
 
@@ -65,35 +61,43 @@
           </ul>
         </nav>
       }
-    </div>
 
-    <div class="asili-footer__newsletter">
-      <app-newsletter-form />
+      <div class="asili-footer__newsletter">
+        <app-newsletter-form />
+      </div>
     </div>
-
-    <address class="asili-footer__address">
-      <span class="asili-footer__address-line">{{ adresse }}</span>
-      @for (method of contactMethods; track $index) {
-        <span class="asili-footer__address-line" [attr.data-testid]="'contact-method-' + $index">
-          <a [href]="method.href" [attr.aria-label]="method.label + ': ' + method.value">{{
-            method.value
-          }}</a>
-        </span>
-      }
-    </address>
 
     <div class="asili-footer__bot">
-      <span class="asili-footer__copyright">{{ copyright }}</span>
-    </div>
+      <address class="asili-footer__address">
+        <a
+          class="asili-footer__address-line"
+          [href]="carte"
+          target="_blank"
+          rel="noopener noreferrer"
+          >{{ adresse }}</a
+        >
+        @for (method of contactMethods; track $index) {
+          <a
+            class="asili-footer__address-line"
+            [href]="method.href"
+            [attr.aria-label]="method.label + ': ' + method.value"
+            [attr.data-testid]="'contact-method-' + $index"
+            >{{ method.value }}</a
+          >
+        }
+      </address>
 
-    <ul class="asili-footer__legal" data-testid="legal-links">
-      @for (legalLink of legalLinks; track $index) {
-        <li>
-          <a class="asili-footer__legal-link" [routerLink]="legalLink.href">{{
-            legalLink.label
-          }}</a>
-        </li>
-      }
-    </ul>
+      <span class="asili-footer__copyright">{{ copyright }}</span>
+
+      <ul class="asili-footer__legal" data-testid="legal-links">
+        @for (legalLink of legalLinks; track $index) {
+          <li>
+            <a class="asili-footer__legal-link" [routerLink]="legalLink.href">{{
+              legalLink.label
+            }}</a>
+          </li>
+        }
+      </ul>
+    </div>
   </div>
 </footer>

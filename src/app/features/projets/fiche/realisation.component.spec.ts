@@ -24,11 +24,16 @@ const SLUGS = [
   'atlanticbike',
   'maria-naumenko',
   'asilidesign',
-  'innovmind',
+  'musaium',
   'gestion-de-chais',
   'ifs-academy',
   'zenfirst-renta',
   'morning-brief',
+  'portail-eg',
+  'schema-atlas',
+  'slide-shot',
+  'outillage-claude',
+  'fourmizzz-suite',
 ];
 
 const pages = METADONNEES_DU_SITE.pages;
@@ -81,9 +86,10 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
 
   describe('la fiche', () => {
     for (const [slug, besoin] of [
-      ['innovmind', 'app-mobile'],
+      ['musaium', 'app-mobile'],
       ['gestion-de-chais', 'sur-mesure'],
       ['maria-naumenko', 'creer'],
+      ['slide-shot', 'sur-mesure'],
     ] as const) {
       it(`REC-11 · /projets/${slug} suit défi, construit, résultat puis mène au contact avec le besoin ${besoin}`, async () => {
         const { harnais, page } = await ouvrir(`/projets/${slug}`);
@@ -106,6 +112,27 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
       });
     }
 
+    for (const [slug, depot] of [
+      ['slide-shot', 'https://github.com/TimMoyence/slide-shot'],
+      ['outillage-claude', 'https://github.com/TimMoyence/outillage-claude'],
+      ['schema-atlas', null],
+      ['atlanticbike', null],
+    ] as const) {
+      it(`VIT2-08 · /projets/${slug} ${depot ? 'montre son code dans un nouvel onglet' : 'ne montre aucun code'}`, async () => {
+        const { page } = await ouvrir(`/projets/${slug}`);
+        const lien = page.querySelector('a.fiche-depot');
+
+        expect(
+          lien && [
+            texte(lien),
+            lien.getAttribute('href'),
+            lien.getAttribute('target'),
+            lien.getAttribute('rel'),
+          ],
+        ).toEqual(depot && ['Voir le code', depot, '_blank', 'noopener noreferrer']);
+      });
+    }
+
     for (const url of ['/projets/inconnu', '/projets/AtlanticBike', '/projets/atlanticbike/plus']) {
       it(`REC-11 · ${url} tombe sur la page introuvable`, async () => {
         const { harnais } = await ouvrir(url);
@@ -118,7 +145,7 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
       const { harnais, page } = await ouvrir('/projets');
       const router = TestBed.inject(Router);
       const vignette = page.querySelector<HTMLAnchorElement>(
-        'a.proj-link[href="/projets/innovmind"]',
+        'a.proj-link[href="/projets/musaium"]',
       );
       let etat: unknown;
       const abonnement = router.events.subscribe(() => {
@@ -132,7 +159,7 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
       await harnais.fixture.whenStable();
       abonnement.unsubscribe();
 
-      expect(router.url).toBe('/projets/innovmind');
+      expect(router.url).toBe('/projets/musaium');
       expect(etat).toEqual({ vignette: true });
     });
   });
@@ -140,7 +167,7 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
   describe('la transition', () => {
     const base = {
       depuis: '/projets',
-      vers: '/projets/innovmind',
+      vers: '/projets/musaium',
       vignette: true,
       retour: false,
       mouvementReduit: false,
@@ -152,7 +179,7 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
       expect(
         joueLaTransition({
           ...base,
-          depuis: '/projets/innovmind',
+          depuis: '/projets/musaium',
           vers: '/projets',
           vignette: false,
           retour: true,
@@ -165,7 +192,7 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
       expect(
         joueLaTransition({
           ...base,
-          depuis: '/projets/innovmind',
+          depuis: '/projets/musaium',
           vers: '/contact',
           vignette: false,
           retour: true,
@@ -179,7 +206,7 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
       expect(
         joueLaTransition({
           ...base,
-          depuis: '/projets/innovmind',
+          depuis: '/projets/musaium',
           vers: '/projets',
           vignette: false,
           retour: true,
@@ -232,13 +259,13 @@ describe('REC-11 · une réalisation se raconte sur sa propre page', () => {
       it('REC-11 · un popstate qui restaure l état { vignette: true } ne rejoue pas l agrandissement', () => {
         const restauree = { trigger: 'popstate', extras: { state: { vignette: true } } } as const;
 
-        expect(sautee(restauree, '/projets', '/projets/innovmind')).toBeTrue();
+        expect(sautee(restauree, '/projets', '/projets/musaium')).toBeTrue();
         expect(sautee(restauree, '/', '/projets/atlanticbike')).toBeTrue();
       });
 
       it('REC-11 · tout popstate d une fiche vers une vitrine joue la transition inverse', () => {
         expect(
-          sautee({ trigger: 'popstate', extras: {} }, '/projets/innovmind', '/projets'),
+          sautee({ trigger: 'popstate', extras: {} }, '/projets/musaium', '/projets'),
         ).toBeFalse();
       });
     });

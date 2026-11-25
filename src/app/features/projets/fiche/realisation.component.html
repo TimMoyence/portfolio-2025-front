@@ -52,6 +52,16 @@
         i18n="@@realisationFicheAppel"
         >Un projet comparable ? Parlons de votre site</a
       >
+      @if (realisation.depot; as depot) {
+        <a
+          class="link-arrow fiche-depot"
+          [href]="depot"
+          target="_blank"
+          rel="noopener noreferrer"
+          i18n="@@realisationFicheDepot"
+          >Voir le code</a
+        >
+      }
     </footer>
   </article>
 }

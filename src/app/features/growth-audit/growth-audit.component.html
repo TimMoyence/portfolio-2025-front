@@ -1,6 +1,6 @@
-<app-hero-section [contenu]="hero" />
+<app-asili-hero [titre]="heroTitre" [kicker]="heroKicker" [lead]="heroLead" />
 
-<section class="container px-2 py-4 grid gap-6 grid-cols-12">
+<section class="wrap py-4 grid gap-6 grid-cols-12">
   <div class="rounded-form border border-scheme-border bg-scheme-surface p-6 col-span-12">
     <h2 class="font-heading heading-h3 text-h3 mb-2">{{ formLabels.title }}</h2>
     <p class="text-sm md:text-base text-scheme-text-muted mb-6">
@@ -245,7 +245,7 @@
               @for (item of scoreEntries; track item.key) {
                 <div class="rounded-form border border-scheme-border bg-scheme-surface p-2">
                   <p class="text-xs uppercase tracking-wide text-scheme-text-muted">
-                    {{ item.key }}
+                    {{ item.nom }}
                   </p>
                   <p class="text-lg font-semibold">{{ item.score }}/100</p>
                 </div>
@@ -258,7 +258,7 @@
   </div>
 </section>
 
-<section class="container px-2 py-4 grid gap-6 grid-cols-12">
+<section class="wrap py-4 grid gap-6 grid-cols-12">
   <div class="border border-scheme-border col-span-12 md:col-span-6 bg-scheme-surface p-6">
     <h2 class="font-heading heading-h3 text-h3 mb-2" i18n="@@auditPillarsTitle">
       Le diagnostic en 7 points
@@ -267,9 +267,9 @@
       Un diagnostic concret, qui suit les 7 points du rapport que vous recevez.
     </p>
     <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-      @for (pillar of pillars; track pillar.title) {
+      @for (pillar of pillars; track pillar.nom) {
         <div class="rounded-form border border-scheme-border p-4">
-          <p class="font-semibold text-base md:text-lg">{{ pillar.title }}</p>
+          <p class="font-semibold text-base md:text-lg">{{ pillar.nom }}</p>
           <p class="text-sm md:text-base text-scheme-text-muted">
             {{ pillar.description }}
           </p>
@@ -296,9 +296,4 @@
   </div>
 </section>
 
-<app-faq-section
-  [title]="faqTitle"
-  [description]="faqDescription"
-  [items]="faqItems"
-  headingId="audit-faq-heading"
-></app-faq-section>
+<app-asili-faq [kicker]="faqKicker" [title]="faqTitle" [items]="faqItems" />

@@ -351,22 +351,6 @@ describe('GrowthAuditComponent', () => {
     ]);
   });
 
-  it('exposes the seven report pillars in the public offer', () => {
-    const fixture = TestBed.createComponent(GrowthAuditComponent);
-    const component = fixture.componentInstance;
-
-    expect(component.pillars).toHaveSize(7);
-    expect(component.pillars.map(({ title }) => title)).toEqual([
-      'Conversion & clarté',
-      'Vitesse & performance',
-      'SEO fondations',
-      'Crédibilité & confiance',
-      'Tech & scalabilité',
-      'Visibilité IA',
-      'Citabilité',
-    ]);
-  });
-
   describe('fin et interruption de l audit', () => {
     function soumettreSansFlux(): GrowthAuditComponent {
       const fixture = TestBed.createComponent(GrowthAuditComponent);

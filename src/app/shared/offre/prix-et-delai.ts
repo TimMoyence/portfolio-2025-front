@@ -35,7 +35,7 @@ export function faqDuSite(locale: string, offre: OffreDeSite = OFFRE_DE_SITE): Q
     },
     {
       question: $localize`:@@faqDuSiteDelaiQuestion:En combien de temps mon site est-il en ligne ?`,
-      reponse: $localize`:@@faqDuSiteDelaiReponse:Votre site est ${delai}:delai:, du premier échange à la mise en ligne, dès que vos textes et vos photos sont prêts.`,
+      reponse: $localize`:@@faqDuSiteDelaiReponse:Votre site est ${delai}:delai:, du premier échange à la mise en ligne. La date est fixée dès le départ : c’est le contenu qui s’ajuste, et j’écris les textes avec vous.`,
     },
     {
       question: $localize`:@@faqDuSiteApresQuestion:Et après la mise en ligne ?`,

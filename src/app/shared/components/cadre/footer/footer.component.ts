@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NOM_DU_SITE } from '../../../../core/seo/pages/nom-du-site';
-import { CONTACT_METHODS } from '../../../data/contact-methods';
+import { JOINDRE_PAR_ECRIT_OU_TELEPHONE } from '../../../data/contact-methods';
 import { COORDONNEES_DU_SITE, profilSur } from '../../../data/coordonnees';
 import type { FooterColumn, FooterLink, SocialLink } from '../../../models/footer.model';
 import { NewsletterFormComponent } from '../../sections/newsletter-form/newsletter-form.component';
 import { SvgIconComponent } from '../../svg-icon.component';
+import { MarqueComponent } from '../marque/marque.component';
 import { nomCourtServi } from '../../../../core/seo/site-servi';
 
 const lienDePage = (href: string): FooterLink => ({ label: nomCourtServi(href), href });
@@ -14,17 +15,17 @@ const lienDePage = (href: string): FooterLink => ({ label: nomCourtServi(href), 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterModule, SvgIconComponent, NewsletterFormComponent],
+  imports: [CommonModule, RouterModule, SvgIconComponent, NewsletterFormComponent, MarqueComponent],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {
-  readonly contactMethods = CONTACT_METHODS;
-
-  protected readonly nomDuSite = NOM_DU_SITE;
+  readonly contactMethods = JOINDRE_PAR_ECRIT_OU_TELEPHONE;
 
   protected readonly adresse = COORDONNEES_DU_SITE.adresse;
+
+  protected readonly carte = COORDONNEES_DU_SITE.carte;
 
   readonly brandBaseline = $localize`:footer.brand.baseline|Footer brand baseline@@footerBrandBaseline:« Asili » — la racine, l'essentiel : des sites et des apps qui disent votre métier, et qu'on trouve.`;
 

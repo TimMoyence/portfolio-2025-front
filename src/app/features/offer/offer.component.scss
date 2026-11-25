@@ -55,11 +55,23 @@
   }
 
   li {
-    padding-block: 18px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 8px var(--s-4);
+    align-items: baseline;
+    padding-block: 22px;
     border-top: 1px solid var(--line);
-    font-family: var(--font-display);
-    font-size: clamp(24px, 2.6vw, 34px);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: clamp(22px, 2.2vw, 30px);
     line-height: 1.15;
+  }
+
+  p {
+    margin: 0;
+    color: var(--ink-mute);
   }
 }
 
@@ -111,7 +123,8 @@
 
 @include bp.tablet {
   .formules,
-  .inclus-grille {
+  .inclus-grille,
+  .inclus-grille li {
     grid-template-columns: 1fr;
   }
 }

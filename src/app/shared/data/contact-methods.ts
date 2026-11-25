@@ -1,7 +1,7 @@
 import type { ContactMethod } from '../models/contact-method.model';
 import { COORDONNEES_DU_SITE } from './coordonnees';
 
-export const CONTACT_METHODS: readonly ContactMethod[] = [
+export const JOINDRE_PAR_ECRIT_OU_TELEPHONE: readonly ContactMethod[] = [
   {
     label: $localize`:contact.method.email.label|Contact method label@@contactMethodEmailLabel:Email`,
     value: COORDONNEES_DU_SITE.email,
@@ -14,6 +14,10 @@ export const CONTACT_METHODS: readonly ContactMethod[] = [
     href: COORDONNEES_DU_SITE.tel,
     icon: 'phone',
   },
+];
+
+export const CONTACT_METHODS: readonly ContactMethod[] = [
+  ...JOINDRE_PAR_ECRIT_OU_TELEPHONE,
   {
     label: $localize`:contact.method.office.label|Contact method label@@contactMethodOfficeLabel:Bureau`,
     value: COORDONNEES_DU_SITE.bureau,

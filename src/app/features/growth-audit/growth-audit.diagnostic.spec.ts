@@ -1,7 +1,6 @@
 import { texteDe as texte } from '../../../testing/texte/textes-dom';
-import { AUDIT_REQUEST_PORT } from '../../core/ports/audit-request.port';
 import { METADONNEES_DU_SITE, nomCourtServi } from '../../core/seo/site-servi';
-import { createAuditRequestPortStub } from '../../../testing/factories/audit-request.factory';
+import { fournirUnPortDuDiagnostic } from '../../../testing/factories/audit-request.factory';
 import { pageMontee } from '../../../testing/page/montage-page';
 import { GrowthAuditComponent } from './growth-audit.component';
 
@@ -10,9 +9,7 @@ const pages = METADONNEES_DU_SITE.pages;
 const localesDe = (id: string) => pages.find((page) => page.id === id)?.locales ?? {};
 
 describe('REC-08 · le diagnostic porte un seul nom', () => {
-  const page = pageMontee(GrowthAuditComponent, {
-    providers: [{ provide: AUDIT_REQUEST_PORT, useValue: createAuditRequestPortStub() }],
-  });
+  const page = pageMontee(GrowthAuditComponent, { providers: fournirUnPortDuDiagnostic() });
 
   it('REC-08 · le titre de la page dit « Diagnostic gratuit »', () => {
     const titres = page.racine.querySelectorAll('h1');
@@ -32,7 +29,7 @@ describe('REC-08 · le diagnostic porte un seul nom', () => {
   });
 
   it('REC-08 · la FAQ parle du diagnostic', () => {
-    const faq = page.racine.querySelector('app-faq-section');
+    const faq = page.racine.querySelector('app-asili-faq');
 
     expect(texte(faq?.querySelector('h2'))).toContain('diagnostic');
   });

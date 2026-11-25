@@ -7,7 +7,8 @@ import type {
   AuditStreamEvent,
   AuditSummaryResponse,
 } from '../../app/core/models/audit-request.model';
-import type { AuditRequestPort } from '../../app/core/ports/audit-request.port';
+import type { Provider } from '@angular/core';
+import { AUDIT_REQUEST_PORT, type AuditRequestPort } from '../../app/core/ports/audit-request.port';
 
 export function buildAuditCreateResponse(
   overrides?: Partial<AuditCreateResponse>,
@@ -209,4 +210,8 @@ export function createAuditRequestPortStub(): jasmine.SpyObj<AuditRequestPort> {
     'getSummary',
     'stream',
   ]);
+}
+
+export function fournirUnPortDuDiagnostic(): Provider[] {
+  return [{ provide: AUDIT_REQUEST_PORT, useValue: createAuditRequestPortStub() }];
 }

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { baseSsr, exigerLaPorteSsr } from '../porte-ssr';
-import { sansContenu } from '../vitrine/ouvrir';
+import { attendreAngular, sansContenu } from '../vitrine/ouvrir';
 
 test.describe('une navigation interne qui saute sa transition ne lève aucune erreur', () => {
   exigerLaPorteSsr();
@@ -11,7 +11,7 @@ test.describe('une navigation interne qui saute sa transition ne lève aucune er
     page.on('pageerror', (erreur) => erreurs.push(erreur.message));
     await sansContenu(page);
     await page.goto(`${baseSsr}/fr/offer`, { waitUntil: 'networkidle' });
-    await page.waitForFunction(() => document.querySelector('app-root[ng-version]') !== null);
+    await attendreAngular(page);
 
     await page.locator('nav a[href$="/contact"]').first().click();
     await expect(page).toHaveURL(`${baseSsr}/fr/contact`);

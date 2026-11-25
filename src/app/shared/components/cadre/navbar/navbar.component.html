@@ -12,7 +12,7 @@
       aria-label="Asili Design — accueil"
       i18n-aria-label="@@navLogoHomeAriaLabel"
     >
-      <ng-container *ngTemplateOutlet="logoContent" />
+      <app-marque />
     </a>
 
     <div class="asili-nav__links">
@@ -60,7 +60,7 @@
     <div #mobileMenuPanel class="asili-drawer">
       <div class="asili-drawer__top">
         <a class="asili-logo" routerLink="/" (click)="closeMobileMenu()">
-          <ng-container *ngTemplateOutlet="logoContent" />
+          <app-marque />
         </a>
         <button
           type="button"
@@ -220,26 +220,6 @@
       {{ item.label }}
     </a>
   </div>
-</ng-template>
-
-<ng-template #logoContent>
-  <img
-    class="asili-logo_img"
-    aria-hidden="true"
-    src="/assets/images/logo.webp"
-    srcset="
-      /assets/images/logo/64.webp   64w,
-      /assets/images/logo/128.webp 128w,
-      /assets/images/logo/192.webp 192w
-    "
-    sizes="4rem"
-    alt="Logo Asili Design"
-    i18n-alt="@@navLogoAlt"
-  />
-  <span class="asili-logo__texte">
-    <span class="asili-logo__name" i18n="@@NavbarCompanyTitle">Asili Design</span>
-    <small class="asili-logo__metier" i18n="@@marqueMetier">Sites web & apps mobiles</small>
-  </span>
 </ng-template>
 
 <ng-template #smallAvatar>

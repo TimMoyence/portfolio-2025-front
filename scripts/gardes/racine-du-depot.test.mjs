@@ -45,6 +45,7 @@ const CE_QU_UN_OUTIL_CHERCHE_A_LA_RACINE = {
   'scripts/': 'outillage du dépôt',
   'src/': 'code',
   'tailwind.config.js': 'tailwind le cherche à la racine',
+  'tsconfig.app.json': 'angular.json, extends et files relatifs à son dossier',
   'tsconfig.json': 'tsc et les éditeurs',
   'tsconfig.spec.json': 'angular.json, extends et include relatifs à son dossier',
 };

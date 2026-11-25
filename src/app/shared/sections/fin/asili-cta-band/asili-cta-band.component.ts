@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CoucheDeNuitComponent } from '../../../components/cadre/couche-de-nuit/couche-de-nuit.component';
 import { FiletDeSectionDirective } from '../../../directives/filet-de-section.directive';
 
 export interface AsiliCtaAction {
@@ -18,7 +19,7 @@ export interface AsiliCta {
 @Component({
   selector: 'app-asili-cta-band',
   standalone: true,
-  imports: [RouterLink, FiletDeSectionDirective],
+  imports: [RouterLink, FiletDeSectionDirective, CoucheDeNuitComponent],
   templateUrl: './asili-cta-band.component.html',
   styleUrls: ['./asili-cta-band.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
