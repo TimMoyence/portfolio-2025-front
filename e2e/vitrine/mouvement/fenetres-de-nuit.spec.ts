@@ -1,12 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { ouvrir } from '../ouvrir';
-import {
-  TOILE_DE_FOND,
-  defilerJusqua,
-  exigerUnPointSurChaque,
-  sansMouvement,
-  surLaToile,
-} from './toile';
+import { TOILE_DE_FOND, exigerUnPointSurChaque, placer, sansMouvement, surLaToile } from './toile';
 
 const COUCHE_DE_LA_BANDE = '.cta canvas.couche-de-nuit';
 const COUCHE_DE_LA_METHODE = '.ai-method canvas.couche-de-nuit';
@@ -83,7 +77,7 @@ test.describe('sans mouvement', () => {
     page,
   }) => {
     await ouvrir(page, '/presentation');
-    await defilerJusqua(page, '.ai-steps');
+    await placer(page, '.ai-steps', 200);
     await page.clock.runFor(300);
 
     expect(await fondDe(page, '.ai-method')).toBe('rgb(10, 14, 18)');

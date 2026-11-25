@@ -160,18 +160,6 @@ export const centres = (page: Page, selecteur: string) =>
     }),
   );
 
-export const defilerJusqua = (page: Page, selecteur: string): Promise<void> =>
-  page
-    .locator(selecteur)
-    .first()
-    .evaluate(
-      (element) =>
-        new Promise<void>((defile) => {
-          addEventListener('scroll', () => defile(), { once: true });
-          element.scrollIntoView({ block: 'center' });
-        }),
-    );
-
 export async function exigerUnPointSurChaque(
   page: Page,
   selecteur: string,

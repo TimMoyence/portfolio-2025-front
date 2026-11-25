@@ -3,10 +3,10 @@ import { ouvrir } from '../ouvrir';
 import {
   TOILE_DE_FOND,
   contourDeLaPremiereCarteSurvolee,
-  defilerJusqua,
   exigerUnPointSurChaque,
   image,
   opaciteAutour,
+  placer,
   sansMouvement,
   surLaToile,
 } from './toile';
@@ -20,7 +20,7 @@ test.describe('sans mouvement', () => {
     page,
   }) => {
     await ouvrir(page, '/');
-    await defilerJusqua(page, 'app-asili-method');
+    await placer(page, 'app-asili-method', 100);
     await page.clock.runFor(300);
 
     await exigerUnPointSurChaque(page, 'app-asili-method >> nth=0 >> .num');

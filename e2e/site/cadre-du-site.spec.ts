@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { baseAnglaise, exigerLaPorteSsr } from '../porte-ssr';
-import { sansContenu } from '../vitrine/ouvrir';
+import { attendreAngular, sansContenu } from '../vitrine/ouvrir';
 
 const LANGUES = [
   { langue: 'fr', url: (chemin: string) => chemin },
@@ -127,6 +127,7 @@ for (const { langue, url } of LANGUES) {
   }) => {
     await page.setViewportSize({ width: 360, height: 640 });
     await ouvrir(page, langue, url('/'));
+    await attendreAngular(page);
     await page.locator('button.asili-burger').click();
     await page.locator('.asili-drawer .asili-nav__trigger').click();
     await expect(page.locator('.asili-drawer__sublist')).toBeVisible();

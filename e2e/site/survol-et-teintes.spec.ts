@@ -9,6 +9,7 @@ import { buildToolkitPageData } from '../../src/testing/factories/lead-magnet.fa
 import { contrastesInsuffisants } from '../../src/testing/texte/contrastes-insuffisants';
 import { intercepterApi, MOCK_SESSION, servirJson, servirSansContenu } from '../fixtures';
 import { parcourir, survolsHorsHover, violationsAxe } from '../sondes-de-style';
+import { attendreAngular } from '../vitrine/ouvrir';
 
 const ARTICLE = buildRecitDuMatin({ slug: 'morning-brief-2026-11-10' });
 
@@ -133,6 +134,7 @@ test.describe('REC-16 · la navigation se lit à 4,5:1 dans chacun de ses états
 
     test('REC-16 · le tiroir ouvert', async ({ page }) => {
       await page.goto('/');
+      await attendreAngular(page);
       await page.locator('.asili-burger').click();
       await expect(page.locator('.asili-drawer')).toBeVisible();
 
