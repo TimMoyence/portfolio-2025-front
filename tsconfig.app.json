@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["@angular/localize"]
+  },
+  "files": ["src/demarrage/main.ts", "src/demarrage/main.server.ts", "src/server.ts"],
+  "include": ["src/**/*.d.ts"]
+}

@@ -494,6 +494,22 @@ describe('CoursEtudiantComponent', () => {
     expect(entree?.querySelector('[data-testid="cours-galerie"]')).toBeNull();
   });
 
+  it('MET-01 · les étapes de l entrée de séance portent le rond plein de Socle & Élan, en 30 px', () => {
+    const fixture = monter();
+    const rond = lire(fixture, 'etudiant-entree')?.querySelector('.student-entry__steps li > span');
+    if (!(rond instanceof HTMLElement)) throw new Error('étape sans rond');
+    const style = getComputedStyle(rond);
+    const { width, height } = rond.getBoundingClientRect();
+
+    expect([
+      width,
+      height,
+      style.borderRadius,
+      style.backgroundColor,
+      `${style.borderTopWidth} ${style.borderTopStyle} ${style.borderTopColor}`,
+    ]).toEqual([30, 30, '50%', 'rgb(255, 250, 242)', '1px solid rgb(228, 216, 196)']);
+  });
+
   it('F03 · propose au formateur de se connecter puis de revenir au pupitre du cours vise', async () => {
     await TestBed.inject(Router).navigateByUrl('/?cours=b2-01-traitement-information-chiffree');
     const fixture = monter();

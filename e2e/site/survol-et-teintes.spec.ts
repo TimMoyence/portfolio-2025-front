@@ -63,6 +63,9 @@ test.describe('REC-16 · hors vitrine, le survol attend (hover: hover) et l acce
     await ouvrir(page, '/formations/ia-solopreneurs/toolkit/jeton-de-test');
     const copier = page.locator('.tkp-copy').first();
     await copier.hover();
+    await copier.evaluate((bouton) =>
+      Promise.all(bouton.getAnimations().map(({ finished }) => finished)),
+    );
 
     expect(await copier.evaluate(contrastesInsuffisants)).toEqual([]);
   });

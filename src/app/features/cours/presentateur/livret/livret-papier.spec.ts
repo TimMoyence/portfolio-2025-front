@@ -8,6 +8,7 @@ import type {
 } from '../../../../../cours/content/types';
 import { echapperPourRegex, objet } from '../../../../../cours/runtime/core/texte/valeurs';
 import { type Recolte, recolterDansLArbre } from '../../../../../testing/dom/arbre-json';
+import { enMotEntier } from '../../../../../testing/texte/mots-entiers';
 import { INSTANTANE_B2_01 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-01';
 import { INSTANTANE_B2_02 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-02';
 import { INSTANTANE_B2_03 } from '../../../../../testing/fixtures/instantanes/b2/instantane-b2-03';
@@ -212,7 +213,7 @@ function cite(texte: string, reponse: string): boolean {
     return false;
   }
   const motif = echapperPourRegex(cherchee);
-  return new RegExp(`(?<![\\p{L}\\p{N}])${motif}(?![\\p{L}\\p{N}])`, 'u').test(texte);
+  return new RegExp(enMotEntier(motif), 'u').test(texte);
 }
 
 function fichesAvantElleSurSaPage(

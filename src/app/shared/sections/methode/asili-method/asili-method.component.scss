@@ -1,6 +1,7 @@
 @use '../../../../styles-shared/mise-en-page/breakpoints' as bp;
 @use '../../../../styles-shared/mise-en-page/heads' as heads;
 @use '../../../../styles-shared/mise-en-page/mono';
+@use '../../../../styles-shared/composants/ronds';
 @use '../../../../styles-shared/composants/survol';
 :host {
   display: block;
@@ -18,33 +19,6 @@
   display: grid;
   grid-template-columns: repeat(var(--etapes, 4), minmax(0, 1fr));
   gap: 0;
-  position: relative;
-}
-
-.method-line {
-  position: absolute;
-  top: 30px;
-  left: 6%;
-  right: 6%;
-  height: 2px;
-  background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 16px);
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--teal-deep);
-    transform-origin: left;
-
-    @include survol.en-mouvement {
-      transform: scaleX(0);
-      transition: transform 1.6s var(--ease) 0.2s;
-
-      .filet-trace & {
-        transform: none;
-      }
-    }
-  }
 }
 
 .step {
@@ -53,18 +27,8 @@
 }
 
 .step .num {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: var(--cream);
-  border: 1px solid var(--line);
-  display: grid;
-  place-items: center;
-  @include mono.police;
+  @include ronds.rond(60px);
   font-size: 13px;
-  color: var(--teal-deep);
-  position: relative;
-  z-index: 1;
   @include survol.en-mouvement {
     transition:
       border-color 0.4s,
@@ -128,10 +92,6 @@
 
   .step:last-child:nth-child(odd) {
     grid-column: 1 / -1;
-  }
-
-  .method-line {
-    display: none;
   }
 }
 

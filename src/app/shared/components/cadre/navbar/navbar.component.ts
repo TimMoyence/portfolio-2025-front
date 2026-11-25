@@ -26,6 +26,7 @@ import { SvgIconComponent } from '../../svg-icon.component';
 import { MarqueComponent } from '../marque/marque.component';
 import { ENTREES_DE_FORMATION } from '../../../../core/config/familles-de-formation';
 import { CHEMINS_DE_LA_NAVIGATION, nomCourtServi } from '../../../../core/seo/site-servi';
+import { ecranASurvol } from '../../../../../cours/runtime/core/ecran/mouvement';
 
 const HORS_FORMATIONS = CHEMINS_DE_LA_NAVIGATION.filter(
   (chemin) => !ENTREES_DE_FORMATION.some(({ lien }) => lien === chemin),
@@ -173,7 +174,7 @@ export class NavbarComponent {
   }
 
   cliquerFormation(dropdown: DropdownSection, clic: MouseEvent): void {
-    if (clic.detail > 0 && this.surEcranASurvol()) {
+    if (clic.detail > 0 && ecranASurvol()) {
       this.setDropdownOpen(dropdown, true);
       return;
     }
@@ -181,13 +182,9 @@ export class NavbarComponent {
   }
 
   openDropdown(dropdown: DropdownSection): void {
-    if (this.surEcranASurvol()) {
+    if (ecranASurvol()) {
       this.setDropdownOpen(dropdown, true);
     }
-  }
-
-  private surEcranASurvol(): boolean {
-    return window.matchMedia('(hover: hover)').matches;
   }
 
   closeDropdownWhenFocusLeaves(dropdown: DropdownSection, event: FocusEvent): void {

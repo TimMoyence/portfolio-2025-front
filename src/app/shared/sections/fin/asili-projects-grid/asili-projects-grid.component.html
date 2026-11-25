@@ -14,13 +14,13 @@
 
     <div class="proj-grid">
       @for (project of projects(); track project.href) {
-        <article class="proj">
+        <article class="proj" [class.proj--seule]="seule()">
           <a class="proj-link" [routerLink]="project.href" [state]="{ vignette: true }">
             <div class="proj-shot">
               <img
                 [src]="project.image"
                 [attr.srcset]="project.srcset"
-                [attr.sizes]="cadre.sizes"
+                [attr.sizes]="sizes()"
                 [alt]="project.imageAlt"
                 [style.view-transition-name]="project.vignette"
                 [attr.width]="cadre.width"

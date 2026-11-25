@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { ouvrir, sansAnimationNiContenu, sansContenu } from './ouvrir';
+import { ouvrir, sansAnimationNiContenu, sansContenu } from '../ouvrir';
 
 const PAGES_A_HEROS = ['/', '/offer', '/projets', '/presentation', '/articles', '/contact'];
 

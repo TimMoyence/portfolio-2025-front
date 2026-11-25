@@ -245,7 +245,7 @@
               @for (item of scoreEntries; track item.key) {
                 <div class="rounded-form border border-scheme-border bg-scheme-surface p-2">
                   <p class="text-xs uppercase tracking-wide text-scheme-text-muted">
-                    {{ item.key }}
+                    {{ item.nom }}
                   </p>
                   <p class="text-lg font-semibold">{{ item.score }}/100</p>
                 </div>
@@ -267,9 +267,9 @@
       Un diagnostic concret, qui suit les 7 points du rapport que vous recevez.
     </p>
     <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-      @for (pillar of pillars; track pillar.title) {
+      @for (pillar of pillars; track pillar.nom) {
         <div class="rounded-form border border-scheme-border p-4">
-          <p class="font-semibold text-base md:text-lg">{{ pillar.title }}</p>
+          <p class="font-semibold text-base md:text-lg">{{ pillar.nom }}</p>
           <p class="text-sm md:text-base text-scheme-text-muted">
             {{ pillar.description }}
           </p>

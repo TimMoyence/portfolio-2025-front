@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { ouvrir, sansContenu } from './ouvrir';
 
-test('REC-14 · l accueil ne joue aucune animation en boucle et ne dessine aucun fond animé', async ({
+test('REC-14 · CON-09 · l accueil ne joue aucune animation CSS en boucle et porte une seule toile de fond, aria-hidden', async ({
   page,
 }) => {
   await sansContenu(page);
@@ -18,7 +18,8 @@ test('REC-14 · l accueil ne joue aucune animation en boucle et ne dessine aucun
   );
 
   expect(enBoucle).toEqual([]);
-  await expect(page.locator('canvas')).toHaveCount(0);
+  await expect(page.locator('canvas.asili-field')).toHaveCount(1);
+  await expect(page.locator('canvas.asili-field')).toHaveAttribute('aria-hidden', 'true');
   await expect(page.locator('.live-dot, .scroll-hint')).toHaveCount(0);
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundImage)).toContain(
     'url(',

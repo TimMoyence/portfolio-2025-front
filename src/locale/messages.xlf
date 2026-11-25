@@ -7736,14 +7736,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="auditReportPillars" datatype="html">
-        <source> Scorecard par pilier </source>
+        <source> Votre note, point par point </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html</context>
           <context context-type="linenumber">15,17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditReportQuickWins" datatype="html">
-        <source> Quick wins prioritaires </source>
+        <source> Les corrections rapides d’abord </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html</context>
           <context context-type="linenumber">23,25</context>
@@ -7777,60 +7777,11 @@
           <context context-type="linenumber">14,17</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="auditEngineAiVisibility" datatype="html">
-        <source> Visibilité IA </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/components/engine-coverage-matrix/engine-coverage-matrix.component.html</context>
-          <context context-type="linenumber">18,21</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="auditPillarTarget" datatype="html">
         <source> / cible <x id="INTERPOLATION" equiv-text="{{ item.target }}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.html</context>
           <context context-type="linenumber">17,19</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="auditPillarPerformance" datatype="html">
-        <source>Performance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="auditPillarTechnical" datatype="html">
-        <source>Tech &amp; scalabilité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="auditPillarTrust" datatype="html">
-        <source>Crédibilité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="auditPillarConversion" datatype="html">
-        <source>Conversion</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
-          <context context-type="linenumber">21</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="auditPillarAiVisibility" datatype="html">
-        <source>Visibilité IA</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="auditPillarCitationWorthiness" datatype="html">
-        <source>Citabilité IA</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts</context>
-          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditPhaseTechnicalPages" datatype="html">
@@ -7999,14 +7950,14 @@
         <source>IA</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="diagnosticKicker" datatype="html">
         <source><x id="nom" equiv-text="nomCourtServi(&apos;/growth-audit&apos;)"/> · IA et relecture humaine, sous 24 h</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <note priority="1" from="description">Kicker du diagnostic</note>
       </trans-unit>
@@ -8014,7 +7965,7 @@
         <source>Diagnostic gratuit : ce qui freine votre site, et quoi corriger d’abord</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">119</context>
         </context-group>
         <note priority="1" from="description">audit.hero.title</note>
       </trans-unit>
@@ -8022,7 +7973,7 @@
         <source>Vous laissez l’adresse de votre site. Une première analyse automatique passe vos pages en revue : visibilité sur Google et dans les IA, vitesse, clarté, appels à l’action. Sous 24 h, je relis tout moi-même et je vous envoie une note claire, un rapport détaillé et les corrections à faire en premier.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <note priority="1" from="description">audit.hero.description</note>
       </trans-unit>
@@ -8030,71 +7981,47 @@
         <source>1. Vous laissez vos infos</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <note priority="1" from="description">audit.steps.one.title</note>
-      </trans-unit>
-      <trans-unit id="auditStepOneDesc" datatype="html">
-        <source>Nom du site ou URL + contact (email ou téléphone).</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">136</context>
-        </context-group>
-        <note priority="1" from="description">audit.steps.one.desc</note>
       </trans-unit>
       <trans-unit id="auditStepTwoTitle" datatype="html">
         <source>2. Première analyse automatique</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <note priority="1" from="description">audit.steps.two.title</note>
-      </trans-unit>
-      <trans-unit id="auditStepTwoDesc" datatype="html">
-        <source>Je passe vos pages en revue (visibilité, vitesse, clarté, visibilité IA) et je sors un premier diagnostic rapide.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">140</context>
-        </context-group>
-        <note priority="1" from="description">audit.steps.two.desc</note>
       </trans-unit>
       <trans-unit id="auditStepThreeTitle" datatype="html">
         <source>3. Diagnostic relu par moi sous 24 h</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <note priority="1" from="description">audit.steps.three.title</note>
-      </trans-unit>
-      <trans-unit id="auditStepThreeDesc" datatype="html">
-        <source>Je reprends l&apos;analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d&apos;actions concret.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">144</context>
-        </context-group>
-        <note priority="1" from="description">audit.steps.three.desc</note>
       </trans-unit>
       <trans-unit id="auditHighlightsPdf" datatype="html">
         <source>Rapport PDF détaillé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.pdf</note>
       </trans-unit>
       <trans-unit id="auditHighlightsScore" datatype="html">
-        <source>Scorecard claire</source>
+        <source>Une note claire, point par point</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.score</note>
       </trans-unit>
       <trans-unit id="auditHighlightsWins" datatype="html">
-        <source>Quick wins + priorités (impact/effort)</source>
+        <source>Les corrections rapides d’abord, puis les priorités</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.wins</note>
       </trans-unit>
@@ -8102,7 +8029,7 @@
         <source>Aucun engagement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <note priority="1" from="description">audit.highlights.noObligation</note>
       </trans-unit>
@@ -8110,7 +8037,7 @@
         <source>Questions fréquentes sur le diagnostic gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <note priority="1" from="description">audit.faq.title</note>
       </trans-unit>
@@ -8118,14 +8045,14 @@
         <source>Questions fréquentes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditFaqQ1" datatype="html">
         <source>Comment se déroule le diagnostic gratuit en 24 heures ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">147</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q1</note>
       </trans-unit>
@@ -8133,7 +8060,7 @@
         <source>Vous laissez l’adresse de votre site et votre contact. Une première analyse automatique passe vos pages en revue en quelques minutes. Puis, sous 24 h, je relis tout moi-même et vous envoie une note claire, un rapport détaillé et les corrections classées par priorité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">159</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a1</note>
       </trans-unit>
@@ -8141,15 +8068,15 @@
         <source>Que contient le diagnostic ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q2</note>
       </trans-unit>
       <trans-unit id="auditFaqA2" datatype="html">
-        <source>Le diagnostic passe en revue sept points : les fondations du référencement, la vitesse, la solidité du site, la confiance qu’il inspire, la clarté et les appels à l’action, la visibilité dans les réponses des IA et la matière qu’elles peuvent citer. Vous recevez une note, des gains rapides et des recommandations classées.</source>
+        <source>Le diagnostic passe en revue sept points : clarté et appels, vitesse, être trouvé sur Google, confiance, solidité du site, visibilité dans les IA et matière à citer. Vous recevez une note point par point, les corrections rapides d’abord, puis les priorités.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a2</note>
       </trans-unit>
@@ -8157,7 +8084,7 @@
         <source>Le diagnostic est-il vraiment gratuit ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q3</note>
       </trans-unit>
@@ -8165,7 +8092,7 @@
         <source>Oui, totalement. Aucun engagement, aucune carte bancaire. Je limite à 5 diagnostics par semaine pour relire chacun moi-même sous 24 h. Le but : vous être utile tout de suite, et ouvrir un échange si vous le souhaitez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">167</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a3</note>
       </trans-unit>
@@ -8173,7 +8100,7 @@
         <source>Qui réalise le diagnostic : une IA ou un humain ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">159</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q4</note>
       </trans-unit>
@@ -8181,7 +8108,7 @@
         <source>Les deux. Une première analyse automatique tourne tout de suite. Ensuite, je relis le diagnostic moi-même pour classer les priorités et formuler des recommandations adaptées à votre situation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a4</note>
       </trans-unit>
@@ -8189,7 +8116,7 @@
         <source>Pour quels sites le diagnostic est-il utile ?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">163</context>
         </context-group>
         <note priority="1" from="description">audit.faq.q5</note>
       </trans-unit>
@@ -8197,127 +8124,15 @@
         <source>Le diagnostic sert aux sites vitrines, aux boutiques en ligne, aux pages de présentation et aux outils en ligne. Il est fait pour les artisans, commerces, indépendants et petites entreprises qui veulent être mieux trouvés et recevoir plus d’appels, sans se perdre dans la technique.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <note priority="1" from="description">audit.faq.a5</note>
-      </trans-unit>
-      <trans-unit id="auditPillarConversionTitle" datatype="html">
-        <source>Conversion &amp; clarté</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">181</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.conversion.title</note>
-      </trans-unit>
-      <trans-unit id="auditPillarConversionDesc" datatype="html">
-        <source>Proposition de valeur, CTA, friction contact, mobile.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">182</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.conversion.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarPerformanceTitle" datatype="html">
-        <source>Vitesse &amp; performance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">185</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.performance.title</note>
-      </trans-unit>
-      <trans-unit id="auditPillarPerformanceDesc" datatype="html">
-        <source>PageSpeed, poids images, Core Web Vitals.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">186</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.performance.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarSeoTitle" datatype="html">
-        <source>SEO fondations</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">189</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.seo.title</note>
-      </trans-unit>
-      <trans-unit id="auditPillarSeoDesc" datatype="html">
-        <source>Titres, H1, meta, indexation, SEO local.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">190</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.seo.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarTrustTitle" datatype="html">
-        <source>Crédibilité &amp; confiance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">193</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.trust.title</note>
-      </trans-unit>
-      <trans-unit id="auditPillarTrustDesc" datatype="html">
-        <source>Preuves sociales, portfolio, signaux de confiance.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">194</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.trust.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarTechTitle" datatype="html">
-        <source>Tech &amp; scalabilité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">197</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.tech.title</note>
-      </trans-unit>
-      <trans-unit id="auditPillarTechDesc" datatype="html">
-        <source>CMS, sécurité, erreurs, maintenabilité.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">198</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.tech.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarAiVisibilityTitle" datatype="html">
-        <source>Visibilité IA</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">201</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.aiVisibility.title</note>
-      </trans-unit>
-      <trans-unit id="auditPillarAiVisibilityDesc" datatype="html">
-        <source>Compréhension par les assistants IA, données structurées, réponses génératives.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">202</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.aiVisibility.desc</note>
-      </trans-unit>
-      <trans-unit id="auditPillarCitationWorthinessTitle" datatype="html">
-        <source>Citabilité</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">205</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.citationWorthiness.title</note>
-      </trans-unit>
-      <trans-unit id="auditPillarCitationWorthinessDesc" datatype="html">
-        <source>Sources, preuves, FAQ et contenus que les moteurs peuvent citer.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">206</context>
-        </context-group>
-        <note priority="1" from="description">audit.pillar.citationWorthiness.desc</note>
       </trans-unit>
       <trans-unit id="auditFormTitle" datatype="html">
         <source>Demander un diagnostic gratuit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <note priority="1" from="description">audit.form.title</note>
       </trans-unit>
@@ -8325,7 +8140,7 @@
         <source>Je limite à 5 diagnostics par semaine pour relire chacun moi-même sous 24 h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <note priority="1" from="description">audit.form.description</note>
       </trans-unit>
@@ -8333,7 +8148,7 @@
         <source>Nom du site ou URL</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <note priority="1" from="description">audit.form.websiteLabel</note>
       </trans-unit>
@@ -8341,7 +8156,7 @@
         <source>ex. https://votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">174</context>
         </context-group>
         <note priority="1" from="description">audit.form.websitePlaceholder</note>
       </trans-unit>
@@ -8349,7 +8164,7 @@
         <source>Méthode de contact</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactMethodLabel</note>
       </trans-unit>
@@ -8357,7 +8172,7 @@
         <source>Email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactEmail</note>
       </trans-unit>
@@ -8365,7 +8180,7 @@
         <source>Téléphone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">177</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactPhone</note>
       </trans-unit>
@@ -8373,7 +8188,7 @@
         <source>Coordonnée</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">218</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <note priority="1" from="description">audit.form.contactValueLabel</note>
       </trans-unit>
@@ -8381,7 +8196,7 @@
         <source>ex. hello@votresite.fr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">179</context>
         </context-group>
         <note priority="1" from="description">audit.form.emailPlaceholder</note>
       </trans-unit>
@@ -8389,7 +8204,7 @@
         <source>ex. <x id="telephone" equiv-text="COORDONNEES_DU_SITE.telephone"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">180</context>
         </context-group>
         <note priority="1" from="description">audit.form.phonePlaceholder</note>
       </trans-unit>
@@ -8397,7 +8212,7 @@
         <source>Demander mon diagnostic (analyse immédiate, relue par moi sous 24 h)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">181</context>
         </context-group>
         <note priority="1" from="description">audit.form.submit</note>
       </trans-unit>
@@ -8405,7 +8220,7 @@
         <source>Merci ! L’analyse est lancée, votre diagnostic relu arrive sous 24 h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <note priority="1" from="description">audit.form.success</note>
       </trans-unit>
@@ -8413,28 +8228,28 @@
         <source>Vérifiez votre boîte e-mail : le diagnostic démarre dès que vous ouvrez le lien de confirmation reçu, valable <x id="heures" equiv-text="heures"/> heures.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditFormConfirmee" datatype="html">
         <source>Adresse confirmée ! L’analyse est lancée, votre diagnostic relu arrive sous 24 h.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">225</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditFormLienDeConfirmationRefuse" datatype="html">
         <source>Ce lien de confirmation est invalide ou a expiré : refaites la demande de diagnostic.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">186</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditFormError" datatype="html">
         <source>Impossible d&apos;envoyer la demande. Réessayez dans un instant.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">187</context>
         </context-group>
         <note priority="1" from="description">audit.form.error</note>
       </trans-unit>
@@ -8442,7 +8257,7 @@
         <source>J&apos;accepte que mes coordonnées soient utilisées pour traiter ma demande de diagnostic (voir &lt;a href=&quot;/fr/privacy&quot; class=&quot;underline&quot;&gt;politique de confidentialité&lt;/a&gt;).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <note priority="1" from="description">audit.form.rgpdLabel</note>
       </trans-unit>
@@ -8450,7 +8265,7 @@
         <source>Votre consentement est obligatoire pour lancer le diagnostic.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <note priority="1" from="description">audit.form.rgpdError</note>
       </trans-unit>
@@ -8458,7 +8273,7 @@
         <source>Diagnostic terminé</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <note priority="1" from="description">Audit completed step</note>
         <note priority="1" from="meaning">growthAudit.step.completed</note>
@@ -8467,7 +8282,7 @@
         <source>Le diagnostic a échoué.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">235</context>
+          <context context-type="linenumber">195</context>
         </context-group>
         <note priority="1" from="description">Audit failed message</note>
         <note priority="1" from="meaning">growthAudit.error.failed</note>
@@ -8476,7 +8291,7 @@
         <source>Connexion interrompue pendant le diagnostic. Rechargez la page pour vérifier le résultat.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">237</context>
+          <context context-type="linenumber">197</context>
         </context-group>
         <note priority="1" from="description">Connection lost during audit</note>
         <note priority="1" from="meaning">growthAudit.error.connectionLost</note>
@@ -8485,14 +8300,14 @@
         <source>La demande n’a pas été acceptée : vérifiez l’adresse du site et votre moyen de contact.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">310</context>
+          <context context-type="linenumber">270</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auditStepPending" datatype="html">
         <source>Diagnostic en attente...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">369</context>
+          <context context-type="linenumber">329</context>
         </context-group>
         <note priority="1" from="description">Audit pending step</note>
         <note priority="1" from="meaning">growthAudit.step.pending</note>
@@ -8501,10 +8316,108 @@
         <source>Impossible de récupérer le résumé du diagnostic pour le moment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/growth-audit/growth-audit.component.ts</context>
-          <context context-type="linenumber">446</context>
+          <context context-type="linenumber">406</context>
         </context-group>
         <note priority="1" from="description">Summary fetch error</note>
         <note priority="1" from="meaning">growthAudit.error.summaryFetch</note>
+      </trans-unit>
+      <trans-unit id="auditPillarConversionTitle" datatype="html">
+        <source>Clarté et appels</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarConversionDesc" datatype="html">
+        <source>Ce que vous faites, dit en une phrase ; le bouton qui fait appeler ; un contact sans effort ; l’affichage sur téléphone.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarPerformanceTitle" datatype="html">
+        <source>Vitesse</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarPerformanceDesc" datatype="html">
+        <source>Le temps d’affichage de vos pages, le poids des images, la fluidité sur téléphone.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarSeoTitle" datatype="html">
+        <source>Être trouvé sur Google</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarSeoDesc" datatype="html">
+        <source>Le titre de chaque page, ce que Google en lit, les pages qu’il connaît, votre présence près de chez vous.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarTrustTitle" datatype="html">
+        <source>Confiance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarTrustDesc" datatype="html">
+        <source>Avis clients, réalisations montrées, tout ce qui rassure avant d’appeler.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarTechTitle" datatype="html">
+        <source>Solidité du site</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarTechDesc" datatype="html">
+        <source>L’outil qui fait tourner le site, la sécurité, les pages en erreur, la facilité d’entretien.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarAiVisibilityTitle" datatype="html">
+        <source>Visibilité dans les IA</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarAiVisibilityDesc" datatype="html">
+        <source>Ce que les assistants IA comprennent de votre métier et répondent quand on les interroge.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarCitationWorthinessTitle" datatype="html">
+        <source>Matière à citer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auditPillarCitationWorthinessDesc" datatype="html">
+        <source>Sources, preuves, questions fréquentes : ce que Google et les IA peuvent reprendre de vos pages.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/growth-audit/piliers.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="homeHeroParlerDeMonSite" datatype="html">
         <source>Parler de mon site</source>
@@ -10645,21 +10558,21 @@
         <source>Ce site n’utilise que des cookies strictement nécessaires à son fonctionnement : aucun cookie de mesure d’audience ni de publicité.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/cookie-banner/cookie-banner.component.html</context>
-          <context context-type="linenumber">13,16</context>
+          <context context-type="linenumber">11,14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cookieBannerEnSavoirPlus" datatype="html">
         <source>En savoir plus</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/cookie-banner/cookie-banner.component.html</context>
-          <context context-type="linenumber">21,25</context>
+          <context context-type="linenumber">19,23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cookieBannerCompris" datatype="html">
         <source> J’ai compris </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/cookie-banner/cookie-banner.component.html</context>
-          <context context-type="linenumber">31,33</context>
+          <context context-type="linenumber">29,31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="footerLogoAlt" datatype="html">
@@ -10821,7 +10734,7 @@
         <source>Formation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <note priority="1" from="description">Formations dropdown label</note>
         <note priority="1" from="meaning">navbar.formations.label</note>
@@ -10830,7 +10743,7 @@
         <source>Ouvrir le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.open</note>
@@ -10839,7 +10752,7 @@
         <source>Fermer le menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <note priority="1" from="description">Burger button label</note>
         <note priority="1" from="meaning">navbar.menu.close</note>
@@ -10848,7 +10761,7 @@
         <source>Menu principal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <note priority="1" from="description">Mobile nav heading</note>
         <note priority="1" from="meaning">navbar.menu.heading</note>
@@ -10857,7 +10770,7 @@
         <source>Fermer le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.close</note>
@@ -10866,7 +10779,7 @@
         <source>Ouvrir le menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/cadre/navbar/navbar.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <note priority="1" from="description">Icon label</note>
         <note priority="1" from="meaning">navbar.menu.icon.open</note>
@@ -11201,7 +11114,7 @@
         <source>Cadrer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">20</context>
         </context-group>
         <note priority="1" from="description">Phase de la méthode</note>
       </trans-unit>
@@ -11209,28 +11122,28 @@
         <source>Vous fixez votre budget et votre date de mise en ligne : le contenu s’ajuste, jamais la date.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeCadrerLivrable" datatype="html">
         <source>Le carnet de décisions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeCadrerDuree" datatype="html">
         <source>jours 1-2</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeEcrireTitre" datatype="html">
         <source>Écrire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <note priority="1" from="description">Phase de la méthode</note>
       </trans-unit>
@@ -11238,28 +11151,28 @@
         <source>Vous validez des textes écrits avec vous, dans vos mots, et votre démo est en ligne avant la fin de la semaine.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeEcrireLivrable" datatype="html">
         <source>Les textes de la version 1 et la démo en ligne</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeEcrireDuree" datatype="html">
         <source>semaine 1</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeConstruireTitre" datatype="html">
         <source>Construire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <note priority="1" from="description">Phase de la méthode</note>
       </trans-unit>
@@ -11267,28 +11180,28 @@
         <source>Chaque semaine, vous voyez la démo avancer lors d’un point de trente minutes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeConstruireLivrable" datatype="html">
         <source>La démo, mise à jour chaque semaine</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeConstruireDuree" datatype="html">
         <source>semaines 2 à <x id="min" equiv-text="min"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeLancerTitre" datatype="html">
         <source>Lancer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <note priority="1" from="description">Phase de la méthode</note>
       </trans-unit>
@@ -11296,28 +11209,28 @@
         <source>Votre site passe le contrôle point par point, puis il est en ligne et vous savez le faire vivre.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeLancerLivrable" datatype="html">
         <source>Le rapport de vérification, le site en ligne, la prise en main</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeLancerDuree" datatype="html">
         <source>semaines <x id="min" equiv-text="min"/> à <x id="max" equiv-text="max"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeElanTitre" datatype="html">
         <source>Élan</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <note priority="1" from="description">Phase de la méthode</note>
       </trans-unit>
@@ -11325,77 +11238,77 @@
         <source>Un mois après, on lit vos vraies visites et on améliore ce qui freine.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeElanLivrable" datatype="html">
         <source>Le bilan et l’amélioration prioritaire</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="methodeElanDuree" datatype="html">
         <source>30 jours après</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inclusDemoTitre" datatype="html">
         <source>Une démo dès la semaine 1</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inclusDemoPhrase" datatype="html">
         <source>Vous voyez votre site en ligne, sur un lien privé, avant la fin de la première semaine.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inclusCarnetTitre" datatype="html">
         <source>Un carnet de décisions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inclusCarnetPhrase" datatype="html">
         <source>Chaque choix est noté avec ma recommandation, et vous le gardez.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inclusRapportTitre" datatype="html">
         <source>Un rapport de vérification</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inclusRapportPhrase" datatype="html">
         <source>Vitesse, affichage mobile et lisibilité par Google et les IA sont contrôlés avant la mise en ligne.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">72</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inclusBilanTitre" datatype="html">
         <source>Un bilan à 30 jours</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="inclusBilanPhrase" datatype="html">
         <source>Un mois après, vos vraies visites disent quoi améliorer en premier, et je le fais.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/offre/socle-et-elan.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="homePlanTitre" datatype="html">
@@ -11416,7 +11329,7 @@
         <source>Tim Moyence, fondateur d&apos;Asili Design</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/sections/tete/portrait/portrait.component.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="formations.toolkitPrivate.copyError" datatype="html">

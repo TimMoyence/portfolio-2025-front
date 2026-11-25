@@ -45,14 +45,12 @@ describe('ProjetsComponent', () => {
     const cadres = new Set(
       cartes.map((carte) => {
         const capture = carte.querySelector<HTMLImageElement>('.proj-shot img');
-        return [capture?.getAttribute('width'), capture?.getAttribute('height'), capture?.sizes]
-          .map(String)
-          .join(' | ');
+        return `${capture?.getAttribute('width')} × ${capture?.getAttribute('height')}`;
       }),
     );
 
     expect(cartes.length).toBe(REALISATIONS.length);
-    expect([...cadres].map((cadre) => cadre.split(' | ').slice(0, 2))).toEqual([['800', '600']]);
+    expect([...cadres]).toEqual(['800 × 600']);
   });
 
   it('should render the four-step method banner (le fil rouge)', () => {

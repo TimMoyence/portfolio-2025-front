@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import type { ClientReport } from '../../../../core/models/audit-client-report.model';
+import { PILIERS } from '../../piliers';
 
 @Component({
   selector: 'app-engine-coverage-matrix',
@@ -12,4 +13,6 @@ import type { ClientReport } from '../../../../core/models/audit-client-report.m
 })
 export class EngineCoverageMatrixComponent {
   @Input({ required: true }) matrix!: ClientReport['googleVsAiMatrix'];
+
+  protected readonly nomDesIa = PILIERS.aiVisibility.nom;
 }

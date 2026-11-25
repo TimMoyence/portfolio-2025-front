@@ -6,6 +6,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { AdresseAVerifierComponent } from './shared/components/auth/adresse-a-verifier/adresse-a-verifier.component';
 import { FooterComponent } from './shared/components/cadre/footer/footer.component';
+import { ConstellationComponent } from './shared/components/cadre/constellation/constellation.component';
 import { CookieBannerComponent } from './shared/components/cadre/cookie-banner/cookie-banner.component';
 import { NavbarComponent } from './shared/components/cadre/navbar/navbar.component';
 import { SeoManagerComponent } from './shared/components/seo-manager.component';
@@ -33,11 +34,13 @@ function porteLaCoquille(racine: ActivatedRouteSnapshot): boolean {
     CookieBannerComponent,
     SessionRetryComponent,
     AdresseAVerifierComponent,
+    ConstellationComponent,
   ],
   template: `
     <app-seo-manager></app-seo-manager>
     @if (coquille()) {
       <app-skip-link></app-skip-link>
+      <app-constellation />
     }
     <div [class.min-h-screen]="coquille()" [class.text-scheme-text]="coquille()">
       @if (coquille()) {

@@ -854,16 +854,6 @@
   </segment>
 </unit>
 
-<unit id="auditStepOneDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:60</note>
-    <note category="description">audit.steps.one.desc</note>
-  </notes>
-  <segment>
-    <source>Nom du site ou URL + contact (email ou téléphone).</source>
-    <target>Website name or URL + your preferred contact (email or phone).</target>
-  </segment>
-</unit>
 
     <unit id="auditStepTwoTitle">
       <segment>
@@ -872,12 +862,6 @@
       </segment>
     </unit>
 
-    <unit id="auditStepTwoDesc">
-      <segment>
-        <source>Je passe vos pages en revue (visibilité, vitesse, clarté, visibilité IA) et je sors un premier diagnostic rapide.</source>
-        <target>I review your pages (visibility, speed, clarity, AI visibility) and produce a quick first diagnosis.</target>
-      </segment>
-    </unit>
 
     <unit id="auditStepThreeTitle">
       <segment>
@@ -886,16 +870,6 @@
       </segment>
     </unit>
 
-<unit id="auditStepThreeDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:68</note>
-    <note category="description">audit.steps.three.desc</note>
-  </notes>
-  <segment>
-    <source>Je reprends l&apos;analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d&apos;actions concret.</source>
-    <target>I personally review the analysis, prioritize opportunities, and send you the scorecard, the detailed PDF report, and a concrete action plan.</target>
-  </segment>
-</unit>
 
 <unit id="auditHighlightsPdf">
   <notes>
@@ -908,27 +882,19 @@
   </segment>
 </unit>
 
-<unit id="auditHighlightsScore">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:71</note>
-    <note category="description">audit.highlights.score</note>
-  </notes>
-  <segment>
-    <source>Scorecard claire</source>
-    <target>Clear scorecard</target>
-  </segment>
-</unit>
+    <unit id="auditHighlightsScore">
+      <segment>
+        <source>Une note claire, point par point</source>
+        <target>A clear score, point by point</target>
+      </segment>
+    </unit>
 
-<unit id="auditHighlightsWins">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:72</note>
-    <note category="description">audit.highlights.wins</note>
-  </notes>
-  <segment>
-    <source>Quick wins + priorités (impact/effort)</source>
-    <target>Quick wins + prioritized actions (impact/effort)</target>
-  </segment>
-</unit>
+    <unit id="auditHighlightsWins">
+      <segment>
+        <source>Les corrections rapides d’abord, puis les priorités</source>
+        <target>Quick fixes first, then priorities</target>
+      </segment>
+    </unit>
 
 <unit id="auditHighlightsNoObligation">
   <notes>
@@ -972,8 +938,8 @@
 
     <unit id="auditFaqA2">
       <segment>
-        <source>Le diagnostic passe en revue sept points : les fondations du référencement, la vitesse, la solidité du site, la confiance qu’il inspire, la clarté et les appels à l’action, la visibilité dans les réponses des IA et la matière qu’elles peuvent citer. Vous recevez une note, des gains rapides et des recommandations classées.</source>
-        <target>The diagnosis reviews seven points: search foundations, speed, how solid the website is, the trust it inspires, clarity and calls to action, visibility in AI answers and the material they can quote. You receive a score, quick wins and ranked recommendations.</target>
+        <source>Le diagnostic passe en revue sept points : clarté et appels, vitesse, être trouvé sur Google, confiance, solidité du site, visibilité dans les IA et matière à citer. Vous recevez une note point par point, les corrections rapides d’abord, puis les priorités.</source>
+        <target>The diagnosis reviews seven points: clarity and calls, speed, being found on Google, trust, how solid the site is, visibility in AI and material to quote. You get a score point by point, quick fixes first, then priorities.</target>
       </segment>
     </unit>
 
@@ -1019,159 +985,103 @@
       </segment>
     </unit>
 
-<unit id="auditPillarConversionTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:80</note>
-    <note category="description">audit.pillar.conversion.title</note>
-  </notes>
-  <segment>
-    <source>Conversion &amp; clarté</source>
-    <target>Conversion &amp; clarity</target>
-  </segment>
-</unit>
+    <unit id="auditPillarConversionTitle">
+      <segment>
+        <source>Clarté et appels</source>
+        <target>Clarity and calls</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarConversionDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:81</note>
-    <note category="description">audit.pillar.conversion.desc</note>
-  </notes>
-  <segment>
-    <source>Proposition de valeur, CTA, friction contact, mobile.</source>
-    <target>Value proposition, CTAs, contact friction, mobile experience.</target>
-  </segment>
-</unit>
+    <unit id="auditPillarConversionDesc">
+      <segment>
+        <source>Ce que vous faites, dit en une phrase ; le bouton qui fait appeler ; un contact sans effort ; l’affichage sur téléphone.</source>
+        <target>What you do, said in one sentence; the button that gets people to call; effortless contact; how it looks on a phone.</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarPerformanceTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:84</note>
-    <note category="description">audit.pillar.performance.title</note>
-  </notes>
-  <segment>
-    <source>Vitesse &amp; performance</source>
-    <target>Speed &amp; performance</target>
-  </segment>
-</unit>
+    <unit id="auditPillarPerformanceTitle">
+      <segment>
+        <source>Vitesse</source>
+        <target>Speed</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarPerformanceDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:85</note>
-    <note category="description">audit.pillar.performance.desc</note>
-  </notes>
-  <segment>
-    <source>PageSpeed, poids images, Core Web Vitals.</source>
-    <target>PageSpeed, image weight, Core Web Vitals.</target>
-  </segment>
-</unit>
+    <unit id="auditPillarPerformanceDesc">
+      <segment>
+        <source>Le temps d’affichage de vos pages, le poids des images, la fluidité sur téléphone.</source>
+        <target>How fast your pages load, the weight of images, smoothness on a phone.</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarSeoTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:88</note>
-    <note category="description">audit.pillar.seo.title</note>
-  </notes>
-  <segment>
-    <source>SEO fondations</source>
-    <target>SEO foundations</target>
-  </segment>
-</unit>
+    <unit id="auditPillarSeoTitle">
+      <segment>
+        <source>Être trouvé sur Google</source>
+        <target>Being found on Google</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarSeoDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:89</note>
-    <note category="description">audit.pillar.seo.desc</note>
-  </notes>
-  <segment>
-    <source>Titres, H1, meta, indexation, SEO local.</source>
-    <target>Titles, H1, meta, indexing, local SEO.</target>
-  </segment>
-</unit>
+    <unit id="auditPillarSeoDesc">
+      <segment>
+        <source>Le titre de chaque page, ce que Google en lit, les pages qu’il connaît, votre présence près de chez vous.</source>
+        <target>The title of each page, what Google reads from it, the pages it knows, your presence near you.</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarTrustTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:92</note>
-    <note category="description">audit.pillar.trust.title</note>
-  </notes>
-  <segment>
-    <source>Crédibilité &amp; confiance</source>
-    <target>Credibility &amp; trust</target>
-  </segment>
-</unit>
+    <unit id="auditPillarTrustTitle">
+      <segment>
+        <source>Confiance</source>
+        <target>Trust</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarTrustDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:93</note>
-    <note category="description">audit.pillar.trust.desc</note>
-  </notes>
-  <segment>
-    <source>Preuves sociales, portfolio, signaux de confiance.</source>
-    <target>Social proof, portfolio, trust signals.</target>
-  </segment>
-</unit>
+    <unit id="auditPillarTrustDesc">
+      <segment>
+        <source>Avis clients, réalisations montrées, tout ce qui rassure avant d’appeler.</source>
+        <target>Customer reviews, work you show, everything that reassures people before they call.</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarTechTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:96</note>
-    <note category="description">audit.pillar.tech.title</note>
-  </notes>
-  <segment>
-    <source>Tech &amp; scalabilité</source>
-    <target>Tech &amp; scalability</target>
-  </segment>
-</unit>
+    <unit id="auditPillarTechTitle">
+      <segment>
+        <source>Solidité du site</source>
+        <target>How solid the site is</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarTechDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:97</note>
-    <note category="description">audit.pillar.tech.desc</note>
-  </notes>
-  <segment>
-    <source>CMS, sécurité, erreurs, maintenabilité.</source>
-    <target>CMS, security, errors, maintainability.</target>
-  </segment>
-</unit>
+    <unit id="auditPillarTechDesc">
+      <segment>
+        <source>L’outil qui fait tourner le site, la sécurité, les pages en erreur, la facilité d’entretien.</source>
+        <target>The tool that runs the site, security, pages in error, how easy it is to maintain.</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarAiVisibilityTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:162</note>
-    <note category="description">audit.pillar.aiVisibility.title</note>
-  </notes>
-  <segment>
-    <source>Visibilité IA</source>
-    <target>AI visibility</target>
-  </segment>
-</unit>
+    <unit id="auditPillarAiVisibilityTitle">
+      <segment>
+        <source>Visibilité dans les IA</source>
+        <target>Visibility in AI</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarAiVisibilityDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:163</note>
-    <note category="description">audit.pillar.aiVisibility.desc</note>
-  </notes>
-  <segment>
-    <source>Compréhension par les assistants IA, données structurées, réponses génératives.</source>
-    <target>Understanding by AI assistants, structured data, generative answers.</target>
-  </segment>
-</unit>
+    <unit id="auditPillarAiVisibilityDesc">
+      <segment>
+        <source>Ce que les assistants IA comprennent de votre métier et répondent quand on les interroge.</source>
+        <target>What AI assistants understand about your trade and say when asked.</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarCitationWorthinessTitle">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:166</note>
-    <note category="description">audit.pillar.citationWorthiness.title</note>
-  </notes>
-  <segment>
-    <source>Citabilité</source>
-    <target>Citation worthiness</target>
-  </segment>
-</unit>
+    <unit id="auditPillarCitationWorthinessTitle">
+      <segment>
+        <source>Matière à citer</source>
+        <target>Material to quote</target>
+      </segment>
+    </unit>
 
-<unit id="auditPillarCitationWorthinessDesc">
-  <notes>
-    <note category="location">src/app/features/growth-audit/growth-audit.component.ts:167</note>
-    <note category="description">audit.pillar.citationWorthiness.desc</note>
-  </notes>
-  <segment>
-    <source>Sources, preuves, FAQ et contenus que les moteurs peuvent citer.</source>
-    <target>Sources, evidence, FAQs, and content that search engines can cite.</target>
-  </segment>
-</unit>
+    <unit id="auditPillarCitationWorthinessDesc">
+      <segment>
+        <source>Sources, preuves, questions fréquentes : ce que Google et les IA peuvent reprendre de vos pages.</source>
+        <target>Sources, proof, frequently asked questions: what Google and AI can pick up from your pages.</target>
+      </segment>
+    </unit>
 
     <unit id="auditFormTitle">
       <segment>
@@ -10239,21 +10149,15 @@
       </segment>
     </unit>
     <unit id="auditReportPillars">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html:15,17</note>
-      </notes>
       <segment>
-        <source> Scorecard par pilier </source>
-        <target> Scorecard by pillar </target>
+        <source> Votre note, point par point </source>
+        <target>Your score, point by point</target>
       </segment>
     </unit>
     <unit id="auditReportQuickWins">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/audit-client-report-section/audit-client-report-section.component.html:23,25</note>
-      </notes>
       <segment>
-        <source> Quick wins prioritaires </source>
-        <target> Priority quick wins </target>
+        <source> Les corrections rapides d’abord </source>
+        <target>Quick fixes first</target>
       </segment>
     </unit>
     <unit id="auditEffortLow">
@@ -10292,15 +10196,6 @@
         <target> Google visibility </target>
       </segment>
     </unit>
-    <unit id="auditEngineAiVisibility">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/engine-coverage-matrix/engine-coverage-matrix.component.html:38,40</note>
-      </notes>
-      <segment>
-        <source> Visibilité IA </source>
-        <target> AI visibility </target>
-      </segment>
-    </unit>
     <unit id="auditPillarTarget">
       <notes>
         <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.html:17,19</note>
@@ -10308,60 +10203,6 @@
       <segment>
         <source> / cible <ph id="0" equiv="INTERPOLATION" disp="{{ item.target }}"/> </source>
         <target> / target <ph id="0" equiv="INTERPOLATION" disp="{{ item.target }}"/> </target>
-      </segment>
-    </unit>
-    <unit id="auditPillarPerformance">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:18</note>
-      </notes>
-      <segment>
-        <source>Performance</source>
-        <target>Performance</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarTechnical">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:19</note>
-      </notes>
-      <segment>
-        <source>Tech &amp; scalabilité</source>
-        <target>Tech &amp; scalability</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarTrust">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:20</note>
-      </notes>
-      <segment>
-        <source>Crédibilité</source>
-        <target>Credibility</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarConversion">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:21</note>
-      </notes>
-      <segment>
-        <source>Conversion</source>
-        <target>Conversion</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarAiVisibility">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:22</note>
-      </notes>
-      <segment>
-        <source>Visibilité IA</source>
-        <target>AI visibility</target>
-      </segment>
-    </unit>
-    <unit id="auditPillarCitationWorthiness">
-      <notes>
-        <note category="location">src/app/features/growth-audit/components/pillar-scorecard/pillar-scorecard.component.ts:23</note>
-      </notes>
-      <segment>
-        <source>Citabilité IA</source>
-        <target>AI citability</target>
       </segment>
     </unit>
     <unit id="auditProgressDefaultStep">

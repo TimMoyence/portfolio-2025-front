@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { AsiliEnTeteDirective, LIENS_ASILI } from '../../asili-en-tete.directive';
 
 interface AsiliProjectTag {
@@ -27,6 +27,8 @@ const CADRE_DE_LA_VIGNETTE = {
   sizes: `${PLEINE_LARGEUR_SUR_TABLETTE}, calc((${LARGEUR_DU_CONTENEUR} - 44px) / 3)`,
 } as const;
 
+const SIZES_DE_LA_CARTE_SEULE = `${PLEINE_LARGEUR_SUR_TABLETTE}, calc((${LARGEUR_DU_CONTENEUR}) / 2)`;
+
 @Component({
   selector: 'app-asili-projects-grid',
   standalone: true,
@@ -39,4 +41,10 @@ export class AsiliProjectsGridComponent extends AsiliEnTeteDirective {
   readonly projects = input.required<readonly AsiliProject[]>();
 
   protected readonly cadre = CADRE_DE_LA_VIGNETTE;
+
+  protected readonly seule = computed(() => this.projects().length === 1);
+
+  protected readonly sizes = computed(() =>
+    this.seule() ? SIZES_DE_LA_CARTE_SEULE : CADRE_DE_LA_VIGNETTE.sizes,
+  );
 }

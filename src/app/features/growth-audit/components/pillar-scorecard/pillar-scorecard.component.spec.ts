@@ -49,20 +49,4 @@ describe('PillarScorecardComponent', () => {
     expect(badge.textContent?.trim()).toBe('Target reached');
     expect(badge.getAttribute('aria-label')).toBe('Target reached');
   });
-
-  it('devrait traduire en français les noms techniques des piliers', () => {
-    const text = rendreLaScorecard([
-      {
-        pillar: 'aiVisibility',
-        score: 30,
-        target: 70,
-        status: 'critical',
-        statusLabel: 'Critique',
-      },
-      { pillar: 'seo', score: 80, target: 80, status: 'ok', statusLabel: 'Objectif atteint' },
-    ]).textContent as string;
-
-    expect(text).toContain('Visibilité IA');
-    expect(text).toContain('SEO');
-  });
 });

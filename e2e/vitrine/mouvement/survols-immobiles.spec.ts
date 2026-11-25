@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { sansAnimationNiContenu, sansContenu } from './ouvrir';
+import { sansAnimationNiContenu, sansContenu } from '../ouvrir';
 
 const SURVOLS = [
   { chemin: '/', selecteur: 'main .btn' },

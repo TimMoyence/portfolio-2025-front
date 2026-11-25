@@ -1,0 +1,16 @@
+@use '../mise-en-page/mono';
+
+@mixin rond($taille) {
+  width: $taille;
+  height: $taille;
+  flex: none;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  @include mono.police;
+  color: var(--accent-text);
+  position: relative;
+  z-index: 1;
+}

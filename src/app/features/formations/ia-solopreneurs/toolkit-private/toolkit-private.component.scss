@@ -235,10 +235,13 @@
   background: rgba(var(--teal-rgb), 0.1);
   color: var(--teal-deep);
   cursor: pointer;
-  transition: background 0.25s;
+  transition:
+    background 0.25s,
+    color 0.25s;
 
   @include survol.survol {
-    background: rgba(var(--teal-rgb), 0.2);
+    background: var(--teal-deep);
+    color: var(--cream);
   }
 }
 

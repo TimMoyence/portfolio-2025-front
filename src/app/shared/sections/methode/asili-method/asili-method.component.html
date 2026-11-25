@@ -8,7 +8,6 @@
     </div>
 
     <div class="method-steps" [style.--etapes]="steps().length">
-      <div class="method-line" aria-hidden="true"></div>
       @for (step of steps(); track step.num; let i = $index) {
         <div class="step">
           <div class="num">{{ step.num }}</div>

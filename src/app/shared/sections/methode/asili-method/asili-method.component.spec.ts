@@ -88,12 +88,10 @@ describe('AsiliMethodComponent', () => {
     expect(fixture.nativeElement.querySelector('.kicker')?.textContent).toContain('La methode');
   });
 
-  it("rend la ligne pointillee masquee aux lecteurs d'ecran", () => {
+  it('CON-05 · ne rend plus de ligne pointillée : la constellation relie les étapes', () => {
     setup();
     fixture.detectChanges();
-    const line = fixture.nativeElement.querySelector('.method-line');
-    expect(line).not.toBeNull();
-    expect(line.getAttribute('aria-hidden')).toBe('true');
+    expect(fixture.nativeElement.querySelector('.method-line')).toBeNull();
   });
 
   decrireRenduServeur(monter, (hote) => {

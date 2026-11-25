@@ -35,6 +35,13 @@
   @include cartes.carte-survolee;
 }
 
+.proj--seule {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+}
+
 .proj-link {
   display: block;
   @include cartes.lien-etire;
@@ -93,5 +100,10 @@
 @include bp.tablet {
   .proj-grid {
     grid-template-columns: 1fr;
+  }
+
+  .proj--seule {
+    display: flex;
+    align-items: stretch;
   }
 }

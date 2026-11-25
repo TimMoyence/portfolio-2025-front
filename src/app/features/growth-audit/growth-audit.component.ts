@@ -51,11 +51,7 @@ import {
   formatTaskLabel,
   sectionBadgeClass as sectionBadgeClassFn,
 } from './growth-audit-format.utils';
-
-interface AuditPillar {
-  title: string;
-  description: string;
-}
+import { PILIERS } from './piliers';
 
 function formulaireVierge(): AuditRequestPayload {
   return {
@@ -129,19 +125,16 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
   readonly steps = [
     {
       title: $localize`:audit.steps.one.title@@auditStepOneTitle:1. Vous laissez vos infos`,
-      description: $localize`:audit.steps.one.desc@@auditStepOneDesc:Nom du site ou URL + contact (email ou téléphone).`,
     },
     {
       title: $localize`:audit.steps.two.title@@auditStepTwoTitle:2. Première analyse automatique`,
-      description: $localize`:audit.steps.two.desc@@auditStepTwoDesc:Je passe vos pages en revue (visibilité, vitesse, clarté, visibilité IA) et je sors un premier diagnostic rapide.`,
     },
     {
       title: $localize`:audit.steps.three.title@@auditStepThreeTitle:3. Diagnostic relu par moi sous 24 h`,
-      description: $localize`:audit.steps.three.desc@@auditStepThreeDesc:Je reprends l'analyse moi-même, je priorise, et je vous envoie la scorecard, le rapport PDF détaillé et un plan d'actions concret.`,
       highlights: [
         $localize`:audit.highlights.pdf@@auditHighlightsPdf:Rapport PDF détaillé`,
-        $localize`:audit.highlights.score@@auditHighlightsScore:Scorecard claire`,
-        $localize`:audit.highlights.wins@@auditHighlightsWins:Quick wins + priorités (impact/effort)`,
+        $localize`:audit.highlights.score@@auditHighlightsScore:Une note claire, point par point`,
+        $localize`:audit.highlights.wins@@auditHighlightsWins:Les corrections rapides d’abord, puis les priorités`,
         $localize`:audit.highlights.noObligation@@auditHighlightsNoObligation:Aucun engagement`,
       ],
     },
@@ -156,7 +149,7 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
     },
     {
       question: $localize`:audit.faq.q2@@auditFaqQ2:Que contient le diagnostic ?`,
-      reponse: $localize`:audit.faq.a2@@auditFaqA2:Le diagnostic passe en revue sept points : les fondations du référencement, la vitesse, la solidité du site, la confiance qu’il inspire, la clarté et les appels à l’action, la visibilité dans les réponses des IA et la matière qu’elles peuvent citer. Vous recevez une note, des gains rapides et des recommandations classées.`,
+      reponse: $localize`:audit.faq.a2@@auditFaqA2:Le diagnostic passe en revue sept points : clarté et appels, vitesse, être trouvé sur Google, confiance, solidité du site, visibilité dans les IA et matière à citer. Vous recevez une note point par point, les corrections rapides d’abord, puis les priorités.`,
     },
     {
       question: $localize`:audit.faq.q3@@auditFaqQ3:Le diagnostic est-il vraiment gratuit ?`,
@@ -172,36 +165,7 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
     },
   ];
 
-  readonly pillars: AuditPillar[] = [
-    {
-      title: $localize`:audit.pillar.conversion.title@@auditPillarConversionTitle:Conversion & clarté`,
-      description: $localize`:audit.pillar.conversion.desc@@auditPillarConversionDesc:Proposition de valeur, CTA, friction contact, mobile.`,
-    },
-    {
-      title: $localize`:audit.pillar.performance.title@@auditPillarPerformanceTitle:Vitesse & performance`,
-      description: $localize`:audit.pillar.performance.desc@@auditPillarPerformanceDesc:PageSpeed, poids images, Core Web Vitals.`,
-    },
-    {
-      title: $localize`:audit.pillar.seo.title@@auditPillarSeoTitle:SEO fondations`,
-      description: $localize`:audit.pillar.seo.desc@@auditPillarSeoDesc:Titres, H1, meta, indexation, SEO local.`,
-    },
-    {
-      title: $localize`:audit.pillar.trust.title@@auditPillarTrustTitle:Crédibilité & confiance`,
-      description: $localize`:audit.pillar.trust.desc@@auditPillarTrustDesc:Preuves sociales, portfolio, signaux de confiance.`,
-    },
-    {
-      title: $localize`:audit.pillar.tech.title@@auditPillarTechTitle:Tech & scalabilité`,
-      description: $localize`:audit.pillar.tech.desc@@auditPillarTechDesc:CMS, sécurité, erreurs, maintenabilité.`,
-    },
-    {
-      title: $localize`:audit.pillar.aiVisibility.title@@auditPillarAiVisibilityTitle:Visibilité IA`,
-      description: $localize`:audit.pillar.aiVisibility.desc@@auditPillarAiVisibilityDesc:Compréhension par les assistants IA, données structurées, réponses génératives.`,
-    },
-    {
-      title: $localize`:audit.pillar.citationWorthiness.title@@auditPillarCitationWorthinessTitle:Citabilité`,
-      description: $localize`:audit.pillar.citationWorthiness.desc@@auditPillarCitationWorthinessDesc:Sources, preuves, FAQ et contenus que les moteurs peuvent citer.`,
-    },
-  ];
+  readonly pillars = Object.values(PILIERS);
 
   readonly formLabels = {
     title: $localize`:audit.form.title@@auditFormTitle:Demander un diagnostic gratuit`,
@@ -244,11 +208,11 @@ export class GrowthAuditComponent implements OnInit, OnDestroy {
       : this.formLabels.phonePlaceholder;
   }
 
-  get scoreEntries(): Array<{ key: PillarKey; score: number }> {
+  get scoreEntries(): Array<{ key: PillarKey; nom: string; score: number }> {
     const scores = this.auditSummary?.pillarScores ?? {};
     return PILLAR_KEYS.flatMap((key) => {
       const score = scores[key];
-      return score === undefined ? [] : [{ key, score }];
+      return score === undefined ? [] : [{ key, nom: PILIERS[key].nom, score }];
     });
   }
 
